@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="employees.Elements.Paginator"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+             xmlns:cal="http://www.caliburnproject.org"
+             >
+    <StackPanel Orientation="Horizontal">
+        <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Элементов на странице"
+               Height="15" Margin="16,0,16,0" />
+        <ComboBox Width="52"
+                  ItemsSource="{Binding ComboValues}" SelectedItem="{Binding ElementsPerPage}" Margin="0,0,8,0"/>
+
+        <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 
+                   Height="15" Margin="16,0,16,0">
+            <TextBlock.Text>
+                <MultiBinding StringFormat="{}{0} из {1}">
+                    <Binding Path="CurrentPage"/>
+                    <Binding Path="MaxPages"/>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+        <Button Name="MovePrevious" Margin="0" Foreground="{StaticResource MaterialDesignBodyLight}"
+            IsEnabled="{Binding IsMovePreviousEnabled}"
+            Style="{StaticResource MaterialDesignFlatButton}">
+            <materialDesign:PackIcon Kind="ArrowLeft" Height="24" Width="20" />
+        </Button>
+        <Button  Name="MoveNext" Margin="0,0,4,0" Foreground="{StaticResource MaterialDesignBodyLight}" 
+            IsEnabled="{Binding IsMoveNextEnabled}"
+            Style="{StaticResource MaterialDesignFlatButton}">
+            <materialDesign:PackIcon Kind="ArrowRight" Height="24" Width="20" />
+        </Button>
+    </StackPanel>
+</UserControl>

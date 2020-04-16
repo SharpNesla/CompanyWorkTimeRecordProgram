@@ -1,0 +1,15 @@
+﻿<DataGridTextColumn x:Class="employees.Elements.DataGridAdaptiveColumn"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    mc:Ignorable="d"
+>
+    <DataGridTextColumn.ElementStyle>
+        <Style TargetType="TextBlock" BasedOn="{StaticResource MaterialDesignBody2TextBlock}">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="Foreground" Value="{StaticResource MaterialDesignBody}" />
+        </Style>
+    </DataGridTextColumn.ElementStyle>
+</DataGridTextColumn>

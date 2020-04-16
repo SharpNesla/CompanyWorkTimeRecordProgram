@@ -12,22 +12,23 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using employees.Model;
 
 namespace Employees
 {
     /// <summary>
     /// Interaction logic for EmployeeCardEditor.xaml
     /// </summary>
-    public partial class EmployeeCardEditor : UserControl
-    {
-        public EmployeeCardEditor()
-        {
-            InitializeComponent();
-        }
-    }
+   
 
     public class CardEditorViewModel
     {
 
+        public bool IsNew { get; set; }
+        public virtual string EditorTitle
+        {
+            get { return !IsNew ? $"Редактирование информации о карточке загруженности №{Entity.Id}" : $"Добавление новой карточки загруженности"; }
+        }
+        public Card Entity { get; set; } = new Card();
     }
 }

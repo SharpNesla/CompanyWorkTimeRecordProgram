@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Navigation;
-using Autofac;
 using employees;
+using employees.Elements;
 using employees.Model;
 
 namespace Employees
@@ -15,12 +15,13 @@ namespace Employees
         private ApplicationContext _applicationContext = new ApplicationContext();
         private EmployeeService employeeService => new EmployeeService(_applicationContext);
         private CardService cardService => new CardService();
-
-        public EmployeeDictionaryViewModel EmployeeDictionary => new EmployeeDictionaryViewModel();
+        private PaginatorViewModel paginator => new PaginatorViewModel();
+        public EmployeeDictionaryViewModel EmployeeDictionary => new EmployeeDictionaryViewModel(paginator);
+        public EmployeeEditorViewModel EmployeeEditor => new EmployeeEditorViewModel();
+        public EmployeeInfoViewModel EmployeeInfo => new EmployeeInfoViewModel();
         public CardDictionaryViewModel CardDictionary => new CardDictionaryViewModel();
-
         public AuthViewModel Auth => new AuthViewModel(employeeService);
         public CardEditorViewModel CardEditor => new CardEditorViewModel();
-        public HubViewModel hubViewModel => new HubViewModel();
+        public HubViewModel Hub => new HubViewModel();
     }
 }

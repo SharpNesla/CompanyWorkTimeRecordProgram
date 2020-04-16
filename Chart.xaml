@@ -1,0 +1,137 @@
+﻿<UserControl x:Class="employees.Chart"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:employees"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converters="clr-namespace:employees.Converters"
+             xmlns:employees="clr-namespace:Employees"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <DockPanel LastChildFill="True">
+        <materialDesign:ColorZone DockPanel.Dock="Top" materialDesign:ShadowAssist.ShadowDepth="Depth1" Mode="PrimaryMid"
+                              Padding="16">
+            <DockPanel>
+
+                <Button Grid.Row="0" Visibility="{Binding OrderGridVisibility}" DockPanel.Dock="Right"
+                Style="{StaticResource MaterialDesignToolButton}"
+                Foreground="{StaticResource MaterialDesignDarkForeground}" Width="28"
+                >
+                    <Button.Resources>
+                        <converters:BindingProxy x:Key="proxy" Data="{Binding}" />
+                    </Button.Resources>
+                    <Button.ContextMenu>
+                        <ContextMenu DataContext="{Binding ElementName=Screen, Path=DataContext}">
+                            <MenuItem Header="Экспортировать как">
+                                <MenuItem Header="*.csv" 
+                          />
+                                <MenuItem Header="*.xlsx" 
+                           />
+                            </MenuItem>
+                            <MenuItem Header="Удалить выбраное"
+                        Visibility="{Binding Visibilities.DirectorAdvisor, Converter={StaticResource BoolVisibilityConverter}}"
+                        
+                         />
+                        </ContextMenu>
+                    </Button.ContextMenu>
+                </Button>
+                <StackPanel Orientation="Horizontal">
+                    <employees:NavigateButton
+                            Foreground="{StaticResource MaterialDesignDarkForeground}"
+                        Style="{DynamicResource MaterialDesignToolButton}"
+                            NavigateUri="Hub.xaml"
+                            materialDesign:ShadowAssist.ShadowDepth="Depth0">
+                        <materialDesign:PackIcon Kind="ArrowBack" Height="32" VerticalAlignment="Center"
+                                                 Width="32"></materialDesign:PackIcon>
+                    </employees:NavigateButton>
+                    <TextBlock
+
+            Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+            VerticalAlignment="Center"
+            Margin="16 0 0 0">
+            Загруженность работников
+                    </TextBlock>
+                </StackPanel>
+            </DockPanel>
+
+        </materialDesign:ColorZone>
+
+        <StackPanel Panel.ZIndex="3" DockPanel.Dock="Bottom">
+            <Button Name="AddEntity" Panel.ZIndex="1" HorizontalAlignment="Right" Margin="0 0 16 -32"
+              materialDesign:ShadowAssist.ShadowDepth="Depth3"
+              Visibility="{Binding Visibilities.DirectorAdvisor, Converter={StaticResource BoolVisibilityConverter}}"
+              Style="{StaticResource MaterialDesignFloatingActionAccentButton}">
+                <materialDesign:PackIcon Kind="Plus" Height="24" Width="24" />
+            </Button>
+            <materialDesign:ColorZone materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                Mode="PrimaryMid"
+                                Padding="16">
+                <DockPanel>
+                    <StackPanel
+            Orientation="Horizontal"
+            materialDesign:RippleAssist.IsCentered="True">
+
+                        <materialDesign:PackIcon Kind="Account" VerticalAlignment="Center" Height="32" Width="32" />
+                        <materialDesign:ColorZone
+              Mode="Standard"
+              Padding="8 4 8 4"
+              CornerRadius="2"
+              Panel.ZIndex="1"
+              Margin="16 0 0 0"
+              materialDesign:ShadowAssist.ShadowDepth="Depth1" Width="400">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition
+                    Width="Auto" />
+                                    <ColumnDefinition
+                    Width="*" />
+                                    <ColumnDefinition
+                    Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Button Name="AdvancedSearch"
+                        Style="{DynamicResource MaterialDesignToolButton}">
+                                    <materialDesign:PackIcon
+                    Kind="Magnify"
+                    Opacity="0.56" />
+                                </Button>
+                                <TextBox
+                  Grid.Column="1"
+                  Margin="8 0 0 0"
+                  materialDesign:TextFieldAssist.DecorationVisibility="Hidden"
+                  BorderThickness="0"
+                  MinWidth="200"
+                  VerticalAlignment="Center"
+                  Text="{Binding EntityGrid.SearchString}" />
+                            </Grid>
+                        </materialDesign:ColorZone>
+
+                        <materialDesign:ColorZone
+              Mode="Standard"
+              Padding="8 4 0 4"
+              CornerRadius="2"
+              Panel.ZIndex="1"
+              Margin="16 0 0 0"
+              materialDesign:ShadowAssist.ShadowDepth="Depth1" Height="40">
+                            <ContentControl Name="Paginator" />
+                        </materialDesign:ColorZone>
+                        <ToggleButton Margin="8,0,0,0"
+                          Style="{StaticResource MaterialDesignActionToggleButton}"
+                          IsChecked="{Binding EntityGrid.IsSearchDrawerOpened}"
+                          ToolTip="Расширенный поиск">
+                            <ToggleButton.Content>
+                                <materialDesign:PackIcon
+                  Kind="Search" />
+                            </ToggleButton.Content>
+                            <materialDesign:ToggleButtonAssist.OnContent>
+                                <materialDesign:PackIcon
+                  Kind="ArrowDown" />
+                            </materialDesign:ToggleButtonAssist.OnContent>
+                        </ToggleButton>
+                    </StackPanel>
+                </DockPanel>
+            </materialDesign:ColorZone>
+        </StackPanel>
+        <ContentControl Margin="0,0,0,-24" Name="EntityGrid" />
+    </DockPanel>
+</UserControl>

@@ -2,10 +2,27 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Employees"
+             xmlns:converters="clr-namespace:employees.Converters"
              StartupUri="ShellWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <local:ViewModelLocator x:Key="Locator"></local:ViewModelLocator>
+
+            <converters:BoolVisibilityConverter x:Key="BoolVisibilityConverter"></converters:BoolVisibilityConverter>
+            <converters:BoolNotVisibilityConverter x:Key="BoolNotVisibilityConverter"></converters:BoolNotVisibilityConverter>
+            <converters:TimeToIntConverter x:Key="TimeStringIntConverter"></converters:TimeToIntConverter>
+
+            <Style x:Key="CellStyle" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource {x:Type DataGridCell}}">
+                <Style.Triggers>
+
+                    <Trigger Property="DataGridCell.IsSelected" Value="True">
+                        <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesignSelection}" />
+                        <Setter Property="Foreground" Value="{DynamicResource MaterialDesignDarkForeground}" />
+                        <Setter Property="Background" Value="{DynamicResource MaterialDesignSelection}" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary
           Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
@@ -16,6 +33,7 @@
                 <ResourceDictionary
           Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Amber.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

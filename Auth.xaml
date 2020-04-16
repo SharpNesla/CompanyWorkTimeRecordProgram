@@ -55,7 +55,7 @@
                             </materialDesign:ToggleButtonAssist.OnContent>
                         </ToggleButton>
                         <local:NavigateButton Style="{StaticResource MaterialDesignRaisedButton}"
-                                              Content="Войти" NavigateUri="EmployeeCardEditor.xaml"/>
+                                              Content="Войти" NavigateUri="Hub.xaml"/>
                     </StackPanel>
                 </Border>
             </StackPanel>

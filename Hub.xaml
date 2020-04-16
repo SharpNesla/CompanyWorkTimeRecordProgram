@@ -1,15 +1,515 @@
 ﻿<Page x:Class="employees.Hub"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:employees"
-      mc:Ignorable="d" 
-      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="Hub">
+      mc:Ignorable="d"
 
-    <Grid>
-        
-    </Grid>
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:elements="clr-namespace:employees.Elements"
+      xmlns:converters="clr-namespace:employees.Converters"
+      xmlns:employees="clr-namespace:Employees"
+      DataContext="{Binding Hub,Source={StaticResource Locator}}"
+      Title="Hub" d:DesignHeight="549" d:DesignWidth="1205.5">
+    <DockPanel LastChildFill="True">
+        <materialDesign:ColorZone DockPanel.Dock="Top" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                  Mode="PrimaryMid">
+            <Grid Margin="0,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="400*" />
+                    <ColumnDefinition Width="361*" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <StackPanel Margin="16" Grid.Row="0" Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="Accounts" Height="32" Width="32" />
+                    <TextBlock
+
+                        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                        VerticalAlignment="Center"
+                        Margin="16 0 0 0" Text="Организация" />
+                </StackPanel>
+                <StackPanel HorizontalAlignment="Right" Margin="0,0,16,0"
+                            Orientation="Horizontal" Grid.Column="1" Grid.Row="0">
+                    <employees:NavigateButton NavigateUri="Chart.xaml"
+                                              Style="{StaticResource MaterialDesignToolButton}" Width="32"
+                                              Margin="0,0,16,0" Height="32"
+                                              Foreground="{StaticResource MaterialDesignDarkForeground}">
+                        <materialDesign:PackIcon Height="24" Width="24" Kind="ChartBar" />
+                    </employees:NavigateButton>
+                    <Button Style="{StaticResource MaterialDesignToolButton}" Width="32" Height="32"
+                            Foreground="{StaticResource MaterialDesignDarkForeground}">
+                        <materialDesign:PackIcon Kind="FileExcelOutline" Height="24" Width="24" />
+                    </Button>
+                </StackPanel>
+                <RadioButton
+                    Style="{StaticResource MaterialDesignTabRadioButton}"
+                    IsChecked="{Binding IsEmployeeTab}" Height="42" Grid.Row="1" Grid.Column="0"
+                    Content="Работники" />
+                <RadioButton Grid.Column="1" Grid.ColumnSpan="2" IsChecked="{Binding IsCardTab}"
+                             Style="{StaticResource MaterialDesignTabRadioButton}" Height="42" Grid.Row="1"
+                             Content="Карточки загруженности" />
+
+            </Grid>
+        </materialDesign:ColorZone>
+        <Grid>
+            <Grid Visibility="{Binding IsEmployeeTab, Converter={StaticResource BoolVisibilityConverter}}">
+                <DockPanel LastChildFill="True"
+                           DataContext="{Binding EmployeeDictionary,Source={StaticResource Locator}}">
+                    <StackPanel Panel.ZIndex="3" DockPanel.Dock="Bottom">
+                        <Button Panel.ZIndex="1" HorizontalAlignment="Right" Margin="0 0 16 -32"
+                                materialDesign:ShadowAssist.ShadowDepth="Depth3"
+                                Style="{StaticResource MaterialDesignFloatingActionAccentButton}">
+                            <materialDesign:PackIcon Kind="Plus" Height="24" Width="24" />
+                        </Button>
+                        <materialDesign:ColorZone materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                                  Mode="PrimaryMid"
+                                                  Padding="16">
+                            <DockPanel>
+                                <StackPanel
+                                    Orientation="Horizontal"
+                                    materialDesign:RippleAssist.IsCentered="True">
+
+                                    <materialDesign:PackIcon Kind="Account" VerticalAlignment="Center" Height="32"
+                                                             Width="32" />
+                                    <materialDesign:ColorZone
+                                        Mode="Standard"
+                                        Padding="8 4 8 4"
+                                        CornerRadius="2"
+                                        Panel.ZIndex="1"
+                                        Margin="16 0 0 0"
+                                        materialDesign:ShadowAssist.ShadowDepth="Depth1" Width="400">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition
+                                                    Width="Auto" />
+                                                <ColumnDefinition
+                                                    Width="*" />
+                                                <ColumnDefinition
+                                                    Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <Button Name="AdvancedSearch"
+                                                    Style="{DynamicResource MaterialDesignToolButton}">
+                                                <materialDesign:PackIcon
+                                                    Kind="Magnify"
+                                                    Opacity="0.56" />
+                                            </Button>
+                                            <TextBox
+                                                Grid.Column="1"
+                                                Margin="8 0 0 0"
+                                                materialDesign:HintAssist.Hint="Поиск работников"
+                                                materialDesign:TextFieldAssist.DecorationVisibility="Hidden"
+                                                BorderThickness="0"
+                                                MinWidth="200"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding EntityGrid.SearchString}" />
+                                        </Grid>
+                                    </materialDesign:ColorZone>
+
+                                    <materialDesign:ColorZone
+                                        Mode="Standard"
+                                        Padding="8 4 0 4"
+                                        CornerRadius="2"
+                                        Panel.ZIndex="1"
+                                        Margin="16 0 0 0"
+                                        materialDesign:ShadowAssist.ShadowDepth="Depth1" Height="40">
+                                        <elements:Paginator DataContext="{Binding PaginatorViewModel}" />
+                                    </materialDesign:ColorZone>
+                                    <ToggleButton Margin="8,0,0,0"
+                                                  Style="{StaticResource MaterialDesignActionToggleButton}"
+                                                  IsChecked="{Binding IsFilterDrawerOpened}"
+                                                  ToolTip="Расширенный поиск">
+                                        <ToggleButton.Content>
+                                            <materialDesign:PackIcon
+                                                Kind="Search" />
+                                        </ToggleButton.Content>
+                                        <materialDesign:ToggleButtonAssist.OnContent>
+                                            <materialDesign:PackIcon
+                                                Kind="ArrowDown" />
+                                        </materialDesign:ToggleButtonAssist.OnContent>
+                                    </ToggleButton>
+                                </StackPanel>
+                            </DockPanel>
+                        </materialDesign:ColorZone>
+                    </StackPanel>
+                    <Grid VerticalAlignment="Stretch" Margin="0,0,0,-24">
+                        <DockPanel LastChildFill="True">
+                            <materialDesign:DrawerHost DockPanel.Dock="Bottom"
+                                                       Name="DrawerHost"
+                                                       IsBottomDrawerOpen="{Binding IsFilterDrawerOpened}">
+                                <materialDesign:DrawerHost.BottomDrawerContent>
+                                    <StackPanel Orientation="Vertical"
+                                                Background="{StaticResource MaterialDesignCardBackground}">
+                                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                            <TextBlock Margin="24,16,16,16"
+                                                       Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                                                       Text="Критерии выбора данных" />
+                                            <Button
+                                                Margin="0,0,0,0"
+                                                Style="{StaticResource MaterialDesignFlatButton}"
+                                                ToolTip="Icon">
+                                                <Button.Content>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <materialDesign:PackIcon Kind="Eraser" />
+                                                        <TextBlock Margin="4,0,0,0">Очистить</TextBlock>
+                                                    </StackPanel>
+
+                                                </Button.Content>
+                                            </Button>
+                                            <Button
+                                                Margin="4,0,0,0"
+                                                Style="{StaticResource MaterialDesignFlatButton}"
+                                                ToolTip="Icon">
+                                                <Button.Content>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <materialDesign:PackIcon Kind="Refresh" />
+                                                        <TextBlock Margin="4,0,0,0">Обновить</TextBlock>
+                                                    </StackPanel>
+
+                                                </Button.Content>
+                                            </Button>
+                                        </StackPanel>
+                                        <StackPanel VerticalAlignment="Stretch" Margin="7,0,0,0" Orientation="Horizontal" Height="128">
+                                            <StackPanel Width="94" Margin="16,8,0,0" VerticalAlignment="Stretch"
+                                                        HorizontalAlignment="Left">
+                                                <CheckBox IsChecked="{Binding IsByDateBirth}">По полу</CheckBox>
+                                                <RadioButton  IsEnabled="{Binding IsByGender}"
+                                                             Style="{StaticResource MaterialDesignRadioButton}">
+                                                    Мужской
+                                                </RadioButton>
+                                                <RadioButton  IsEnabled="{Binding IsByGender}"
+                                                             Style="{StaticResource MaterialDesignRadioButton}">
+                                                    Женский
+                                                </RadioButton>
+                                            </StackPanel>
+                                            <StackPanel Width="152" Margin="16,8,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Left">
+                                                <CheckBox IsChecked="{Binding IsByDateBirth}">По дате рождения</CheckBox>
+                                                <DatePicker SelectedDate="{Binding LowDateBirthBound}" materialDesign:HintAssist.Hint="Нижняя граница"
+                                                            Style="{StaticResource MaterialDesignFloatingHintDatePicker}" Margin="0,0,0,8"
+                                                            HorizontalAlignment="Stretch" IsEnabled="{Binding IsByDateBirth}"/>
+                                                <DatePicker SelectedDate="{Binding HighDateBirthBound}" materialDesign:HintAssist.Hint="Верхняя граница"
+                                                            Style="{StaticResource MaterialDesignFloatingHintDatePicker}" Margin="0,0,0,8"
+                                                            HorizontalAlignment="Stretch" IsEnabled="{Binding IsByDateBirth}"/>
+                                            </StackPanel>
+                                            <StackPanel Width="152" Margin="16,8,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Left">
+                                                <CheckBox IsChecked="{Binding IsByDateBirth}">По часам работы</CheckBox>
+                                                <TextBox materialDesign:HintAssist.Hint="Нижняя граница"
+                                                            
+                                                            HorizontalAlignment="Stretch" IsEnabled="{Binding IsByDateBirth}"/>
+                                                <TextBox materialDesign:HintAssist.Hint="Верхняя граница"
+                                                            
+                                                            HorizontalAlignment="Stretch" IsEnabled="{Binding IsByDateBirth}"/>
+                                            </StackPanel>
+
+                                            <StackPanel Width="152" Margin="16,10,8,8" VerticalAlignment="Stretch" HorizontalAlignment="Left">
+                                                <CheckBox IsChecked="{Binding IsByDateBirth}">По правам в системе</CheckBox>
+                                                <ComboBox></ComboBox>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </materialDesign:DrawerHost.BottomDrawerContent>
+
+                            </materialDesign:DrawerHost>
+
+                            <DataGrid
+                                Margin="16"
+                                Background="{Binding ElementName=OwnControl, Path=Background}"
+                                CanUserSortColumns="True"
+                                CanUserAddRows="False"
+                                IsReadOnly="True"
+                                CanUserResizeColumns="True"
+                                CellStyle="{StaticResource CellStyle}"
+                                SelectionMode="Single"
+                                AutoGenerateColumns="False"
+                                SelectedItem="{Binding SelectedEntity}"
+                                ItemsSource="{Binding Entities}">
+                                <DataGrid.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem />
+                                        <MenuItem />
+                                    </ContextMenu>
+                                </DataGrid.ContextMenu>
+
+                                <DataGrid.Resources>
+                                    <converters:BindingProxy x:Key="proxy" Data="{Binding}" />
+                                </DataGrid.Resources>
+
+                                <DataGrid.Columns>
+                                    <elements:DataGridAdaptiveColumn Binding="{Binding Id}" CanUserReorder="True"
+                                                                     IsReadOnly="True" MinWidth="32"
+
+                                                                     Header="№" />
+                                    <elements:DataGridAdaptiveColumn Binding="{Binding Surname}" CanUserReorder="True"
+
+                                                                     MinWidth="96"
+                                                                     Header="Фамилия" />
+                                    <elements:DataGridAdaptiveColumn Binding="{Binding Name}" CanUserReorder="True"
+
+
+                                                                     Header="Имя" />
+                                    <elements:DataGridAdaptiveColumn Binding="{Binding Patronymic}"
+                                                                     CanUserReorder="True"
+
+                                                                     Visibility="{Binding Data.IsCompact, Source={StaticResource proxy}, Converter={StaticResource BoolNotVisibilityConverter}}"
+                                                                     MinWidth="96" SortMemberPath="Surname"
+                                                                     Header="Отчество" />
+                                    <elements:DataGridAdaptiveColumn Binding="{Binding PhoneNumber}" MinWidth="128"
+                                                                     Header="Номер телефона"
+                                                                     Visibility="{Binding Data.IsCompact, Source={StaticResource proxy}, Converter={StaticResource BoolNotVisibilityConverter}}"
+                                                                     CanUserReorder="True"
+                                                                     SortMemberPath="PhoneNumber" />
+                                    <elements:DataGridAdaptiveColumn
+                                        Binding="{Binding DateBirth, StringFormat='dd.MM.yyyy'}" CanUserReorder="True"
+                                        SortMemberPath="DateBirth" MinWidth="128"
+                                        Header="Дата рождения" />
+                                    <DataGridTemplateColumn CanUserReorder="True" Width="*" />
+
+                                    <DataGridTemplateColumn CanUserReorder="False" MinWidth="190" IsReadOnly="True">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <local:DialogButton Margin="0"
+                                                                        DialogUri="DeleteDialog.xaml"
+                                                                        Foreground="{StaticResource MaterialDesignBodyLight}"
+                                                                        Style="{StaticResource MaterialDesignFlatButton}">
+                                                        <materialDesign:PackIcon
+                                                            Kind="Trash"
+                                                            Height="24"
+                                                            Width="24" />
+                                                    </local:DialogButton>
+                                                    <employees:NavigateButton Margin="0"
+                                                                              NavigateUri="EmployeeEditor.xaml"
+                                                                              Foreground="{StaticResource MaterialDesignBodyLight}"
+                                                                              Style="{StaticResource MaterialDesignFlatButton}">
+                                                        <materialDesign:PackIcon
+                                                            Kind="Edit"
+                                                            Height="24"
+                                                            Width="24" />
+                                                    </employees:NavigateButton>
+
+                                                    <Button Margin="0"
+                                                            Foreground="{StaticResource MaterialDesignBodyLight}"
+                                                            Style="{StaticResource MaterialDesignFlatButton}">
+                                                        <materialDesign:PackIcon
+                                                            Kind="InfoOutline"
+                                                            Height="24"
+                                                            Width="24" />
+                                                    </Button>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </DockPanel>
+                    </Grid>
+
+                </DockPanel>
+            </Grid>
+
+            <Grid Visibility="{Binding IsCardTab, Converter={StaticResource BoolVisibilityConverter}}">
+                <DockPanel LastChildFill="True">
+                    <StackPanel Panel.ZIndex="3" DockPanel.Dock="Bottom">
+                        <Button Panel.ZIndex="1" HorizontalAlignment="Right" Margin="0 0 16 -32"
+                                materialDesign:ShadowAssist.ShadowDepth="Depth3"
+                                Style="{StaticResource MaterialDesignFloatingActionAccentButton}">
+                            <materialDesign:PackIcon Kind="Plus" Height="24" Width="24" />
+                        </Button>
+                        <materialDesign:ColorZone materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                                  Mode="PrimaryMid"
+                                                  Padding="16">
+                            <DockPanel>
+                                <StackPanel
+                                    Orientation="Horizontal"
+                                    materialDesign:RippleAssist.IsCentered="True">
+
+                                    <materialDesign:PackIcon Kind="AccountCardDetailsOutline"
+                                                             VerticalAlignment="Center"
+                                                             Height="32"
+                                                             Width="32" />
+                                    <materialDesign:ColorZone
+                                        Mode="Standard"
+                                        Padding="8 4 8 4"
+                                        CornerRadius="2"
+                                        Panel.ZIndex="1"
+                                        Margin="16 0 0 0"
+                                        materialDesign:ShadowAssist.ShadowDepth="Depth1" Width="400">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition
+                                                    Width="Auto" />
+                                                <ColumnDefinition
+                                                    Width="*" />
+                                                <ColumnDefinition
+                                                    Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <Button
+                                                Style="{DynamicResource MaterialDesignToolButton}">
+                                                <materialDesign:PackIcon
+                                                    Kind="Magnify"
+                                                    Opacity="0.56" />
+                                            </Button>
+                                            <TextBox
+                                                Grid.Column="1"
+                                                Margin="8 0 0 0"
+                                                materialDesign:HintAssist.Hint="Поиск карточек"
+                                                materialDesign:TextFieldAssist.DecorationVisibility="Hidden"
+                                                BorderThickness="0"
+                                                MinWidth="200"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding EntityGrid.SearchString}" />
+                                        </Grid>
+                                    </materialDesign:ColorZone>
+
+                                    <materialDesign:ColorZone
+                                        Mode="Standard"
+                                        Padding="8 4 0 4"
+                                        CornerRadius="2"
+                                        Panel.ZIndex="1"
+                                        Margin="16 0 0 0"
+                                        materialDesign:ShadowAssist.ShadowDepth="Depth1" Height="40">
+                                        <elements:Paginator />
+                                    </materialDesign:ColorZone>
+                                    <ToggleButton Margin="8,0,0,0"
+                                                  Style="{StaticResource MaterialDesignActionToggleButton}"
+                                                  IsChecked="{Binding EntityGrid.IsSearchDrawerOpened}"
+                                                  ToolTip="Расширенный поиск">
+                                        <ToggleButton.Content>
+                                            <materialDesign:PackIcon
+                                                Kind="Search" />
+                                        </ToggleButton.Content>
+                                        <materialDesign:ToggleButtonAssist.OnContent>
+                                            <materialDesign:PackIcon
+                                                Kind="ArrowDown" />
+                                        </materialDesign:ToggleButtonAssist.OnContent>
+                                    </ToggleButton>
+                                </StackPanel>
+                            </DockPanel>
+                        </materialDesign:ColorZone>
+                    </StackPanel>
+                    <Grid VerticalAlignment="Stretch"
+
+                          DataContext="{Binding CardDictionary,Source={StaticResource Locator}}">
+                        <DockPanel LastChildFill="True">
+                            <materialDesign:DrawerHost DockPanel.Dock="Bottom"
+                                                       materialDesign:ShadowAssist.ShadowDepth="Depth5"
+
+                                                       IsBottomDrawerOpen="{Binding IsFilterDrawerOpened}">
+                                <materialDesign:DrawerHost.BottomDrawerContent>
+                                    <StackPanel Orientation="Horizontal" Height="128"
+                                                Background="{StaticResource MaterialDesignCardBackground}">
+                                        <TextBlock>TEst</TextBlock>
+                                    </StackPanel>
+                                </materialDesign:DrawerHost.BottomDrawerContent>
+
+                            </materialDesign:DrawerHost>
+
+                            <DataGrid
+                                Margin="16"
+                                Background="{Binding ElementName=OwnControl, Path=Background}"
+                                CanUserSortColumns="True"
+                                CanUserAddRows="False"
+                                CanUserResizeColumns="True"
+                                CellStyle="{StaticResource CellStyle}"
+                                SelectionMode="Single"
+                                IsReadOnly="True"
+                                AutoGenerateColumns="False"
+                                SelectedItem="{Binding SelectedEntity}"
+                                ItemsSource="{Binding Entities}">
+                                <DataGrid.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem />
+                                        <MenuItem />
+                                    </ContextMenu>
+                                </DataGrid.ContextMenu>
+
+                                <DataGrid.Resources>
+                                    <converters:BindingProxy x:Key="proxy" Data="{Binding}" />
+                                </DataGrid.Resources>
+
+                                <DataGrid.Columns>
+                                    <elements:DataGridAdaptiveColumn Binding="{Binding Id}" CanUserReorder="True"
+                                                                     IsReadOnly="True" MinWidth="32"
+
+                                                                     Header="№" />
+
+                                    <elements:DataGridAdaptiveColumn
+                                        Binding="{Binding WorkLoadTimeMonday, StringFormat='00:00'}"
+                                        CanUserReorder="True"
+
+                                        Width="64"
+                                        Header="Пн" />
+                                    <elements:DataGridAdaptiveColumn
+                                        Binding="{Binding WorkLoadTimeTuesday, StringFormat='00:00'}"
+                                        CanUserReorder="True"
+
+                                        Width="64"
+
+                                        Header="Вт" />
+                                    <elements:DataGridAdaptiveColumn
+                                        Binding="{Binding WorkLoadTimeWednesday, StringFormat='00:00'}"
+                                        CanUserReorder="True"
+
+                                        Visibility="{Binding Data.IsCompact, Source={StaticResource proxy}, Converter={StaticResource BoolNotVisibilityConverter}}"
+                                        Width="64"
+                                        Header="Ср" />
+                                    <elements:DataGridAdaptiveColumn
+                                        Binding="{Binding WorkLoadTimeThursday, StringFormat='00:00'}"
+                                        Header="Чт"
+                                        Width="64"
+                                        CanUserReorder="True" />
+                                    <elements:DataGridAdaptiveColumn
+                                        Binding="{Binding WorkLoadTimeFriday, StringFormat='00:00'}"
+                                        Header="Пт"
+                                        Width="64"
+                                        CanUserReorder="True" />
+                                    <DataGridTemplateColumn CanUserReorder="True" Width="*" />
+
+                                    <DataGridTemplateColumn CanUserReorder="False" MinWidth="190">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <local:DialogButton Margin="0" DialogUri="DeleteDialog.xaml"
+                                                                        Foreground="{StaticResource MaterialDesignBodyLight}"
+                                                                        Style="{StaticResource MaterialDesignFlatButton}">
+                                                        <materialDesign:PackIcon
+                                                            Kind="Trash"
+                                                            Height="24"
+                                                            Width="24" />
+                                                    </local:DialogButton>
+                                                    <employees:NavigateButton Margin="0"
+                                                                              NavigateUri="CardEditor.xaml"
+                                                                              Foreground="{StaticResource MaterialDesignBodyLight}"
+                                                                              Style="{StaticResource MaterialDesignFlatButton}">
+                                                        <materialDesign:PackIcon
+                                                            Kind="Edit"
+                                                            Height="24"
+                                                            Width="24" />
+                                                    </employees:NavigateButton>
+
+                                                    <local:DialogButton Margin="0"
+                                                                        DialogUri="CardInfo.xaml"
+                                                                        Foreground="{StaticResource MaterialDesignBodyLight}"
+                                                                        Style="{StaticResource MaterialDesignFlatButton}">
+                                                        <materialDesign:PackIcon
+                                                            Kind="InfoOutline"
+                                                            Height="24"
+                                                            Width="24" />
+                                                    </local:DialogButton>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </DockPanel>
+                    </Grid>
+                </DockPanel>
+            </Grid>
+        </Grid>
+    </DockPanel>
 </Page>
