@@ -1,39 +1,47 @@
 ﻿<Page x:Class="employees.EmployeeInfo"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:employees"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-      mc:Ignorable="d" 
+      xmlns:employees="clr-namespace:Employees"
+      xmlns:converters="clr-namespace:employees.Converters"
+      xmlns:elements="clr-namespace:employees.Elements"
+      mc:Ignorable="d"
+      TextElement.FontWeight="Medium"
+      TextElement.FontSize="14"
+      FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
       Title="EmployeeInfo"
       DataContext="{Binding EmployeeInfo,Source={StaticResource Locator}}"
       Background="{StaticResource MaterialDesignPaper}">
 
-    <DockPanel Height="700" Width="970">
-        <materialDesign:ColorZone DockPanel.Dock="Top" materialDesign:ShadowAssist.ShadowDepth="Depth1" Mode="PrimaryMid"
-                              Padding="24,20,24,20">
+    <DockPanel Height="581" Width="1009">
+        <materialDesign:ColorZone DockPanel.Dock="Top" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                  Mode="PrimaryMid"
+                                  Padding="24,20,24,20">
             <DockPanel>
-                <Button DockPanel.Dock="Right" Name="EditClient" Style="{StaticResource MaterialDesignToolButton}"
-                Foreground="{StaticResource MaterialDesignDarkForeground}" Width="33"
-                Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
-                Visibility="{Binding Visibilities.Director, Converter={StaticResource BoolVisibilityConverter}}">
+                <employees:NavigateButton NavigateUri="EmployeeEditor.xaml" DockPanel.Dock="Right"
+                                          Style="{StaticResource MaterialDesignToolButton}"
+                                          Foreground="{StaticResource MaterialDesignDarkForeground}" Width="33"
+                                          Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
                     <materialDesign:PackIcon Kind="SquareEditOutline" VerticalAlignment="Center" Height="24" Width="24" />
-                </Button>
+                </employees:NavigateButton>
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
                     <materialDesign:PackIcon Kind="Account" VerticalAlignment="Center" Height="24" Width="24" />
                     <TextBlock
-            Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-            VerticalAlignment="Center"
-            Margin="8 0 0 0" Text="{Binding Entity.Id, StringFormat='Работник №{0}'}" />
+                        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                        VerticalAlignment="Center"
+                        Margin="8 0 0 0" Text="{Binding Entity.Id, StringFormat='Работник №{0}'}" />
                 </StackPanel>
 
             </DockPanel>
         </materialDesign:ColorZone>
         <DockPanel LastChildFill="False" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" Margin="24,0,24,24">
             <Button IsCancel="True" MaxWidth="132" DockPanel.Dock="Left"
-              Style="{StaticResource MaterialDesignFlatButton}"
-              Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
+                    Style="{StaticResource MaterialDesignFlatButton}"
+                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
                 ПРИНЯТЬ
             </Button>
         </DockPanel>
@@ -45,19 +53,14 @@
                 <ColumnDefinition Width="371*" />
             </Grid.ColumnDefinitions>
             <materialDesign:Card Margin="0,0,16,0"
-                           Padding="16"
-                           BorderThickness="0" VerticalAlignment="Stretch">
-
+                                 Padding="16"
+                                 BorderThickness="0" VerticalAlignment="Stretch">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="328" />
-                        <RowDefinition Height="37*" />
-                    </Grid.RowDefinitions>
-                    <StackPanel>
-                        <TextBlock Style="{StaticResource MaterialDesignTitleTextBlock}"
-                       Text="{StaticResource ClientEditor.MainInfoTitle}" />
-                        <StackPanel Margin="0,16,0,0">
-                            <TextBlock Margin="0,0,0,0" Style="{StaticResource MaterialDesignBody2TextBlock}">
+                    <DockPanel LastChildFill="True">
+                        <StackPanel DockPanel.Dock="Top">
+                            <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                                       Text="Информация о работнике" />
+                            <TextBlock Margin="0,16,0,0">
                                 <TextBlock.Text>
                                     <MultiBinding StringFormat="{}{1} {0} {2}">
                                         <Binding Path="Entity.Name" />
@@ -66,64 +69,129 @@
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>
-
-                            <TextBlock Margin="0,8,0,0" Text="{Binding Entity.DateBirth, StringFormat='Дата рождения: dd.MM.yyyy'}"
-                         Style="{StaticResource MaterialDesignBody2TextBlock}" />
-                            <TextBlock Margin="0,8,0,0" Text="{Binding Entity.PhoneNumber, StringFormat='Номер телефона: {0}'}"
-                         Style="{StaticResource MaterialDesignBody2TextBlock}" />
-                            <TextBlock Margin="0,8,0,0" Text="{Binding Entity.Profession, StringFormat='Должность: {0}', Converter={StaticResource ProfessionConverter}}"
-                         Style="{StaticResource MaterialDesignBody2TextBlock}" />
-                            <TextBlock Margin="0,8,0,0" Visibility="{Binding Visibilities.Director}"
-                         Style="{StaticResource MaterialDesignBody2TextBlock}">
-                                <TextBlock.Text>
-                                    <MultiBinding StringFormat="{}Адрес: г. {0} ул. {1} д. {2} (Индекс: {3})">
-                                        <Binding Path="Entity.City" />
-                                        <Binding Path="Entity.Street" />
-                                        <Binding Path="Entity.House" />
-                                        <Binding Path="Entity.ZipCode" />
-                                    </MultiBinding>
-                                </TextBlock.Text>
-                            </TextBlock>
-                            <TextBlock Margin="0,8,0,0" Text="Комментарий:" Style="{StaticResource MaterialDesignBody2TextBlock}" />
-                            <TextBlock Margin="0,4,0,0" Text="{Binding Entity.Comment}" TextWrapping="Wrap" 
-                         Style="{StaticResource MaterialDesignBody1TextBlock}" />
+                            <TextBlock Margin="0,8,0,0"
+                                       Text="{Binding Entity.DateBirth, StringFormat='Дата рождения: dd.MM.yyyy'}" />
+                            <TextBlock Margin="0,8,0,0"
+                                       Text="{Binding Entity.PhoneNumber, StringFormat='Номер телефона: {0}'}" />
+                            <TextBlock Text= "Пол: Мужской"
+                                       Margin="0,8,0,0" />
+                            <TextBlock Text= "Серия и номер паспорта: 2333 333212"
+                                       Margin="0,8,0,0" />
+                            <TextBlock Margin="0,8,0,0" Text="Комментарий:" />
                         </StackPanel>
-
-                    </StackPanel>
-                    <!--<Button Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" Click="EditClient"
-              Style="{StaticResource MaterialDesignFlatButton}" Content="РЕДАКТИРОВАТЬ" Margin="0,37,126,0" Height="Auto" Grid.Row="1"/>-->
+                        <ScrollViewer DockPanel.Dock="Bottom">
+                            <TextBlock Margin="0,4,0,0" Text="{Binding Entity.Comment}" TextWrapping="Wrap" />
+                        </ScrollViewer>
+                    </DockPanel>
                 </Grid>
-
             </materialDesign:Card>
 
             <materialDesign:Card Grid.Column="1" VerticalAlignment="Stretch">
                 <DockPanel>
-                    <TextBlock Margin="16,16,16,0" DockPanel.Dock="Top" Style="{StaticResource MaterialDesignTitleTextBlock}"
-                     Text="{StaticResource ClientEditor.OrdersInfo}" />
+                    <TextBlock Margin="16,16,16,0" DockPanel.Dock="Top"
+                               Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                               Text="Карточки загруженности данного работника (5 последних)" />
 
                     <DockPanel DockPanel.Dock="Bottom" Margin="16">
+                        <TextBlock Margin="0,0,16,0" VerticalAlignment="Center"
+
+                                   Text="{Binding Path=Entity.Cards.Count, StringFormat='{}Всего карточек: {0}'}" />
                         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
 
-                            <TextBlock Margin="0,0,16,0" VerticalAlignment="Center"
-                         Style="{StaticResource MaterialDesignBody2TextBlock}">
-                                <TextBlock.Text>
-                                    <MultiBinding StringFormat="{}Всего заказов {0} на общую сумму {1:0.00}₽">
-                                        <Binding Path="Entity.OrdersCount" />
-                                        <Binding Path="Entity.OrdersPrice"/>
-                                    </MultiBinding>
-                                </TextBlock.Text>
-                            </TextBlock>
+
                             <!--Заказ от 21.01.2019, 13:30. Цена: 1300р/!-->
                             <Button Name="ShowOrdersForClint" DockPanel.Dock="Right" Margin="0,0,9,0"
-                      Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
-                      Style="{StaticResource MaterialDesignFlatButton}"
-                      HorizontalAlignment="Left" ToolTip="Просмотреть все заказы данного клиента">
-                                <materialDesign:PackIcon Kind="ViewAgenda" Height="24" Width="24" />
+                                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                    Style="{StaticResource MaterialDesignFlatButton}"
+                                    HorizontalAlignment="Left" ToolTip="Просмотреть все заказы данного клиента">
+
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Margin="0,0,4,0" Kind="FormatListNumbered" />
+                                    <TextBlock>Перейти к списку</TextBlock>
+                                </StackPanel>
                             </Button>
                         </StackPanel>
-                        <StackPanel  DockPanel.Dock="Left"/>
+                        <StackPanel DockPanel.Dock="Left" />
                     </DockPanel>
-                    <ContentControl Name="OrderGrid"/>
+
+                    <DataGrid
+                        Margin="16"
+                        Background="{Binding ElementName=OwnControl, Path=Background}"
+                        CanUserSortColumns="True"
+                        CanUserAddRows="False"
+                        CanUserResizeColumns="True"
+                        CellStyle="{StaticResource CellStyle}"
+                        SelectionMode="Single"
+                        IsReadOnly="True"
+                        AutoGenerateColumns="False"
+                        SelectedItem="{Binding SelectedEntity}"
+                        ItemsSource="{Binding Entity.Cards}">
+                        <DataGrid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem />
+                                <MenuItem />
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>
+
+                        <DataGrid.Resources>
+                            <converters:BindingProxy x:Key="proxy" Data="{Binding}" />
+                        </DataGrid.Resources>
+
+                        <DataGrid.Columns>
+                            <elements:DataGridAdaptiveColumn Binding="{Binding Id}" CanUserReorder="True"
+                                                             IsReadOnly="True" MinWidth="32"
+
+                                                             Header="№" />
+
+                            <elements:DataGridAdaptiveColumn
+                                Binding="{Binding WorkLoadTimeMonday, StringFormat='#0:00'}"
+                                CanUserReorder="True"
+
+                                Width="64"
+                                Header="Пн" />
+                            <elements:DataGridAdaptiveColumn
+                                Binding="{Binding WorkLoadTimeTuesday, StringFormat='#0:00'}"
+                                CanUserReorder="True"
+
+                                Width="64"
+
+                                Header="Вт" />
+                            <elements:DataGridAdaptiveColumn
+                                Binding="{Binding WorkLoadTimeWednesday, StringFormat='#0:00'}"
+                                CanUserReorder="True"
+
+                                Visibility="{Binding Data.IsCompact, Source={StaticResource proxy}, Converter={StaticResource BoolNotVisibilityConverter}}"
+                                Width="64"
+                                Header="Ср" />
+                            <elements:DataGridAdaptiveColumn
+                                Binding="{Binding WorkLoadTimeThursday, StringFormat='#0:00'}"
+                                Header="Чт"
+                                Width="64"
+                                CanUserReorder="True" />
+                            <elements:DataGridAdaptiveColumn
+                                Binding="{Binding WorkLoadTimeFriday, StringFormat='#0:00'}"
+                                Header="Пт"
+                                Width="64"
+                                CanUserReorder="True" />
+                            <DataGridTemplateColumn CanUserReorder="True" Width="*" />
+
+                            <DataGridTemplateColumn CanUserReorder="False">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <local:DialogButton Margin="0"
+                                                            DialogUri="CardInfo.xaml"
+                                                            Foreground="{StaticResource MaterialDesignBodyLight}"
+                                                            Style="{StaticResource MaterialDesignFlatButton}">
+                                            <materialDesign:PackIcon
+                                                Kind="InfoOutline"
+                                                Height="24"
+                                                Width="24" />
+                                        </local:DialogButton>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </DockPanel>
 
             </materialDesign:Card>

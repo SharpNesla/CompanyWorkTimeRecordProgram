@@ -8,12 +8,12 @@
              xmlns:cal="http://www.caliburnproject.org"
              >
     <StackPanel Orientation="Horizontal">
-        <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Элементов на странице"
+        <TextBlock  Text="Элементов на странице"
                Height="15" Margin="16,0,16,0" />
         <ComboBox Width="52"
                   ItemsSource="{Binding ComboValues}" SelectedItem="{Binding ElementsPerPage}" Margin="0,0,8,0"/>
 
-        <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 
+        <TextBlock  
                    Height="15" Margin="16,0,16,0">
             <TextBlock.Text>
                 <MultiBinding StringFormat="{}{0} из {1}">

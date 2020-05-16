@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace employees.Model
 {
-    class CardFilterDefinition
+    public class CardFilterDefinition
     {
+        public bool IsBySumWorkTime { get; set; }
+        public bool IsByDatePass { get; set; }
+        public bool IsByEmployee { get; set; }
     }
 }

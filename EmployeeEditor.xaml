@@ -1,38 +1,39 @@
 ﻿<Page x:Class="employees.EmployeeEditor"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:employees"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:validationRules="clr-namespace:Employees.ValidationRules"
       xmlns:employees="clr-namespace:Employees"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      xmlns:converters="clr-namespace:employees.Converters.Laundry.Utils.Converters"
+      xmlns:model="clr-namespace:Employees.Model"
+      mc:Ignorable="d" d:DesignWidth="800"
       Title="EmployeeEditor"
-      DataContext="{Binding Source={StaticResource Locator}, Path=EmployeeEditor}"
-      >
+      DataContext="{Binding Source={StaticResource Locator}, Path=EmployeeEditor}">
 
     <DockPanel VerticalAlignment="Stretch">
-        <materialDesign:ColorZone DockPanel.Dock="Top" materialDesign:ShadowAssist.ShadowDepth="Depth1" Mode="PrimaryMid"
-                              Padding="16,20,20,20">
+        <materialDesign:ColorZone DockPanel.Dock="Top" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                  Mode="PrimaryMid"
+                                  Padding="16,20,20,20">
             <StackPanel Orientation="Horizontal">
 
                 <materialDesign:PackIcon Kind="Account" VerticalAlignment="Center" Height="24" Width="24" />
                 <TextBlock
-                Text="{Binding EditorTitle}"
-          Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-          VerticalAlignment="Center"
-          Margin="8 0 0 0" />
+                    Text="{Binding EditorTitle}"
+                    Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                    VerticalAlignment="Center"
+                    Margin="8 0 0 0" />
             </StackPanel>
         </materialDesign:ColorZone>
         <DockPanel LastChildFill="False" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" Margin="24,0,24,24">
             <employees:NavigateButton NavigateUri="Hub.xaml" IsCancel="True" DockPanel.Dock="Right" MaxWidth="132"
-              Style="{StaticResource MaterialDesignFlatButton}">
+                                      Style="{StaticResource MaterialDesignFlatButton}">
                 ОТМЕНИТЬ
             </employees:NavigateButton>
-            <Button  DockPanel.Dock="Left" MaxWidth="132"
-              Style="{StaticResource MaterialDesignFlatButton}" Margin="0,0,20,0">
+            <Button DockPanel.Dock="Left" MaxWidth="132"
+                    Style="{StaticResource MaterialDesignFlatButton}" Margin="0,0,20,0">
                 ПРИНЯТЬ
             </Button>
         </DockPanel>
@@ -43,49 +44,49 @@
             </Grid.ColumnDefinitions>
 
             <materialDesign:Card Margin="0,0,16,0"
-                                     BorderThickness="0" VerticalAlignment="Stretch">
+                                 BorderThickness="0" VerticalAlignment="Stretch">
                 <ScrollViewer Padding="16" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                                       Text="Информация о сотруднике" />
-                        <TextBox Margin="0,16,0,12" materialDesign:HintAssist.Hint="Фамилия"
-                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                                   Text="Информация о сотруднике" />
+                        <TextBox Margin="0,16,0,16" materialDesign:HintAssist.Hint="Фамилия"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}">
                             <TextBox.Text>
                                 <Binding Path="Entity.Surname" UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
                                         <validationRules:PersonTextDataValidation FieldName="Фамилия"
-                                                                                      ValidatesOnTargetUpdated="False" />
+                                                                                  ValidatesOnTargetUpdated="False" />
                                     </Binding.ValidationRules>
                                 </Binding>
                             </TextBox.Text>
                         </TextBox>
-                        <TextBox Margin="0,0,0,8" materialDesign:HintAssist.Hint="Имя" Name="Name"
-                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                        <TextBox Margin="0,0,0,16" materialDesign:HintAssist.Hint="Имя" Name="Name"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}">
                             <TextBox.Text>
                                 <Binding Path="Entity.Name" UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
                                         <validationRules:PersonTextDataValidation FieldName="Имя"
-                                                                                      ValidatesOnTargetUpdated="False" />
+                                                                                  ValidatesOnTargetUpdated="False" />
                                     </Binding.ValidationRules>
                                 </Binding>
                             </TextBox.Text>
                         </TextBox>
-                        <TextBox Margin="0,0,0,8" Name="Patronymic"
-                                     materialDesign:HintAssist.Hint="Отчество (если есть)"
-                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                        <TextBox Margin="0,0,0,16" Name="Patronymic"
+                                 materialDesign:HintAssist.Hint="Отчество (если есть)"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}">
                             <TextBox.Text>
                                 <Binding Path="Entity.Patronymic" UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
                                         <validationRules:PersonTextDataValidation FieldName="Отчество"
-                                                                                      IsRequired="False"
-                                                                                      ValidatesOnTargetUpdated="False" />
+                                                                                  IsRequired="False"
+                                                                                  ValidatesOnTargetUpdated="False" />
                                     </Binding.ValidationRules>
                                 </Binding>
                             </TextBox.Text>
                         </TextBox>
-                        <TextBox Margin="0,0,0,8" Name="PhoneNumber"
-                                     materialDesign:HintAssist.Hint="Номер телефона"
-                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                        <TextBox Margin="0,0,0,16" Name="PhoneNumber"
+                                 materialDesign:HintAssist.Hint="Номер телефона"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}">
                             <TextBox.Text>
                                 <Binding Path="Entity.PhoneNumber">
                                     <Binding.ValidationRules>
@@ -95,9 +96,9 @@
                                 </Binding>
                             </TextBox.Text>
                         </TextBox>
-                        <TextBox Margin="0,16,0,8" Name="PassportSerial"
-                                     materialDesign:HintAssist.Hint="Серия и номер паспорта"
-                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                        <TextBox Margin="0,0,0,16" Name="PassportSerial"
+                                 materialDesign:HintAssist.Hint="Серия и номер паспорта"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}">
                             <TextBox.Text>
                                 <Binding Path="Entity.PassportSerial" UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
@@ -106,47 +107,27 @@
                                 </Binding>
                             </TextBox.Text>
                         </TextBox>
-                        <TextBox Margin="0,0,0,8" Name="PassportDistributor"
-                                     materialDesign:HintAssist.Hint="Паспорт выдан"
-                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}">
-                            <TextBox.Text>
-                                <Binding Path="Entity.PassportDistributor" UpdateSourceTrigger="PropertyChanged">
-                                    <Binding.ValidationRules>
-                                        <validationRules:RequiredValidation FieldName="Паспорт выдан" />
-                                    </Binding.ValidationRules>
-                                </Binding>
-                            </TextBox.Text>
-                        </TextBox>
-                        <TextBox Margin="0,0,0,8" Name="PassportDistributorCode"
-                                     materialDesign:HintAssist.Hint="Код подразделения"
-                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}">
-                            <TextBox.Text>
-                                <Binding Path="Entity.PassportDistributorCode"
-                                             UpdateSourceTrigger="PropertyChanged">
-                                    <Binding.ValidationRules>
-                                        <validationRules:RequiredValidation FieldName="Код подразделения" />
-                                    </Binding.ValidationRules>
-                                </Binding>
-                            </TextBox.Text>
-                        </TextBox>
-                        <StackPanel Margin="0,16,0,0" Orientation="Horizontal">
-                            <TextBlock Margin="0,2,8,8">
-                                    Пол:
-                            </TextBlock>
-                            <RadioButton Margin="0,0,8,4" Style="{StaticResource MaterialDesignRadioButton}">
+                        <TextBlock Margin="0,2,8,8">
+                            Пол:
+                        </TextBlock>
+                        <StackPanel Margin="0,0,0,16" Orientation="Vertical">
+
+                            <RadioButton Style="{StaticResource MaterialDesignRadioButton}">
                                 Мужской
                             </RadioButton>
-                            <RadioButton Style="{StaticResource MaterialDesignRadioButton}"
-                                             >
+                            <RadioButton Style="{StaticResource MaterialDesignRadioButton}">
                                 Женский
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource MaterialDesignRadioButton}">
+                                Не определён
                             </RadioButton>
                         </StackPanel>
                         <DatePicker SelectedDate="{Binding Entity.DateBirth}"
-                                        materialDesign:HintAssist.Hint="Дата рождения"
-                                        Style="{StaticResource MaterialDesignFloatingHintDatePicker}" Margin="0,0,0,8"
-                                        HorizontalAlignment="Left" Width="252" />
+                                    materialDesign:HintAssist.Hint="Дата рождения"
+                                    Language="ru"
+                                    Style="{StaticResource MaterialDesignFloatingHintDatePicker}" Margin="0,0,0,16" />
 
-                        <TextBox Margin="0,16,0,12" materialDesign:HintAssist.Hint="Адрес"
+                        <TextBox materialDesign:HintAssist.Hint="Адрес"
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}">
                             <TextBox.Text>
                                 <Binding Path="Entity.Surname" UpdateSourceTrigger="PropertyChanged">
@@ -161,78 +142,53 @@
                 </ScrollViewer>
             </materialDesign:Card>
             <materialDesign:Card
-                    Padding="16" Grid.Column="1" VerticalAlignment="Stretch">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="38" />
-                        <RowDefinition Height="38" />
-                        <RowDefinition Height="47" />
-                        <RowDefinition Height="57" />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="7.015" />
-                        <ColumnDefinition Width="222"/>
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.ColumnSpan="3" Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                                   Text="Должность" />
-                    <ComboBox Margin="2,0,16,0" Grid.Row="1" Grid.Column="0"
-                                  materialDesign:HintAssist.Hint="Должность"
+                Padding="16" Grid.Column="1" VerticalAlignment="Stretch">
+                <DockPanel LastChildFill="True">
+                    <StackPanel Margin="2,0,0,0" MaxWidth="300" HorizontalAlignment="Left" DockPanel.Dock="Top">
+                        <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                                   Text="Дополнительная информация" />
+                        <ComboBox materialDesign:HintAssist.Hint="Права (роль работника в системе)"
                                   VerticalAlignment="Bottom"
+                                  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                                   DisplayMemberPath="Description"
-                                  SelectedValue="{Binding EmployeeProfession}"
-                                  SelectedValuePath="Value" Height="26" Grid.ColumnSpan="2" />
-
-                    <ContentControl Grid.Row="1" Grid.Column="2"
-                                        Visibility="{Binding IsDriverOrCourier, Converter={StaticResource BoolVisibilityConverter}}"
-                                        IsEnabled="{Binding IsDriverOrCourier}"
-                                        Name="CarSearch" />
-                    <ContentControl Grid.Row="1" Grid.Column="2"
-                                        Visibility="{Binding IsAdvisor, Converter={StaticResource BoolVisibilityConverter}}"
-                                        Name="SubsidiarySearch" IsEnabled="{Binding IsAdvisor}" />
-
-                    <TextBox Grid.Row="2" Grid.Column="0" Name="Login"
+                                  ItemsSource="{Binding Source={converters:Enumeration {x:Type model:Role}}}"
+                                  SelectedValue="{Binding Entity.Role}"
+                                  SelectedValuePath="Value" Margin="0,12,0,16" />
+                        <TextBox Name="Login" Margin="0,0,0,16"
                                  materialDesign:HintAssist.Hint="Логин"
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                                 Margin="2,10,16,0" Grid.ColumnSpan="2">
-                        <TextBox.Text>
-                            <Binding Path="Entity.Username" UpdateSourceTrigger="PropertyChanged">
-                                <Binding.ValidationRules>
-                                    <validationRules:RequiredValidation FieldName="Логин" />
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-                    </TextBox>
-                    <PasswordBox Grid.Row="3" Grid.Column="0" Style="{StaticResource MaterialDesignPasswordBox}"
-                                     materialDesign:HintAssist.Hint="Пароль" Margin="2,0,16,16"
-                                     IsEnabled="{Binding ChangePassword}" Grid.ColumnSpan="2"
-                                      />
-                    <StackPanel Grid.Row="3" Grid.Column="2" Orientation="Horizontal"
-                                    Margin="2,0,0,16">
-                        <PasswordBox Style="{StaticResource MaterialDesignPasswordBox}"
-                                         materialDesign:HintAssist.Hint="Пароль (Повторно)"
-                                         IsEnabled="{Binding ChangePassword}"
-                                          />
-                        <CheckBox Margin="8,0,0,4" VerticalAlignment="Bottom"
-                                      Style="{StaticResource MaterialDesignCheckBox}"
-                                      IsChecked="{Binding ChangePassword}">
+                                 Grid.ColumnSpan="2">
+                            <TextBox.Text>
+                                <Binding Path="Entity.Username" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <validationRules:RequiredValidation FieldName="Логин" />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                        <CheckBox VerticalAlignment="Bottom"
+                                  Style="{StaticResource MaterialDesignCheckBox}"
+                                  IsChecked="{Binding IsPasswordChanging}">
                             Изменить пароль
                         </CheckBox>
+                        <PasswordBox Margin="0,0,0,16" Style="{StaticResource MaterialDesignPasswordBox}"
+                                     materialDesign:HintAssist.Hint="Пароль"
+                                     IsEnabled="{Binding IsPasswordChanging}" Height="40" />
+                        <PasswordBox Margin="0,0,0,24" Style="{StaticResource MaterialDesignPasswordBox}"
+                                     materialDesign:HintAssist.Hint="Пароль (Повторно)"
+                                     IsEnabled="{Binding IsPasswordChanging}" Height="36" />
 
                     </StackPanel>
-
-
                     <TextBox Grid.ColumnSpan="3" Grid.Row="4" Grid.Column="0"
-                                 Text="{Binding Entity.Comment}"
-                                 materialDesign:HintAssist.Hint="Комментарий"
-                                 Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
-                                 Margin="2,0,0,-0.5"
-                                 AcceptsReturn="True"
-                                 TextWrapping="Wrap"
-                                 VerticalAlignment="Stretch"
-                                 VerticalScrollBarVisibility="Auto" />
-                </Grid>
+                             Text="{Binding Entity.Comment}"
+                             materialDesign:HintAssist.Hint="Комментарий"
+                             Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
+                             Margin="2,0,0,-0.5"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             VerticalAlignment="Stretch"
+                             VerticalScrollBarVisibility="Auto" />
+                </DockPanel>
             </materialDesign:Card>
         </Grid>
     </DockPanel>

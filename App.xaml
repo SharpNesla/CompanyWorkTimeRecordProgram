@@ -6,7 +6,7 @@
              StartupUri="ShellWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
-            <local:ViewModelLocator x:Key="Locator"></local:ViewModelLocator>
+            <local:CompositionRoot x:Key="Locator"></local:CompositionRoot>
 
             <converters:BoolVisibilityConverter x:Key="BoolVisibilityConverter"></converters:BoolVisibilityConverter>
             <converters:BoolNotVisibilityConverter x:Key="BoolNotVisibilityConverter"></converters:BoolNotVisibilityConverter>
@@ -22,6 +22,8 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
+
+            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource MaterialDesignFloatingHintTextBox}"></Style>
 
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary

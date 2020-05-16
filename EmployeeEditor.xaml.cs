@@ -20,21 +20,24 @@ namespace employees
     /// <summary>
     /// Interaction logic for EmployeeEditor.xaml
     /// </summary>
-    public partial class EmployeeEditor : Page
+    public partial class EmployeeEditor
     {
         public EmployeeEditor()
         {
             InitializeComponent();
+            
         }
     }
 
     public class EmployeeEditorViewModel
     {
-        public bool IsNew { get; set; }
+        public bool IsNew { get; set; } = false;
         public virtual string EditorTitle
         {
-            get { return !IsNew ? $"Редактирование информации о работнике №{Entity.Id}" : $"Добавление нового работника"; }
+            get { return !IsNew ? $"Редактирование информации о работнике №{Entity.Id}" : $"Добавление информации о работнике"; }
         }
-        public Employee Entity { get; set; } = new Employee();
+
+        public bool IsPasswordChanging { get; set; }
+        public Employee Entity { get; set; } = new Employee(){DateBirth = DateTime.Today};
     }
 }

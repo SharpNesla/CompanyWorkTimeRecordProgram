@@ -18,8 +18,13 @@ namespace employees
             Click += NavigateButton_Click;
         }
 
-        void NavigateButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        async void NavigateButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
+            //var window = new Window();
+            //window.WindowStyle = WindowStyle.ToolWindow;
+            //window.SizeToContent = SizeToContent.WidthAndHeight;
+            //window.Content = Application.LoadComponent(DialogUri) as Page;
+            //window.ShowDialog();
             DialogHost.Show(Application.LoadComponent(DialogUri) as Page);
         }
     }

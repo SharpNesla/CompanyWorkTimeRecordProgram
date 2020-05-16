@@ -24,10 +24,10 @@ namespace Employees
     public class CardEditorViewModel
     {
 
-        public bool IsNew { get; set; }
+        public bool IsNew { get; set; } = false;
         public virtual string EditorTitle
         {
-            get { return !IsNew ? $"Редактирование информации о карточке загруженности №{Entity.Id}" : $"Добавление новой карточки загруженности"; }
+            get { return !IsNew ? $"Редактирование информации о карточке загруженности №{Entity.Id}" : $"Добавление информации о карточке загруженности"; }
         }
         public Card Entity { get; set; } = new Card();
     }

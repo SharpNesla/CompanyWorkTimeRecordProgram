@@ -10,17 +10,20 @@ namespace Employees{
     public class NavigateButton : Button
     {
         public Uri NavigateUri { get; set; }
-
+        
         public NavigateButton()
         {
             Click += NavigateButton_Click;
         }
 
-        void NavigateButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        async void NavigateButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             var navigationService = NavigationService.GetNavigationService(this);
             if (navigationService != null)
+            {
+                await Task.Delay(220);
                 navigationService.Navigate(NavigateUri);
+            }
         }
     }
 }

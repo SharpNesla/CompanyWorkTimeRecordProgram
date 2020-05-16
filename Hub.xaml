@@ -5,11 +5,16 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:employees"
       mc:Ignorable="d"
+      TextElement.FontWeight="Medium"
+      TextElement.FontSize="14"
+      FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
 
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:elements="clr-namespace:employees.Elements"
       xmlns:converters="clr-namespace:employees.Converters"
       xmlns:employees="clr-namespace:Employees"
+      xmlns:model="clr-namespace:Employees.Model"
+      xmlns:converters1="clr-namespace:employees.Converters.Laundry.Utils.Converters"
       DataContext="{Binding Hub,Source={StaticResource Locator}}"
       Title="Hub" d:DesignHeight="549" d:DesignWidth="1205.5">
     <DockPanel LastChildFill="True">
@@ -41,9 +46,23 @@
                                               Foreground="{StaticResource MaterialDesignDarkForeground}">
                         <materialDesign:PackIcon Height="24" Width="24" Kind="ChartBar" />
                     </employees:NavigateButton>
+                    <Button Visibility="{Binding IsCardTab, Converter={StaticResource BoolVisibilityConverter}}"
+                            Style="{StaticResource MaterialDesignToolButton}" Width="32" Height="32"
+                            Foreground="{StaticResource MaterialDesignDarkForeground}"
+                            materialDesign:HintAssist.Hint="Список карточек сотрудника"
+                            Margin="0,0,16,0">
+                        <materialDesign:PackIcon Kind="AccountCardDetailsOutline" Height="24" Width="24" />
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignToolButton}" Width="32" Height="32"
+                            Foreground="{StaticResource MaterialDesignDarkForeground}"
+                            Margin="0,0,16,0"
+                            ToolTip="Экспорт списка в Excel">
+                        <materialDesign:PackIcon Kind="FileTableOutline" Height="24" Width="24" />
+                    </Button>
+
                     <Button Style="{StaticResource MaterialDesignToolButton}" Width="32" Height="32"
                             Foreground="{StaticResource MaterialDesignDarkForeground}">
-                        <materialDesign:PackIcon Kind="FileExcelOutline" Height="24" Width="24" />
+                        <materialDesign:PackIcon Kind="ExitToApp" Height="24" Width="24" />
                     </Button>
                 </StackPanel>
                 <RadioButton
@@ -59,14 +78,14 @@
         <Grid>
             <Grid Visibility="{Binding IsEmployeeTab, Converter={StaticResource BoolVisibilityConverter}}">
                 <DockPanel LastChildFill="True"
-                           DataContext="{Binding EmployeeDictionary,Source={StaticResource Locator}}">
+                           DataContext="{Binding EmployeeDictionaryViewModel}">
                     <StackPanel Panel.ZIndex="3" DockPanel.Dock="Bottom">
                         <Button Panel.ZIndex="1" HorizontalAlignment="Right" Margin="0 0 16 -32"
                                 materialDesign:ShadowAssist.ShadowDepth="Depth3"
                                 Style="{StaticResource MaterialDesignFloatingActionAccentButton}">
                             <materialDesign:PackIcon Kind="Plus" Height="24" Width="24" />
                         </Button>
-                        <materialDesign:ColorZone materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                        <materialDesign:ColorZone materialDesign:ShadowAssist.ShadowDepth="Depth3"
                                                   Mode="PrimaryMid"
                                                   Padding="16">
                             <DockPanel>
@@ -105,6 +124,7 @@
                                                 materialDesign:TextFieldAssist.DecorationVisibility="Hidden"
                                                 BorderThickness="0"
                                                 MinWidth="200"
+                                                Style="{StaticResource MaterialDesignTextBox}"
                                                 VerticalAlignment="Center"
                                                 Text="{Binding EntityGrid.SearchString}" />
                                         </Grid>
@@ -119,17 +139,24 @@
                                         materialDesign:ShadowAssist.ShadowDepth="Depth1" Height="40">
                                         <elements:Paginator DataContext="{Binding PaginatorViewModel}" />
                                     </materialDesign:ColorZone>
-                                    <ToggleButton Margin="8,0,0,0"
+                                    <ToggleButton Margin="16,0,0,0"
                                                   Style="{StaticResource MaterialDesignActionToggleButton}"
                                                   IsChecked="{Binding IsFilterDrawerOpened}"
                                                   ToolTip="Расширенный поиск">
                                         <ToggleButton.Content>
-                                            <materialDesign:PackIcon
-                                                Kind="Search" />
+                                            <materialDesign:PackIcon Height="24" Width="24"
+                                                                     Kind="FilterMenu"
+                                                                     RenderTransformOrigin=".5,.5">
+                                                <materialDesign:PackIcon.RenderTransform>
+                                                    <RotateTransform
+                                                        Angle="180" />
+
+                                                </materialDesign:PackIcon.RenderTransform>
+                                            </materialDesign:PackIcon>
                                         </ToggleButton.Content>
                                         <materialDesign:ToggleButtonAssist.OnContent>
-                                            <materialDesign:PackIcon
-                                                Kind="ArrowDown" />
+                                            <materialDesign:PackIcon Height="24" Width="24"
+                                                                     Kind="ArrowDown" />
                                         </materialDesign:ToggleButtonAssist.OnContent>
                                     </ToggleButton>
                                 </StackPanel>
@@ -142,75 +169,103 @@
                                                        Name="DrawerHost"
                                                        IsBottomDrawerOpen="{Binding IsFilterDrawerOpened}">
                                 <materialDesign:DrawerHost.BottomDrawerContent>
-                                    <StackPanel Orientation="Vertical"
-                                                Background="{StaticResource MaterialDesignCardBackground}">
-                                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
-                                            <TextBlock Margin="24,16,16,16"
-                                                       Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                                                       Text="Критерии выбора данных" />
-                                            <Button
-                                                Margin="0,0,0,0"
-                                                Style="{StaticResource MaterialDesignFlatButton}"
-                                                ToolTip="Icon">
-                                                <Button.Content>
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <materialDesign:PackIcon Kind="Eraser" />
-                                                        <TextBlock Margin="4,0,0,0">Очистить</TextBlock>
-                                                    </StackPanel>
+                                    <materialDesign:Card Margin="16,16,16,1">
+                                        <StackPanel Orientation="Vertical" DataContext="{Binding FilterDefinition}"
+                                                    Background="{StaticResource MaterialDesignCardBackground}">
+                                            <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                                <TextBlock Margin="24,16,16,16"
+                                                           Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                                                           Text="Критерии выбора данных" />
+                                                <Button
+                                                    Margin="0,0,0,0"
+                                                    Style="{StaticResource MaterialDesignFlatButton}"
+                                                    ToolTip="Icon">
+                                                    <Button.Content>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <materialDesign:PackIcon Margin="0,0,4,0" Kind="Eraser" />
+                                                            <TextBlock>Очистить</TextBlock>
+                                                        </StackPanel>
 
-                                                </Button.Content>
-                                            </Button>
-                                            <Button
-                                                Margin="4,0,0,0"
-                                                Style="{StaticResource MaterialDesignFlatButton}"
-                                                ToolTip="Icon">
-                                                <Button.Content>
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <materialDesign:PackIcon Kind="Refresh" />
-                                                        <TextBlock Margin="4,0,0,0">Обновить</TextBlock>
-                                                    </StackPanel>
+                                                    </Button.Content>
+                                                </Button>
+                                                <Button
+                                                    Margin="4,0,0,0"
+                                                    Style="{StaticResource MaterialDesignFlatButton}"
+                                                    ToolTip="Icon">
+                                                    <Button.Content>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <materialDesign:PackIcon Kind="Refresh" />
+                                                            <TextBlock Margin="4,0,0,0">Обновить</TextBlock>
+                                                        </StackPanel>
 
-                                                </Button.Content>
-                                            </Button>
+                                                    </Button.Content>
+                                                </Button>
+                                            </StackPanel>
+                                            <StackPanel VerticalAlignment="Stretch" Margin="7,0,0,0"
+                                                        Orientation="Horizontal" Height="128">
+                                                <StackPanel Width="119" Margin="16,8,0,0" VerticalAlignment="Stretch"
+                                                            HorizontalAlignment="Left">
+                                                    <CheckBox IsChecked="{Binding IsByGender}">По полу</CheckBox>
+                                                    <RadioButton Margin="0,18,0,0" IsEnabled="{Binding IsByGender}"
+                                                                 Style="{StaticResource MaterialDesignRadioButton}">
+                                                        Мужской
+                                                    </RadioButton>
+                                                    <RadioButton Margin="0,2,0,0" IsEnabled="{Binding IsByGender}"
+                                                                 Style="{StaticResource MaterialDesignRadioButton}">
+                                                        Женский
+                                                    </RadioButton>
+                                                    <RadioButton Margin="0,2,0,0" IsEnabled="{Binding IsByGender}"
+                                                                 Style="{StaticResource MaterialDesignRadioButton}">
+                                                        Не определён
+                                                    </RadioButton>
+                                                </StackPanel>
+                                                <StackPanel Width="152" Margin="16,8,0,0" VerticalAlignment="Stretch"
+                                                            HorizontalAlignment="Left">
+                                                    <CheckBox IsChecked="{Binding IsByDateBirth}">По дате рождения</CheckBox>
+                                                    <DatePicker SelectedDate="{Binding LowDateBirthBound}"
+                                                                materialDesign:HintAssist.Hint="Нижняя граница"
+                                                                Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                                                                Margin="0,4,0,0"
+                                                                HorizontalAlignment="Stretch"
+                                                                IsEnabled="{Binding IsByDateBirth}" />
+                                                    <DatePicker SelectedDate="{Binding HighDateBirthBound}"
+                                                                materialDesign:HintAssist.Hint="Верхняя граница"
+                                                                Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                                                                Margin="0,4,0,0"
+                                                                HorizontalAlignment="Stretch"
+                                                                IsEnabled="{Binding IsByDateBirth}" />
+                                                </StackPanel>
+                                                <StackPanel Width="152" Margin="16,8,0,0" VerticalAlignment="Stretch"
+                                                            HorizontalAlignment="Left">
+                                                    <CheckBox IsChecked="{Binding IsBySumWorkTime}">По часам работы</CheckBox>
+                                                    <TextBox Margin="0,4,0,0"
+                                                             materialDesign:HintAssist.Hint="Нижняя граница"
+                                                             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                                             HorizontalAlignment="Stretch"
+                                                             IsEnabled="{Binding IsBySumWorkTime}" />
+                                                    <TextBox Margin="0,4,0,0"
+                                                             materialDesign:HintAssist.Hint="Верхняя граница"
+                                                             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                                             HorizontalAlignment="Stretch"
+                                                             IsEnabled="{Binding IsBySumWorkTime}" />
+                                                </StackPanel>
+
+                                                <StackPanel Width="201" Margin="16,10,8,8" VerticalAlignment="Stretch"
+                                                            HorizontalAlignment="Left">
+                                                    <CheckBox IsChecked="{Binding IsByRole}">По правам в системе</CheckBox>
+                                                    <ComboBox IsEnabled="{Binding IsByRole}"
+                                                              Margin="0,-1,0,0"
+
+                                                              Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                                              DisplayMemberPath="Description"
+                                                              ItemsSource="{Binding Source={converters1:Enumeration {x:Type model:Role}}}"
+                                                              SelectedValue="{Binding Entity.Role}"
+                                                              SelectedValuePath="Value"
+                                                              materialDesign:HintAssist.Hint="Права" />
+                                                </StackPanel>
+                                            </StackPanel>
                                         </StackPanel>
-                                        <StackPanel VerticalAlignment="Stretch" Margin="7,0,0,0" Orientation="Horizontal" Height="128">
-                                            <StackPanel Width="94" Margin="16,8,0,0" VerticalAlignment="Stretch"
-                                                        HorizontalAlignment="Left">
-                                                <CheckBox IsChecked="{Binding IsByDateBirth}">По полу</CheckBox>
-                                                <RadioButton  IsEnabled="{Binding IsByGender}"
-                                                             Style="{StaticResource MaterialDesignRadioButton}">
-                                                    Мужской
-                                                </RadioButton>
-                                                <RadioButton  IsEnabled="{Binding IsByGender}"
-                                                             Style="{StaticResource MaterialDesignRadioButton}">
-                                                    Женский
-                                                </RadioButton>
-                                            </StackPanel>
-                                            <StackPanel Width="152" Margin="16,8,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Left">
-                                                <CheckBox IsChecked="{Binding IsByDateBirth}">По дате рождения</CheckBox>
-                                                <DatePicker SelectedDate="{Binding LowDateBirthBound}" materialDesign:HintAssist.Hint="Нижняя граница"
-                                                            Style="{StaticResource MaterialDesignFloatingHintDatePicker}" Margin="0,0,0,8"
-                                                            HorizontalAlignment="Stretch" IsEnabled="{Binding IsByDateBirth}"/>
-                                                <DatePicker SelectedDate="{Binding HighDateBirthBound}" materialDesign:HintAssist.Hint="Верхняя граница"
-                                                            Style="{StaticResource MaterialDesignFloatingHintDatePicker}" Margin="0,0,0,8"
-                                                            HorizontalAlignment="Stretch" IsEnabled="{Binding IsByDateBirth}"/>
-                                            </StackPanel>
-                                            <StackPanel Width="152" Margin="16,8,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Left">
-                                                <CheckBox IsChecked="{Binding IsByDateBirth}">По часам работы</CheckBox>
-                                                <TextBox materialDesign:HintAssist.Hint="Нижняя граница"
-                                                            
-                                                            HorizontalAlignment="Stretch" IsEnabled="{Binding IsByDateBirth}"/>
-                                                <TextBox materialDesign:HintAssist.Hint="Верхняя граница"
-                                                            
-                                                            HorizontalAlignment="Stretch" IsEnabled="{Binding IsByDateBirth}"/>
-                                            </StackPanel>
-
-                                            <StackPanel Width="152" Margin="16,10,8,8" VerticalAlignment="Stretch" HorizontalAlignment="Left">
-                                                <CheckBox IsChecked="{Binding IsByDateBirth}">По правам в системе</CheckBox>
-                                                <ComboBox></ComboBox>
-                                            </StackPanel>
-                                        </StackPanel>
-                                    </StackPanel>
+                                    </materialDesign:Card>
                                 </materialDesign:DrawerHost.BottomDrawerContent>
 
                             </materialDesign:DrawerHost>
@@ -291,14 +346,14 @@
                                                             Width="24" />
                                                     </employees:NavigateButton>
 
-                                                    <Button Margin="0"
-                                                            Foreground="{StaticResource MaterialDesignBodyLight}"
-                                                            Style="{StaticResource MaterialDesignFlatButton}">
+                                                    <local:DialogButton DialogUri="EmployeeInfo.xaml" Margin="0"
+                                                                        Foreground="{StaticResource MaterialDesignBodyLight}"
+                                                                        Style="{StaticResource MaterialDesignFlatButton}">
                                                         <materialDesign:PackIcon
                                                             Kind="InfoOutline"
                                                             Height="24"
                                                             Width="24" />
-                                                    </Button>
+                                                    </local:DialogButton>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
@@ -312,7 +367,8 @@
             </Grid>
 
             <Grid Visibility="{Binding IsCardTab, Converter={StaticResource BoolVisibilityConverter}}">
-                <DockPanel LastChildFill="True">
+                <DockPanel LastChildFill="True"
+                           DataContext="{Binding CardDictionaryViewModel}">
                     <StackPanel Panel.ZIndex="3" DockPanel.Dock="Bottom">
                         <Button Panel.ZIndex="1" HorizontalAlignment="Right" Margin="0 0 16 -32"
                                 materialDesign:ShadowAssist.ShadowDepth="Depth3"
@@ -360,6 +416,7 @@
                                                 materialDesign:TextFieldAssist.DecorationVisibility="Hidden"
                                                 BorderThickness="0"
                                                 MinWidth="200"
+                                                Style="{StaticResource MaterialDesignTextBox}"
                                                 VerticalAlignment="Center"
                                                 Text="{Binding EntityGrid.SearchString}" />
                                         </Grid>
@@ -372,48 +429,123 @@
                                         Panel.ZIndex="1"
                                         Margin="16 0 0 0"
                                         materialDesign:ShadowAssist.ShadowDepth="Depth1" Height="40">
-                                        <elements:Paginator />
+                                        <elements:Paginator DataContext="{Binding PaginatorViewModel}" />
                                     </materialDesign:ColorZone>
-                                    <ToggleButton Margin="8,0,0,0"
+                                    <ToggleButton Margin="16,0,0,0"
                                                   Style="{StaticResource MaterialDesignActionToggleButton}"
-                                                  IsChecked="{Binding EntityGrid.IsSearchDrawerOpened}"
+                                                  IsChecked="{Binding IsFilterDrawerOpened}"
                                                   ToolTip="Расширенный поиск">
                                         <ToggleButton.Content>
-                                            <materialDesign:PackIcon
-                                                Kind="Search" />
+                                            <materialDesign:PackIcon Height="24" Width="24"
+                                                                     Kind="FilterMenu"
+                                                                     RenderTransformOrigin=".5,.5">
+                                                <materialDesign:PackIcon.RenderTransform>
+                                                    <RotateTransform
+                                                        Angle="180" />
+
+                                                </materialDesign:PackIcon.RenderTransform>
+                                            </materialDesign:PackIcon>
                                         </ToggleButton.Content>
                                         <materialDesign:ToggleButtonAssist.OnContent>
-                                            <materialDesign:PackIcon
-                                                Kind="ArrowDown" />
+                                            <materialDesign:PackIcon Height="24" Width="24"
+                                                                     Kind="ArrowDown" />
                                         </materialDesign:ToggleButtonAssist.OnContent>
                                     </ToggleButton>
                                 </StackPanel>
                             </DockPanel>
                         </materialDesign:ColorZone>
                     </StackPanel>
-                    <Grid VerticalAlignment="Stretch"
-
-                          DataContext="{Binding CardDictionary,Source={StaticResource Locator}}">
+                    <Grid VerticalAlignment="Stretch" Margin="0,0,0,-24">
                         <DockPanel LastChildFill="True">
                             <materialDesign:DrawerHost DockPanel.Dock="Bottom"
-                                                       materialDesign:ShadowAssist.ShadowDepth="Depth5"
-
                                                        IsBottomDrawerOpen="{Binding IsFilterDrawerOpened}">
                                 <materialDesign:DrawerHost.BottomDrawerContent>
-                                    <StackPanel Orientation="Horizontal" Height="128"
-                                                Background="{StaticResource MaterialDesignCardBackground}">
-                                        <TextBlock>TEst</TextBlock>
-                                    </StackPanel>
+                                    <materialDesign:Card Margin="16,16,16,1">
+                                        <StackPanel Orientation="Vertical"
+                                                    DataContext="{Binding FilterDefinition}"
+                                                    Background="{StaticResource MaterialDesignCardBackground}">
+                                            <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                                <TextBlock Margin="24,16,16,16"
+                                                           Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                                                           Text="Критерии выбора данных" />
+                                                <Button
+                                                    Margin="0,0,0,0"
+                                                    Style="{StaticResource MaterialDesignFlatButton}"
+                                                    ToolTip="Icon">
+                                                    <Button.Content>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <materialDesign:PackIcon Margin="0,0,4,0" Kind="Eraser" />
+                                                            <TextBlock>Очистить</TextBlock>
+                                                        </StackPanel>
+
+                                                    </Button.Content>
+                                                </Button>
+                                                <Button
+                                                    Margin="4,0,0,0"
+                                                    Style="{StaticResource MaterialDesignFlatButton}"
+                                                    ToolTip="Icon">
+                                                    <Button.Content>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <materialDesign:PackIcon Kind="Refresh" />
+                                                            <TextBlock Margin="4,0,0,0">Обновить</TextBlock>
+                                                        </StackPanel>
+
+                                                    </Button.Content>
+                                                </Button>
+                                            </StackPanel>
+                                            <StackPanel VerticalAlignment="Stretch" Margin="7,0,0,0"
+                                                        Orientation="Horizontal" Height="128">
+                                                <StackPanel Width="152" Margin="16,8,0,0" VerticalAlignment="Stretch"
+                                                            HorizontalAlignment="Left">
+                                                    <CheckBox IsChecked="{Binding IsByDatePass}">По дате сдачи</CheckBox>
+                                                    <DatePicker SelectedDate="{Binding LowDateBirthBound}"
+                                                                materialDesign:HintAssist.Hint="Нижняя граница"
+                                                                Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                                                                Margin="0,4,0,0"
+                                                                HorizontalAlignment="Stretch"
+                                                                IsEnabled="{Binding IsByDatePass}" />
+                                                    <DatePicker SelectedDate="{Binding HighDateBirthBound}"
+                                                                materialDesign:HintAssist.Hint="Верхняя граница"
+                                                                Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                                                                Margin="0,4,0,0"
+                                                                HorizontalAlignment="Stretch"
+                                                                IsEnabled="{Binding IsByDatePass}" />
+                                                </StackPanel>
+                                                <StackPanel Width="225" Margin="16,8,0,0" VerticalAlignment="Stretch"
+                                                            HorizontalAlignment="Left">
+                                                    <CheckBox IsChecked="{Binding IsBySumWorkTime}">По сумме отработанных часов</CheckBox>
+                                                    <TextBox Margin="0,4,0,0"
+                                                             materialDesign:HintAssist.Hint="Нижняя граница"
+                                                             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                                             HorizontalAlignment="Stretch"
+                                                             IsEnabled="{Binding IsBySumWorkTime}" />
+                                                    <TextBox Margin="0,4,0,0"
+                                                             materialDesign:HintAssist.Hint="Верхняя граница"
+                                                             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                                             HorizontalAlignment="Stretch"
+                                                             IsEnabled="{Binding IsBySumWorkTime}" />
+                                                </StackPanel>
+
+                                                <StackPanel Width="197" Margin="16,8,0,0" VerticalAlignment="Stretch"
+                                                            HorizontalAlignment="Left">
+                                                    <CheckBox IsChecked="{Binding IsByEmployee}">По работнику</CheckBox>
+                                                    <ComboBox Margin="0,1,0,0"
+                                                        Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                                        materialDesign:HintAssist.Hint="Работник"
+                                                        IsEnabled="{Binding IsByEmployee}"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </materialDesign:Card>
                                 </materialDesign:DrawerHost.BottomDrawerContent>
 
                             </materialDesign:DrawerHost>
-
                             <DataGrid
                                 Margin="16"
+                                CanUserResizeRows="False"
                                 Background="{Binding ElementName=OwnControl, Path=Background}"
                                 CanUserSortColumns="True"
                                 CanUserAddRows="False"
-                                CanUserResizeColumns="True"
                                 CellStyle="{StaticResource CellStyle}"
                                 SelectionMode="Single"
                                 IsReadOnly="True"
@@ -436,37 +568,54 @@
                                                                      IsReadOnly="True" MinWidth="32"
 
                                                                      Header="№" />
-
                                     <elements:DataGridAdaptiveColumn
                                         Binding="{Binding WorkLoadTimeMonday, StringFormat='00:00'}"
                                         CanUserReorder="True"
-
+                                        CanUserResize="False"
                                         Width="64"
                                         Header="Пн" />
                                     <elements:DataGridAdaptiveColumn
                                         Binding="{Binding WorkLoadTimeTuesday, StringFormat='00:00'}"
                                         CanUserReorder="True"
-
+                                        CanUserResize="False"
                                         Width="64"
-
                                         Header="Вт" />
                                     <elements:DataGridAdaptiveColumn
                                         Binding="{Binding WorkLoadTimeWednesday, StringFormat='00:00'}"
                                         CanUserReorder="True"
-
-                                        Visibility="{Binding Data.IsCompact, Source={StaticResource proxy}, Converter={StaticResource BoolNotVisibilityConverter}}"
+                                        CanUserResize="False"
                                         Width="64"
                                         Header="Ср" />
                                     <elements:DataGridAdaptiveColumn
                                         Binding="{Binding WorkLoadTimeThursday, StringFormat='00:00'}"
                                         Header="Чт"
+                                        CanUserResize="False"
                                         Width="64"
                                         CanUserReorder="True" />
                                     <elements:DataGridAdaptiveColumn
                                         Binding="{Binding WorkLoadTimeFriday, StringFormat='00:00'}"
                                         Header="Пт"
+                                        CanUserResize="False"
                                         Width="64"
                                         CanUserReorder="True" />
+                                    <elements:DataGridAdaptiveColumn
+                                        Binding="{Binding Payment, StringFormat='### ### ##0₽'}"
+                                        Header="Почасовая З/П"
+                                        CanUserResize="False"
+                                        Width="120"
+                                        CanUserReorder="True" />
+                                    <elements:DataGridAdaptiveColumn
+                                        Binding="{Binding PaymentFull, StringFormat='### ### ##0₽'}"
+                                        Header="Почасовая З/П"
+                                        CanUserResize="False"
+                                        Width="150"
+                                        CanUserReorder="True" />
+                                    <elements:DataGridAdaptiveColumn
+                                        Binding="{Binding WorkLoadTimeMonday}"
+                                        CanUserReorder="True"
+                                        CanUserResize="False"
+                                        Width="180"
+                                        Header="Идентификатор работника" />
                                     <DataGridTemplateColumn CanUserReorder="True" Width="*" />
 
                                     <DataGridTemplateColumn CanUserReorder="False" MinWidth="190">

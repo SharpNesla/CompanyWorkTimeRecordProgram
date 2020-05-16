@@ -23,7 +23,7 @@ namespace Employees.ValidationRules
                 return new ValidationResult(false, $"{FieldName} не может быть пустым");
             if (!Regex.IsMatch(strValue, @"^[а-яА-Я-а-яА-Я ]*([а-я])$"))
             {
-                return new ValidationResult(false, $"{FieldName} содержит не правильные символы");
+                return new ValidationResult(false, $"{FieldName} содержит некорректные символы");
             }
             else
             {

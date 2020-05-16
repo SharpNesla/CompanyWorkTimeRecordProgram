@@ -16,7 +16,7 @@
                     <TextBlock
                         Style="{StaticResource MaterialDesignHeadline5TextBlock}"
                         VerticalAlignment="Center"
-                        Margin="8 0 0 0" Text="Удалить?" />
+                        Margin="8 0 0 0" Text="Удалить элемент?" />
                 </StackPanel>
 
             </DockPanel>
@@ -30,7 +30,7 @@
             <Button Name="Remove" DockPanel.Dock="Left" MaxWidth="132"
                     Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
                     Style="{StaticResource MaterialDesignFlatButton}" Margin="0,0,20,0">
-                УДАЛИТЬ
+                ПРИНЯТЬ
             </Button>
         </DockPanel>
     </DockPanel>

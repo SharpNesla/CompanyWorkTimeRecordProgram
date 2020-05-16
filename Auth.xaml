@@ -7,32 +7,17 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid VerticalAlignment="Stretch">
+        <Grid.Background>
+            <ImageBrush ImageSource="Frame 1 (1).png" Stretch="UniformToFill" />
+        </Grid.Background>
         <materialDesign:Snackbar MessageQueue="{materialDesign:MessageQueue}"/>
         <materialDesign:Card Width="300" VerticalAlignment="Center">
             <StackPanel>
                 <materialDesign:ColorZone Mode="PrimaryMid" materialDesign:ShadowAssist.ShadowDepth="Depth2" Padding="16">
                     <DockPanel LastChildFill="True">
-                        <Viewbox Visibility="Collapsed" DockPanel.Dock="Left" Height="16" Width="16" Margin="5" Stretch="Uniform">
-                            <Canvas Width="620"
-                              Height="620">
-                                <Path Fill="{StaticResource MaterialDesignDarkForeground}"
-                              Data="M351.964,402.256c-23.792,38.759-70.714,31.951-85.666,1.355
-		c-39.451,42.854-71.625-1.412-71.625-1.412c7.22,57.175,56,101.356,115.143,101.356c60.086,0,109.501-45.642,115.437-104.182
-		C425.253,399.375,372.367,430.13,351.964,402.256L351.964,402.256z" />
-                                <Path Fill="{StaticResource MaterialDesignDarkForeground}"
-                              Data="M309.978,531.923c-75.934,0-137.484-61.531-137.484-137.47c0-75.91,61.541-137.465,137.484-137.465
-		c75.91,0,137.461,61.556,137.461,137.465C447.438,470.392,385.888,531.923,309.978,531.923L309.978,531.923z M66.851,177.504
-		v427.519c0,8.987,7.59,16.269,17,16.269h453.601c9.386,0,16.99-7.281,16.99-16.269V177.504H66.851L66.851,177.504z" />
-                                <Path Fill="{StaticResource MaterialDesignDarkForeground}"
-                              Data="M237.078,97.522c-13.454,0-24.375-10.922-24.375-24.376c0-13.477,10.922-24.38,24.375-24.38
-		c13.463,0,24.385,10.903,24.385,24.38C261.473,86.6,250.55,97.522,237.078,97.522L237.078,97.522z M156.574,97.522
-		c-13.463,0-24.375-10.922-24.375-24.376c0-13.477,10.913-24.38,24.375-24.38c13.468,0,24.381,10.903,24.381,24.38
-		C180.964,86.6,170.052,97.522,156.574,97.522L156.574,97.522z M537.451,0H83.85c-9.41,0-17,7.855-17,17.554v128.724h487.591V17.554
-		C554.441,7.855,546.837,0,537.451,0L537.451,0z" />
-                            </Canvas>
-                        </Viewbox>
-                        <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" TextAlignment="Center" Height="29">
-                      <Run Text="Предприятие" />
+                        <materialDesign:PackIcon Kind="Accounts" Height="32" Width="32"></materialDesign:PackIcon>
+                        <TextBlock Margin="0,0,32,0" Style="{StaticResource MaterialDesignHeadline6TextBlock}" TextAlignment="Center" Height="29">
+                      <Run Text="Организация" />
                         </TextBlock>
                     </DockPanel>
                 </materialDesign:ColorZone>

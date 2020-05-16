@@ -17,6 +17,7 @@ namespace Employees.Model
         public string Username { get; set; }
         public string PasswordHash { get; set; }
         public int SumWorkTime { get; set; }
+        public Role Role { get; set; }
         public List<Card> Cards { get; set; }
     }
 }
