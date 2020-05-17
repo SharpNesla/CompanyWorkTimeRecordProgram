@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Windows.Documents;
 using employees.Model;
 
@@ -16,7 +17,8 @@ namespace Employees.Model
         public string PhoneNumber{ get; set; }
         public string Username { get; set; }
         public string PasswordHash { get; set; }
-        public int SumWorkTime { get; set; }
+
+        //public int SumWorkTime { get; set; }
         public Role Role { get; set; }
         public List<Card> Cards { get; set; }
     }

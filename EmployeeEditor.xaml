@@ -32,7 +32,7 @@
                                       Style="{StaticResource MaterialDesignFlatButton}">
                 ОТМЕНИТЬ
             </employees:NavigateButton>
-            <Button DockPanel.Dock="Left" MaxWidth="132"
+            <Button DockPanel.Dock="Left" MaxWidth="132" Command="{Binding ApplyCommand}"
                     Style="{StaticResource MaterialDesignFlatButton}" Margin="0,0,20,0">
                 ПРИНЯТЬ
             </Button>

@@ -48,6 +48,8 @@ namespace employees
 
     public class EmployeeDictionaryViewModel : DictionaryViewModelBase<Employee, EmployeeFilterDefinition>
     {
+        private readonly EmployeeService _service;
+
         public List<Employee> Entities { get; set; } = new List<Employee>(new[]
             {
                 new Employee
@@ -98,8 +100,16 @@ namespace employees
             }
         );
 
-        public EmployeeDictionaryViewModel(PaginatorViewModel paginatorViewModel) : base(paginatorViewModel)
+        public EmployeeDictionaryViewModel(EmployeeService service ,PaginatorViewModel paginatorViewModel) 
+            : base(paginatorViewModel)
         {
+            _service = service;
+            this.Refresh();
+        }
+
+        public async void Refresh()
+        {
+            this.Entities = await this._service.Get("", "", true, new EmployeeFilterDefinition(), 1, 0);
         }
     }
 

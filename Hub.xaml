@@ -370,11 +370,12 @@
                 <DockPanel LastChildFill="True"
                            DataContext="{Binding CardDictionaryViewModel}">
                     <StackPanel Panel.ZIndex="3" DockPanel.Dock="Bottom">
-                        <Button Panel.ZIndex="1" HorizontalAlignment="Right" Margin="0 0 16 -32"
+                        <employees:NavigateButton NavigateUri="EmployeeEditor.xaml"
+                                                  Panel.ZIndex="1" HorizontalAlignment="Right" Margin="0 0 16 -32"
                                 materialDesign:ShadowAssist.ShadowDepth="Depth3"
                                 Style="{StaticResource MaterialDesignFloatingActionAccentButton}">
                             <materialDesign:PackIcon Kind="Plus" Height="24" Width="24" />
-                        </Button>
+                        </employees:NavigateButton>
                         <materialDesign:ColorZone materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                                   Mode="PrimaryMid"
                                                   Padding="16">

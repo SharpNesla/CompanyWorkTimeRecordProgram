@@ -29,8 +29,9 @@ namespace employees
         }
     }
 
-    public class EmployeeEditorViewModel
+    public class EmployeeEditorViewModel : ViewModelBase
     {
+        private readonly EmployeeService _employees;
         public bool IsNew { get; set; } = false;
         public virtual string EditorTitle
         {
@@ -39,5 +40,18 @@ namespace employees
 
         public bool IsPasswordChanging { get; set; }
         public Employee Entity { get; set; } = new Employee(){DateBirth = DateTime.Today};
+
+        public ICommand ApplyCommand { get; set; }
+
+        public EmployeeEditorViewModel(EmployeeService employees)
+        {
+            _employees = employees;
+            ApplyCommand = new RelayCommand(Apply);
+        }
+
+        public void Apply()
+        {
+            this._employees.Add(this.Entity);
+        }
     }
 }

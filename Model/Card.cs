@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,5 +20,7 @@ namespace employees.Model
         public int WorkLoadTimeWednesday { get; set; }
         public int WorkLoadTimeThursday { get; set; }
         public int WorkLoadTimeFriday { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public int SumWorkLoadTime { get; set; }
     }
 }
