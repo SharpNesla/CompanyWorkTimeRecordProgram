@@ -19,10 +19,10 @@ namespace employees.Model
             _applicationContext = applicationContext;
         }
 
-        public async Task<List<Employee>> Get(string searchString, string sortBy, bool sortDirection,
+        public List<Employee> Get(string searchString, string sortBy, bool sortDirection,
             EmployeeFilterDefinition filter, int limit, int offset)
         {
-            var request = this._applicationContext.Employees.AsQueryable();
+            var request = this._applicationContext.Employees.AsQueryable().Where(x => x.DeletedAt == null);
 
             if (filter.IsByGender)
                 request = request.Where(x => x.Gender == filter.Gender);
@@ -42,30 +42,35 @@ namespace employees.Model
             if (filter.IsByRole)
                 request = request.Where(x => x.Role == filter.Role);
 
-            return await request.OrderBy(x => x.Id).Skip(offset).Take(limit).ToListAsync();
+            return request.OrderBy(x => x.Id).Skip(offset).Take(limit).ToList();
         }
 
-        public async Task<Employee> GetById(int id)
+        public Employee GetById(int id)
         {
-            return await this._applicationContext.Employees.FindAsync(id);
+            return this._applicationContext.Employees.Find(id);
+        }
+        public long GetCount(string searchString, EmployeeFilterDefinition filter)
+        {
+            return this._applicationContext.Cards.Count();
         }
 
-        public async void Add(Employee employee)
+        public void Add(Employee employee)
         {
             _applicationContext.Employees.Add(employee);
-            await _applicationContext.SaveChangesAsync();
+            _applicationContext.SaveChanges();
         }
-        public async void Update(Employee employee)
+        public void Update(Employee employee)
         {
             _applicationContext.Entry(employee).State = EntityState.Modified;
-            await _applicationContext.SaveChangesAsync();
+            _applicationContext.SaveChanges();
         }
 
-        public async void Remove(Employee employee)
+        public void Remove(int id)
         {
+            var employee = GetById(id);
             employee.DeletedAt = DateTime.Now;
             _applicationContext.Entry(employee).State = EntityState.Modified;
-            await _applicationContext.SaveChangesAsync();
+            _applicationContext.SaveChanges();
         }
     }
 }

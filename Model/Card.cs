@@ -10,17 +10,16 @@ namespace employees.Model
 {
     public class Card : Entity
     {
-        public int EmployeeId { get; set; }
-        public Employee Employee { get; set; }
+        //public int EmployeeId { get; set; }
+        //public Employee Employee { get; set; }
         public decimal Payment { get; set; } = 200;
-        public decimal PaymentFull => 8750;
+        public decimal PaymentFull { get; set; }
         public DateTime DatePass { get; set; }
         public int WorkLoadTimeMonday { get; set; }
         public int WorkLoadTimeTuesday { get; set; }
         public int WorkLoadTimeWednesday { get; set; }
         public int WorkLoadTimeThursday { get; set; }
         public int WorkLoadTimeFriday { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public int SumWorkLoadTime { get; set; }
+        [NotMapped] public int SumWorkLoadTime { get; set; }
     }
 }

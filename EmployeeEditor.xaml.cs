@@ -12,46 +12,126 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Employees;
 using employees.Model;
 using Employees.Model;
 
 namespace employees
 {
-    /// <summary>
-    /// Interaction logic for EmployeeEditor.xaml
-    /// </summary>
-    public partial class EmployeeEditor
+    public abstract class EditorBase : ViewModelBase
     {
-        public EmployeeEditor()
+        public ICommand ApplyCommand => new RelayCommand<DependencyObject>(ApplyChanges);
+        /// <summary>
+        /// Производит UpdateSource всех textbox и combobox
+        /// в передаваемой view для обновления валидаций на полях
+        /// и проверяет их на валидность
+        /// </summary>
+        /// <param name="view"></param>
+        public virtual void ApplyChanges(DependencyObject view)
         {
-            InitializeComponent();
-            
+            var tree = FindVisualChildren<TextBox>(view);
+            var comboboxes = FindVisualChildren<ComboBox>(view).Where(x => x.IsEnabled);
+            foreach (TextBox tb in tree)
+            {
+                tb.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+            }
+
+            foreach (ComboBox tb in comboboxes)
+            {
+                tb.GetBindingExpression(ComboBox.SelectedItemProperty)?.UpdateSource();
+            }
+
+
+            foreach (TextBox tb in tree)
+            {
+                if (Validation.GetHasError(tb))
+                {
+                    return;
+                }
+            }
+
+            foreach (var cb in comboboxes)
+            {
+                if (Validation.GetHasError(cb))
+                {
+                    return;
+                }
+            }
+
+            this.Apply();
+        } 
+        /// <summary>
+        /// Применить изменения или добавить сущность
+        /// в базу данных
+        /// </summary>
+        public abstract void Apply();
+        /// <summary>
+        /// Метод, позволяющий получить всех детей данного
+        /// элемента в визуальном дереве элементов View
+        /// </summary>
+        /// <typeparam name="T">Тип отбираемого контрола</typeparam>
+        /// <param name="depObj">View или её элемент</param>
+        /// <returns>Перечислимое всех детей данного элемент</returns>
+        public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
+        {
+            if (depObj != null)
+            {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+                {
+                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+                    if (child != null && child is T)
+                    {
+                        yield return (T)child;
+                    }
+
+                    foreach (T childOfChild in FindVisualChildren<T>(child))
+                    {
+                        yield return childOfChild;
+                    }
+                }
+            }
         }
     }
 
-    public class EmployeeEditorViewModel : ViewModelBase
+    public class EmployeeEditorViewModel : EditorBase
     {
+        private readonly IShell _shell;
         private readonly EmployeeService _employees;
-        public bool IsNew { get; set; } = false;
+        public bool IsNew { get; set; } = true;
         public virtual string EditorTitle
         {
             get { return !IsNew ? $"Редактирование информации о работнике №{Entity.Id}" : $"Добавление информации о работнике"; }
         }
 
         public bool IsPasswordChanging { get; set; }
-        public Employee Entity { get; set; } = new Employee(){DateBirth = DateTime.Today};
-
-        public ICommand ApplyCommand { get; set; }
-
-        public EmployeeEditorViewModel(EmployeeService employees)
+        public Employee Entity { get; set; }
+        
+        public EmployeeEditorViewModel(IShell shell, EmployeeService employees)
         {
+            _shell = shell;
             _employees = employees;
-            ApplyCommand = new RelayCommand(Apply);
+            if (shell.LastNavigatedParameter == null)
+            {
+                this.Entity = new Employee();
+            }
+            else
+            {
+                this.Entity = employees.GetById((int) shell.LastNavigatedParameter);
+                IsNew = false;
+            }
         }
 
-        public void Apply()
+        public override void Apply()
         {
-            this._employees.Add(this.Entity);
+            if (IsNew)
+            {
+                _employees.Add(this.Entity);
+            }
+            else
+            {
+                _employees.Update(this.Entity);
+            }
+            _shell.NavigateByUri(CompanyUris.Hub);
         }
     }
 }

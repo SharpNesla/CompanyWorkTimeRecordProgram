@@ -1,8 +1,7 @@
-﻿<NavigationWindow x:Class="Employees.ShellWindow"
+﻿<NavigationWindow x:Class="Employees.Shell"
                   TextElement.FontWeight="Medium"
                   TextElement.FontSize="14"
                   FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-
                   Background="{StaticResource MaterialDesignPaper}"
                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,15 +9,33 @@
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                   xmlns:local="clr-namespace:Employees"
                   xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                  xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
                   mc:Ignorable="d"
                   Source="Auth.xaml"
                   ShowsNavigationUI="False"
-                  Title="ShellWindow"
+                  Title="Shell"
+                  DataContext="{Binding Source={StaticResource Locator}, Path=ShellWindowViewModel}"
                   WindowStartupLocation="CenterScreen"
+                  Name="ShellWindowView"
                   MinHeight="600" MinWidth="800">
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="LoadCompleted">
+            <b:InvokeCommandAction Command="{Binding InitializeWindow}"
+                                   CommandParameter="{Binding ElementName=ShellWindowView}"/>
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
     <NavigationWindow.ContentTemplate>
         <DataTemplate>
-            <materialDesign:DialogHost DialogTheme="Inherit">
+            <materialDesign:DialogHost DialogTheme="Inherit" Name="GlobalDialogHost">
+                <b:Interaction.Triggers>
+                    <b:EventTrigger EventName="Loaded">
+                        <b:InvokeCommandAction Command="{Binding DataContext.InitializeDialogHost, ElementName=ShellWindowView}"
+                                               CommandParameter="{Binding Path=.,ElementName=GlobalDialogHost}"/>
+                    </b:EventTrigger>
+                </b:Interaction.Triggers>
+                <materialDesign:DialogHost.DialogContent>
+                    <Frame></Frame>
+                </materialDesign:DialogHost.DialogContent>
                 <ContentControl
                     Content="{Binding Content, RelativeSource={RelativeSource AncestorType=NavigationWindow}}" />
             </materialDesign:DialogHost>

@@ -10,7 +10,7 @@
       xmlns:converters="clr-namespace:employees.Converters.Laundry.Utils.Converters"
       xmlns:model="clr-namespace:Employees.Model"
       mc:Ignorable="d" d:DesignWidth="800"
-      Title="EmployeeEditor"
+      Name="EmployeeEditorView"
       DataContext="{Binding Source={StaticResource Locator}, Path=EmployeeEditor}">
 
     <DockPanel VerticalAlignment="Stretch">
@@ -33,6 +33,7 @@
                 ОТМЕНИТЬ
             </employees:NavigateButton>
             <Button DockPanel.Dock="Left" MaxWidth="132" Command="{Binding ApplyCommand}"
+                    CommandParameter="{Binding ElementName=EmployeeEditorView}"
                     Style="{StaticResource MaterialDesignFlatButton}" Margin="0,0,20,0">
                 ПРИНЯТЬ
             </Button>

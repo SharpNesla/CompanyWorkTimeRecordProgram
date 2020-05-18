@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,9 +13,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Employees;
 using employees.Elements;
 using employees.Model;
 using Employees.Model;
+using Microsoft.Win32;
+using NPOI.SS.UserModel;
+using NPOI.SS.Util;
+using NPOI.XSSF.UserModel;
 
 namespace employees
 {
@@ -37,7 +43,7 @@ namespace employees
     {
         public bool IsFilterDrawerOpened { get; set; } = true;
         public TFilter FilterDefinition { get; set; } = new TFilter();
-
+        public string SearchString { get; set; }
         public PaginatorViewModel PaginatorViewModel { get; private set; }
 
         public DictionaryViewModelBase(PaginatorViewModel paginatorViewModel)
@@ -46,80 +52,120 @@ namespace employees
         }
     }
 
-    public class EmployeeDictionaryViewModel : DictionaryViewModelBase<Employee, EmployeeFilterDefinition>
+    public class EmployeeDictionaryViewModel : DictionaryViewModelBase<Employee, EmployeeFilterDefinition>, IPaginable
     {
+        private readonly IShell _shell;
         private readonly EmployeeService _service;
 
-        public List<Employee> Entities { get; set; } = new List<Employee>(new[]
-            {
-                new Employee
-                {
-                    Id = 12,
-                    Name = "Василий",
-                    Surname = "Иванов",
-                    Patronymic = "Иванович",
-                    PhoneNumber = "80572523765",
-                    DateBirth = new DateTime(1985, 3, 4)
-                },
-                new Employee
-                {
-                    Id = 12,
-                    Name = "Василий",
-                    Surname = "Иванов",
-                    Patronymic = "Иванович",
-                    PhoneNumber = "80572523765",
-                    DateBirth = new DateTime(1985, 3, 4)
-                },
-                new Employee
-                {
-                    Id = 12,
-                    Name = "Василий",
-                    Surname = "Иванов",
-                    Patronymic = null,
-                    PhoneNumber = "80572523765",
-                    DateBirth = new DateTime(1985, 3, 4)
-                },
-                new Employee
-                {
-                    Id = 12,
-                    Name = "Василий",
-                    Surname = "Иванов",
-                    Patronymic = "Иванович",
-                    PhoneNumber = "80572523765",
-                    DateBirth = new DateTime(1985, 3, 4)
-                },
-                new Employee
-                {
-                    Id = 12,
-                    Name = "Василий",
-                    Surname = "Иванов",
-                    Patronymic = "Иванович",
-                    PhoneNumber = "80572523765",
-                    DateBirth = new DateTime(1985, 3, 4)
-                }
-            }
-        );
+        public List<Employee> Entities { get; set; }
 
-        public EmployeeDictionaryViewModel(EmployeeService service ,PaginatorViewModel paginatorViewModel) 
+        public ICommand AddEmployeeCommand =>
+            new RelayCommand(() => _shell.NavigateByUri(CompanyUris.EmployeeEditor));
+
+        public ICommand EditEmployeeCommand =>
+            new RelayCommand<Employee>(x => _shell.NavigateByUri(CompanyUris.EmployeeEditor, x.Id));
+
+        public ICommand ViewEmployeeInfoCommand =>
+            new RelayCommand<Employee>(
+                x => _shell.OpenDialogByUri(CompanyUris.EmployeeInfo, true, x.Id));
+
+        public ICommand DeleteEmployeeCommand =>
+            new RelayCommand<Card>(x => _shell.OpenDialogByUri(
+                CompanyUris.DeleteDialog, false,
+                () => StateChanged?.Invoke(),
+                new object[] { x.Id, _service }));
+
+        public EmployeeDictionaryViewModel(IShell shell, EmployeeService service, PaginatorViewModel paginatorViewModel)
             : base(paginatorViewModel)
         {
+            _shell = shell;
             _service = service;
             this.Refresh();
         }
 
-        public async void Refresh()
+        public void Refresh()
         {
-            this.Entities = await this._service.Get("", "", true, new EmployeeFilterDefinition(), 1, 0);
+            this.Entities = this._service.Get("", "", true, new EmployeeFilterDefinition(), 1, 0);
         }
+
+        public long Count => this._service.GetCount(SearchString, FilterDefinition);
+
+        public void Refresh(int page, int elements)
+        {
+            this.Entities = this._service.Get(SearchString, "", true, FilterDefinition,
+                elements, page * elements);
+        }
+
+        public event Action StateChanged;
     }
 
-    public class CardDictionaryViewModel : DictionaryViewModelBase<Card, CardFilterDefinition>
+    public class CardDictionaryViewModel : DictionaryViewModelBase<Card, CardFilterDefinition>, IPaginable
     {
-        public List<Card> Entities { get; set; } = new List<Card>(new[]
-            {new Card {WorkLoadTimeWednesday = 843, Employee = new Employee {Name = "Василий"}}});
+        private readonly IShell _shell;
+        private readonly CardService _service;
 
-        public CardDictionaryViewModel(PaginatorViewModel paginatorViewModel) : base(paginatorViewModel)
+        public List<Card> Entities { get; set; }
+
+        public ICommand AddCardCommand =>
+            new RelayCommand(() => _shell.NavigateByUri(CompanyUris.CardEditor));
+
+        public ICommand EditCardCommand =>
+            new RelayCommand<Card>(x => _shell.NavigateByUri(CompanyUris.CardEditor, x.Id));
+
+        public ICommand ViewCardInfoCommand =>
+            new RelayCommand<Card>(
+                x => _shell.OpenDialogByUri(CompanyUris.CardInfo, true, x.Id));
+
+        public ICommand DeleteCardCommand =>
+            new RelayCommand<Card>(x => _shell.OpenDialogByUri(
+                CompanyUris.DeleteDialog, false,
+                () => StateChanged?.Invoke(),
+                new object[] {x.Id, _service}));
+
+        public CardDictionaryViewModel(IShell shell, CardService service, PaginatorViewModel paginatorViewModel)
+            : base(paginatorViewModel)
         {
+            _shell = shell;
+            _service = service;
+            this.PaginatorViewModel.RegisterPaginable(this, true);
+        }
+
+        public long Count => this._service.GetCount(SearchString, FilterDefinition);
+
+        public void Refresh(int page, int elements)
+        {
+            this.Entities = this._service.Get(SearchString, "", true, FilterDefinition,
+                elements, page * elements);
+        }
+
+        public event Action StateChanged;
+
+        public void ExportToExcel()
+        {
+            var workbook = new XSSFWorkbook();
+
+            IWorkbook preparedWorkBook = null; //PrepareWorkBook(workbook);
+
+            var dialog = new SaveFileDialog
+            {
+                InitialDirectory = @"~/Documents",
+                Title = $"Путь к экспортируемой таблице карточек загруженности",
+                AddExtension = true,
+                Filter = "Файлы Excel 2007 (*.xlsx)|*.xlsx|Все остальные файлы (*.*)|*.*"
+            };
+            if (dialog.ShowDialog() == true)
+            {
+                if (!File.Exists(dialog.FileName))
+                {
+                    File.Delete(dialog.FileName);
+                }
+
+                //запись в файл
+                using (var fs = new FileStream(dialog.FileName, FileMode.Create, FileAccess.Write))
+                {
+                    preparedWorkBook.Write(fs);
+                }
+            }
         }
     }
 }

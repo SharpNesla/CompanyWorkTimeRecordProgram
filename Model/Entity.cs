@@ -12,7 +12,7 @@ namespace employees.Model
         [Key]
         public int Id { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime DeletedAt { get; set; }
+        public DateTime? DeletedAt { get; set; }
         public string Comment { get; set; }
     }
 }

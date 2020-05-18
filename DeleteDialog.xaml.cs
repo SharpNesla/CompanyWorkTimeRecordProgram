@@ -12,17 +12,34 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Employees;
+using employees.Model;
 
 namespace employees
 {
-    /// <summary>
-    /// Interaction logic for DeleteDialog.xaml
-    /// </summary>
-    public partial class DeleteDialog : Page
+    public class DeleteDialogViewModel
     {
-        public DeleteDialog()
+        private readonly IShell _shell;
+
+        public ICommand ApplyCommand =>
+            new RelayCommand(() =>
+            {
+                var parameters = _shell.LastNavigatedDialogParameter as object[];
+                var id = (int) parameters[0];
+                if (parameters[1] is EmployeeService)
+                {
+                    (parameters[1] as EmployeeService).Remove(id);
+                }
+                else
+                {
+                    (parameters[1] as CardService).Remove(id);
+                }
+                _shell.TryCloseDialog();
+            });
+        public ICommand RejectCommand => new RelayCommand(()=>_shell.TryCloseDialog());
+        public DeleteDialogViewModel(IShell shell)
         {
-            InitializeComponent();
+            _shell = shell;
         }
     }
 }

@@ -33,7 +33,8 @@
                                   Style="{StaticResource MaterialDesignFlatButton}">
                 ОТМЕНИТЬ
             </local:NavigateButton>
-            <Button DockPanel.Dock="Left" MaxWidth="132"
+            <Button DockPanel.Dock="Left" MaxWidth="132" Command="{Binding ApplyCommand}"
+                    CommandParameter="{Binding ElementName=EmployeeEditorView}"
                     Style="{StaticResource MaterialDesignFlatButton}" Margin="0,0,20,0">
                 ПРИНЯТЬ
             </Button>
@@ -78,30 +79,29 @@
                                                    materialDesign:HintAssist.Hint="Вторник"
                                                    Is24Hours="True"
                                                    SelectedTimeFormat="Short"
-                                                   SelectedTime="{Binding Entity.WorkLoadTimeMonday, Converter={StaticResource TimeStringIntConverter}}" Height="37" />
+                                                   SelectedTime="{Binding Entity.WorkLoadTimeTuesday, Converter={StaticResource TimeStringIntConverter}}" Height="37" />
                             <materialDesign:TimePicker Margin="0,0,15,0"  Grid.Column="2"
                                                    materialDesign:HintAssist.IsFloating="True"
 
                                                    materialDesign:HintAssist.Hint="Среда"
                                                    Is24Hours="True"
                                                    SelectedTimeFormat="Short"
-                                                   SelectedTime="{Binding Entity.WorkLoadTimeMonday, Converter={StaticResource TimeStringIntConverter}}" Height="37" />
+                                                   SelectedTime="{Binding Entity.WorkLoadTimeWednesday, Converter={StaticResource TimeStringIntConverter}}" Height="37" />
                             <materialDesign:TimePicker Margin="1,0,8,0"  Grid.Column="3"
                                                    materialDesign:HintAssist.IsFloating="True"
 
                                                    materialDesign:HintAssist.Hint="Четверг"
                                                    Is24Hours="True"
                                                    SelectedTimeFormat="Short"
-                                                   SelectedTime="{Binding Entity.WorkLoadTimeMonday, Converter={StaticResource TimeStringIntConverter}}" Height="37" />
+                                                   SelectedTime="{Binding Entity.WorkLoadTimeFriday, Converter={StaticResource TimeStringIntConverter}}" Height="37" />
                             <materialDesign:TimePicker Margin="8,0,0,0"  Grid.Column="4"
                                                    materialDesign:HintAssist.IsFloating="True"
-
                                                    materialDesign:HintAssist.Hint="Пятница"
                                                    Is24Hours="True"
                                                    SelectedTimeFormat="Short"
                                                    SelectedTime="{Binding Entity.WorkLoadTimeMonday, Converter={StaticResource TimeStringIntConverter}}" Height="37" />
                         </Grid>
-                        <TextBlock Text="{Binding Entity.PaymentFull, StringFormat='Отработано всего: 43:45'}"
+                        <TextBlock Text="{Binding SumWorkLoadTime, StringFormat='Отработано всего: ##0:00'}"
                                    Margin="0,0,0,8"/>
                         <TextBlock Text="{Binding Entity.PaymentFull, StringFormat='Заработная плата за неделю: # ##0₽'}"
                                    Margin="0,0,0,8"/>

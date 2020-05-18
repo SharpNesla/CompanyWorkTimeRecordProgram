@@ -22,12 +22,15 @@
                 </MultiBinding>
             </TextBlock.Text>
         </TextBlock>
-        <Button Name="MovePrevious" Margin="0" Foreground="{StaticResource MaterialDesignBodyLight}"
+        <Button Command="{Binding MovePreviousCommand}" Name="MovePrevious" 
+                Margin="0" Foreground="{StaticResource MaterialDesignBodyLight}"
             IsEnabled="{Binding IsMovePreviousEnabled}"
             Style="{StaticResource MaterialDesignFlatButton}">
             <materialDesign:PackIcon Kind="ArrowLeft" Height="24" Width="20" />
         </Button>
-        <Button  Name="MoveNext" Margin="0,0,4,0" Foreground="{StaticResource MaterialDesignBodyLight}" 
+        <Button 
+            Command="{Binding MoveNextCommand}"
+            Name="MoveNext" Margin="0,0,4,0" Foreground="{StaticResource MaterialDesignBodyLight}" 
             IsEnabled="{Binding IsMoveNextEnabled}"
             Style="{StaticResource MaterialDesignFlatButton}">
             <materialDesign:PackIcon Kind="ArrowRight" Height="24" Width="20" />

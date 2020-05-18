@@ -56,6 +56,10 @@ namespace employees.Elements
     /// </summary>
     public class PaginatorViewModel : ViewModelBase
     {
+        public ICommand MovePreviousCommand => new RelayCommand(MovePrevious);
+
+        public ICommand MoveNextCommand => new RelayCommand(MoveNext);
+
         private int _currentPage;
         private long _count;
         private int _elementsPerPage;

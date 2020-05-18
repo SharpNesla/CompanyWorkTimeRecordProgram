@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace employees.Model
 {
-    class CardService { 
+    public class CardService { 
     private readonly ApplicationContext _applicationContext;
 
     public CardService(ApplicationContext applicationContext)
@@ -15,13 +15,13 @@ namespace employees.Model
         _applicationContext = applicationContext;
     }
 
-    public async Task<List<Card>> Get(string searchString, string sortBy, bool sortDirection,
+    public List<Card> Get(string searchString, string sortBy, bool sortDirection,
         CardFilterDefinition filter, int limit, int offset)
     {
-        var request = this._applicationContext.Cards.AsQueryable();
+        var request = this._applicationContext.Cards.AsQueryable().Where(x=>x.DeletedAt == null);
 
-        if (filter.IsByEmployee)
-            request = request.Where(x => x.EmployeeId == filter.EmployeeId);
+        //if (filter.IsByEmployee)
+        //    request = request.Where(x => x.EmployeeId == filter.EmployeeId);
 
         if (filter.IsBySumWorkTime)
         {
@@ -35,30 +35,36 @@ namespace employees.Model
                                          x.DatePass <= filter.DatePassHighBound);
         }
         
-        return await request.Skip(offset).Take(limit).ToListAsync();
+        return request.OrderBy(x=>x.Id).Skip(offset).Take(limit).ToList();
     }
 
-    public async Task<Card> GetById(int id)
+    public long GetCount(string searchString, CardFilterDefinition filter)
     {
-        return await this._applicationContext.Cards.FindAsync(id);
+        return this._applicationContext.Cards.Count();
     }
 
-    public async void Add(Card card)
+    public Card GetById(int id)
+    {
+        return this._applicationContext.Cards.Find(id);
+    }
+
+    public void Add(Card card)
     {
         _applicationContext.Cards.Add(card);
-        await _applicationContext.SaveChangesAsync();
+        _applicationContext.SaveChangesAsync();
     }
-    public async void Update(Card card)
+    public void Update(Card card)
     {
         _applicationContext.Entry(card).State = EntityState.Modified;
-        await _applicationContext.SaveChangesAsync();
+        _applicationContext.SaveChangesAsync();
     }
 
-    public async void Remove(Card employee)
+    public void Remove(int id)
     {
-        employee.DeletedAt = DateTime.Now;
-        _applicationContext.Entry(employee).State = EntityState.Modified;
-        await _applicationContext.SaveChangesAsync();
+        var card = GetById(id);
+        card.DeletedAt = DateTime.Now;
+        _applicationContext.Entry(card).State = EntityState.Modified;
+        _applicationContext.SaveChangesAsync();
     }
 }
 }
