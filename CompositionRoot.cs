@@ -29,7 +29,7 @@ namespace Employees
         public CardDictionaryViewModel CardDictionary =>
             new CardDictionaryViewModel(ShellWindowViewModel, cardService, paginator);
 
-        public CardEditorViewModel CardEditor => new CardEditorViewModel(ShellWindowViewModel, cardService);
+        public CardEditorViewModel CardEditor => new CardEditorViewModel(ShellWindowViewModel, cardService, employeeService);
         public CardInfoViewModel CardInfo => new CardInfoViewModel(ShellWindowViewModel, cardService);
         public AuthViewModel Auth => new AuthViewModel(employeeService);
         public DeleteDialogViewModel DeleteDialog => new DeleteDialogViewModel(ShellWindowViewModel);

@@ -13,7 +13,7 @@
                   mc:Ignorable="d"
                   Source="Auth.xaml"
                   ShowsNavigationUI="False"
-                  Title="Shell"
+                  Title=""
                   DataContext="{Binding Source={StaticResource Locator}, Path=ShellWindowViewModel}"
                   WindowStartupLocation="CenterScreen"
                   Name="ShellWindowView"
@@ -36,8 +36,11 @@
                 <materialDesign:DialogHost.DialogContent>
                     <Frame></Frame>
                 </materialDesign:DialogHost.DialogContent>
+                <Grid>
                 <ContentControl
                     Content="{Binding Content, RelativeSource={RelativeSource AncestorType=NavigationWindow}}" />
+                    <materialDesign:Snackbar MessageQueue="{Binding SnackbarMessageQueue}"/>
+                </Grid>
             </materialDesign:DialogHost>
         </DataTemplate>
     </NavigationWindow.ContentTemplate>

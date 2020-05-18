@@ -20,8 +20,8 @@ namespace employees.Model
     {
         var request = this._applicationContext.Cards.AsQueryable().Where(x=>x.DeletedAt == null);
 
-        //if (filter.IsByEmployee)
-        //    request = request.Where(x => x.EmployeeId == filter.EmployeeId);
+        if (filter.IsByEmployee)
+            request = request.Where(x => x.EmployeeId == filter.EmployeeId);
 
         if (filter.IsBySumWorkTime)
         {

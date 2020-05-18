@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using employees;
+using employees.Elements;
 using employees.Model;
 using Employees.Model;
 using PropertyChanged;
@@ -49,24 +50,30 @@ namespace Employees
         }
         
         public bool IsNew { get; set; } = true;
+        public EmployeeComboBoxViewModel EmployeeComboBoxViewModel { get; set; }
         public virtual string EditorTitle
         {
             get { return !IsNew ? $"Редактирование информации о карточке загруженности №{Entity.Id}" : $"Добавление информации о карточке загруженности"; }
         }
         public Card Entity { get; set; }
 
-        public CardEditorViewModel(IShell shell, CardService employees)
+        public CardEditorViewModel(IShell shell, CardService cards, EmployeeService employees)
         {
-            _shell = shell;
-            _cards = employees;
+            this._shell = shell;
+            this._cards = cards;
+
+            this.EmployeeComboBoxViewModel = new EmployeeComboBoxViewModel(employees,
+                x=>Entity.EmployeeId = x.Id);
+
             if (shell.LastNavigatedParameter == null)
             {
                 this.Entity = new Card();
             }
             else
             {
-                this.Entity = employees.GetById((int)shell.LastNavigatedParameter);
-                IsNew = false;
+                this.Entity = cards.GetById((int)shell.LastNavigatedParameter);
+                this.EmployeeComboBoxViewModel.SelectedEntity = Entity.Employee;
+                this.IsNew = false;
             }
         }
 
@@ -81,6 +88,10 @@ namespace Employees
                 _cards.Update(this.Entity);
             }
             _shell.NavigateByUri(CompanyUris.Hub);
+        }
+
+        public override void OnIncorrectData()
+        {
         }
     }
 }

@@ -70,7 +70,7 @@ namespace employees
                 x => _shell.OpenDialogByUri(CompanyUris.EmployeeInfo, true, x.Id));
 
         public ICommand DeleteEmployeeCommand =>
-            new RelayCommand<Card>(x => _shell.OpenDialogByUri(
+            new RelayCommand<Employee>(x => _shell.OpenDialogByUri(
                 CompanyUris.DeleteDialog, false,
                 () => StateChanged?.Invoke(),
                 new object[] { x.Id, _service }));
@@ -80,12 +80,7 @@ namespace employees
         {
             _shell = shell;
             _service = service;
-            this.Refresh();
-        }
-
-        public void Refresh()
-        {
-            this.Entities = this._service.Get("", "", true, new EmployeeFilterDefinition(), 1, 0);
+            this.PaginatorViewModel.RegisterPaginable(this, true);
         }
 
         public long Count => this._service.GetCount(SearchString, FilterDefinition);

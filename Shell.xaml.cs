@@ -40,8 +40,8 @@ namespace Employees
 
     public interface IShell
     {
+        SnackbarMessageQueue MessageQueue { get; }
         object LastNavigatedParameter { get; }
-
         object LastNavigatedDialogParameter { get; }
         void NavigateByUri(Uri uri, object parameter = null);
         void OpenDialogByUri(Uri uri, bool closeByClickAway = false, object parameter = null);
@@ -55,7 +55,7 @@ namespace Employees
     {
         private Shell _windowDependencyObject;
         private DialogHost _host;
-
+        public SnackbarMessageQueue MessageQueue { get; set; } = new SnackbarMessageQueue();
         public ICommand InitializeWindow =>
             new RelayCommand<Shell>(x => this._windowDependencyObject = x);
 

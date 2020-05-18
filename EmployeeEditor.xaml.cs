@@ -21,6 +21,7 @@ namespace employees
     public abstract class EditorBase : ViewModelBase
     {
         public ICommand ApplyCommand => new RelayCommand<DependencyObject>(ApplyChanges);
+
         /// <summary>
         /// Производит UpdateSource всех textbox и combobox
         /// в передаваемой view для обновления валидаций на полях
@@ -31,7 +32,7 @@ namespace employees
         {
             var tree = FindVisualChildren<TextBox>(view);
             var comboboxes = FindVisualChildren<ComboBox>(view).Where(x => x.IsEnabled);
-            foreach (TextBox tb in tree)
+            foreach (TextBox tb in tree.Where(x=>x.Visibility == Visibility.Visible && x.IsEnabled))
             {
                 tb.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
             }
@@ -46,6 +47,7 @@ namespace employees
             {
                 if (Validation.GetHasError(tb))
                 {
+                    OnIncorrectData();
                     return;
                 }
             }
@@ -54,17 +56,21 @@ namespace employees
             {
                 if (Validation.GetHasError(cb))
                 {
+                    OnIncorrectData();
                     return;
                 }
             }
 
             this.Apply();
-        } 
+        }
+
         /// <summary>
         /// Применить изменения или добавить сущность
         /// в базу данных
         /// </summary>
         public abstract void Apply();
+
+        public abstract void OnIncorrectData();
         /// <summary>
         /// Метод, позволяющий получить всех детей данного
         /// элемента в визуальном дереве элементов View
@@ -81,7 +87,7 @@ namespace employees
                     DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
                     if (child != null && child is T)
                     {
-                        yield return (T)child;
+                        yield return (T) child;
                     }
 
                     foreach (T childOfChild in FindVisualChildren<T>(child))
@@ -97,22 +103,37 @@ namespace employees
     {
         private readonly IShell _shell;
         private readonly EmployeeService _employees;
+
+        public Role Role
+        {
+            get { return Entity.Role; }
+            set { Entity.Role = value; }
+        }
+
+        public bool HasRights => Role != Role.Undefined;
+
         public bool IsNew { get; set; } = true;
+
         public virtual string EditorTitle
         {
-            get { return !IsNew ? $"Редактирование информации о работнике №{Entity.Id}" : $"Добавление информации о работнике"; }
+            get
+            {
+                return !IsNew
+                    ? $"Редактирование информации о работнике №{Entity.Id}"
+                    : $"Добавление информации о работнике";
+            }
         }
 
         public bool IsPasswordChanging { get; set; }
         public Employee Entity { get; set; }
-        
+
         public EmployeeEditorViewModel(IShell shell, EmployeeService employees)
         {
             _shell = shell;
             _employees = employees;
             if (shell.LastNavigatedParameter == null)
             {
-                this.Entity = new Employee();
+                this.Entity = new Employee(){DateBirth = DateTime.Now.AddYears(-16)};
             }
             else
             {
@@ -131,7 +152,13 @@ namespace employees
             {
                 _employees.Update(this.Entity);
             }
+
             _shell.NavigateByUri(CompanyUris.Hub);
+        }
+
+        public override void OnIncorrectData()
+        {
+
         }
     }
 }

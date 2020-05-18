@@ -1,83 +1,78 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Markup;
 
 namespace employees.Converters
+
 {
-    using System;
-    using System.ComponentModel;
-    using System.Linq;
-    using System.Windows.Markup;
-
-    namespace Laundry.Utils.Converters
+    /// <summary>
+    /// Класс-расширение, используемый для конвертации
+    /// значений перечислений, помеченных атрибутом [Desctirption("Строка")] в строки
+    /// </summary>
+    public class EnumerationExtension : MarkupExtension
     {
-        /// <summary>
-        /// Класс-расширение, используемый для конвертации
-        /// значений перечислений, помеченных атрибутом [Desctirption("Строка")] в строки
-        /// </summary>
-        public class EnumerationExtension : MarkupExtension
+        private Type _enumType;
+
+
+        public EnumerationExtension(Type enumType)
         {
-            private Type _enumType;
+            if (enumType == null)
+                throw new ArgumentNullException("enumType");
 
+            EnumType = enumType;
+        }
 
-            public EnumerationExtension(Type enumType)
+        public Type EnumType
+        {
+            get { return _enumType; }
+            private set
             {
-                if (enumType == null)
-                    throw new ArgumentNullException("enumType");
+                if (_enumType == value)
+                    return;
 
-                EnumType = enumType;
+                var enumType = Nullable.GetUnderlyingType(value) ?? value;
+
+                if (enumType.IsEnum == false)
+                    throw new ArgumentException("Type must be an Enum.");
+
+                _enumType = value;
             }
+        }
 
-            public Type EnumType
-            {
-                get { return _enumType; }
-                private set
+        public override object ProvideValue(IServiceProvider serviceProvider)
+        {
+            var enumValues = Enum.GetValues(EnumType);
+
+            return (
+                from object enumValue in enumValues
+                select new EnumerationMember
                 {
-                    if (_enumType == value)
-                        return;
+                    Value = enumValue,
+                    Description = GetDescription(enumValue)
+                }).ToArray();
+        }
 
-                    var enumType = Nullable.GetUnderlyingType(value) ?? value;
-
-                    if (enumType.IsEnum == false)
-                        throw new ArgumentException("Type must be an Enum.");
-
-                    _enumType = value;
-                }
-            }
-
-            public override object ProvideValue(IServiceProvider serviceProvider)
-            {
-                var enumValues = Enum.GetValues(EnumType);
-
-                return (
-                    from object enumValue in enumValues
-                    select new EnumerationMember
-                    {
-                        Value = enumValue,
-                        Description = GetDescription(enumValue)
-                    }).ToArray();
-            }
-
-            public string GetDescription(object enumValue)
-            {
-                var descriptionAttribute = EnumType
-                    .GetField(enumValue.ToString())
-                    .GetCustomAttributes(typeof(DescriptionAttribute), false)
-                    .FirstOrDefault() as DescriptionAttribute;
+        public string GetDescription(object enumValue)
+        {
+            var descriptionAttribute = EnumType
+                .GetField(enumValue.ToString())
+                .GetCustomAttributes(typeof(DescriptionAttribute), false)
+                .FirstOrDefault() as DescriptionAttribute;
 
 
-                return descriptionAttribute != null
-                    ? descriptionAttribute.Description
-                    : enumValue.ToString();
-            }
+            return descriptionAttribute != null
+                ? descriptionAttribute.Description
+                : enumValue.ToString();
+        }
 
-            public class EnumerationMember
-            {
-                public string Description { get; set; }
-                public object Value { get; set; }
-            }
+        public class EnumerationMember
+        {
+            public string Description { get; set; }
+            public object Value { get; set; }
         }
     }
 }

@@ -21,9 +21,9 @@ namespace employees.Model
         {
             modelBuilder.HasDefaultSchema("public");
             base.OnModelCreating(modelBuilder);
-            //modelBuilder.Entity<Employee>()
-            //    .HasMany(x => x.Cards)
-            //    .WithRequired(x=>x.Employee);
+            modelBuilder.Entity<Employee>()
+                .HasMany(x => x.Cards)
+                .WithRequired(x=>x.Employee);
         }
     }
 }

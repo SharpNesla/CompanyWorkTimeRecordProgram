@@ -12,21 +12,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using employees;
-using employees.Model;
-using Employees.Model;
 
-namespace Employees
+namespace employees
 {
-
-    public class CardInfoViewModel : ViewModelBase
+    /// <summary>
+    /// Interaction logic for ConnectionLostDialog.xaml
+    /// </summary>
+    public partial class ConnectionLostDialog : Page
     {
-        public Card Entity { get; set; }
-        public List<Card> CardArray => new List<Card>(new[] {this.Entity});
-
-        public CardInfoViewModel(IShell shell, CardService service)
+        public ConnectionLostDialog()
         {
-            this.Entity = service.GetById((int) shell.LastNavigatedDialogParameter);
+            InitializeComponent();
         }
     }
 }

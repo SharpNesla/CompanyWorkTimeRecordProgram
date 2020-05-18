@@ -7,8 +7,8 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:validationRules="clr-namespace:Employees.ValidationRules"
       xmlns:employees="clr-namespace:Employees"
-      xmlns:converters="clr-namespace:employees.Converters.Laundry.Utils.Converters"
       xmlns:model="clr-namespace:Employees.Model"
+      xmlns:converters="clr-namespace:employees.Converters"
       mc:Ignorable="d" d:DesignWidth="800"
       Name="EmployeeEditorView"
       DataContext="{Binding Source={StaticResource Locator}, Path=EmployeeEditor}">
@@ -113,13 +113,16 @@
                         </TextBlock>
                         <StackPanel Margin="0,0,0,16" Orientation="Vertical">
 
-                            <RadioButton Style="{StaticResource MaterialDesignRadioButton}">
+                            <RadioButton Style="{StaticResource MaterialDesignRadioButton}"
+                                         IsChecked="{Binding Path=Entity.Gender, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Male}">
                                 Мужской
                             </RadioButton>
-                            <RadioButton Style="{StaticResource MaterialDesignRadioButton}">
+                            <RadioButton Style="{StaticResource MaterialDesignRadioButton}"
+                                         IsChecked="{Binding Path=Entity.Gender, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Female}">
                                 Женский
                             </RadioButton>
-                            <RadioButton Style="{StaticResource MaterialDesignRadioButton}">
+                            <RadioButton Style="{StaticResource MaterialDesignRadioButton}"
+                                         IsChecked="{Binding Path=Entity.Gender, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Unrecognized}">
                                 Не определён
                             </RadioButton>
                         </StackPanel>
@@ -127,18 +130,6 @@
                                     materialDesign:HintAssist.Hint="Дата рождения"
                                     Language="ru"
                                     Style="{StaticResource MaterialDesignFloatingHintDatePicker}" Margin="0,0,0,16" />
-
-                        <TextBox materialDesign:HintAssist.Hint="Адрес"
-                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}">
-                            <TextBox.Text>
-                                <Binding Path="Entity.Surname" UpdateSourceTrigger="PropertyChanged">
-                                    <Binding.ValidationRules>
-                                        <validationRules:PersonTextDataValidation FieldName="Фамилия"
-                                                                                  ValidatesOnTargetUpdated="False" />
-                                    </Binding.ValidationRules>
-                                </Binding>
-                            </TextBox.Text>
-                        </TextBox>
                     </StackPanel>
                 </ScrollViewer>
             </materialDesign:Card>
@@ -153,12 +144,12 @@
                                   Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                                   DisplayMemberPath="Description"
                                   ItemsSource="{Binding Source={converters:Enumeration {x:Type model:Role}}}"
-                                  SelectedValue="{Binding Entity.Role}"
+                                  SelectedValue="{Binding Role}"
                                   SelectedValuePath="Value" Margin="0,12,0,16" />
                         <TextBox Name="Login" Margin="0,0,0,16"
                                  materialDesign:HintAssist.Hint="Логин"
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                                 Grid.ColumnSpan="2">
+                                 Visibility="{Binding HasRights, Converter={StaticResource BoolVisibilityConverter}}">
                             <TextBox.Text>
                                 <Binding Path="Entity.Username" UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
@@ -169,15 +160,19 @@
                         </TextBox>
                         <CheckBox VerticalAlignment="Bottom"
                                   Style="{StaticResource MaterialDesignCheckBox}"
-                                  IsChecked="{Binding IsPasswordChanging}">
+                                  IsChecked="{Binding IsPasswordChanging}"
+                                  
+                                  Visibility="{Binding HasRights, Converter={StaticResource BoolVisibilityConverter}}">
                             Изменить пароль
                         </CheckBox>
                         <PasswordBox Margin="0,0,0,16" Style="{StaticResource MaterialDesignPasswordBox}"
                                      materialDesign:HintAssist.Hint="Пароль"
-                                     IsEnabled="{Binding IsPasswordChanging}" Height="40" />
+                                     IsEnabled="{Binding IsPasswordChanging}" Height="40"
+                                     Visibility="{Binding HasRights, Converter={StaticResource BoolVisibilityConverter}}"/>
                         <PasswordBox Margin="0,0,0,24" Style="{StaticResource MaterialDesignPasswordBox}"
                                      materialDesign:HintAssist.Hint="Пароль (Повторно)"
-                                     IsEnabled="{Binding IsPasswordChanging}" Height="36" />
+                                     IsEnabled="{Binding IsPasswordChanging}" Height="36"
+                                     Visibility="{Binding HasRights, Converter={StaticResource BoolVisibilityConverter}}"/>
 
                     </StackPanel>
                     <TextBox Grid.ColumnSpan="3" Grid.Row="4" Grid.Column="0"

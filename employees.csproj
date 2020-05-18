@@ -146,9 +146,13 @@
     <Compile Include="Chart.xaml.cs">
       <DependentUpon>Chart.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ConnectionLostDialog.xaml.cs">
+      <DependentUpon>ConnectionLostDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\BindingProxy.cs" />
     <Compile Include="Converters\BoolNotConverter.cs" />
     <Compile Include="Converters\BoolVisibilityConverter.cs" />
+    <Compile Include="Converters\EnumBooleanConverter.cs" />
     <Compile Include="Converters\EnumerationExtension.cs" />
     <Compile Include="Converters\TimeToIntConverter.cs" />
     <Compile Include="DeleteDialog.xaml.cs">
@@ -157,6 +161,9 @@
     <Compile Include="DialogButton.cs" />
     <Compile Include="Elements\DataGridAdaptiveColumn.xaml.cs">
       <DependentUpon>DataGridAdaptiveColumn.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Elements\EmployeeComboBox.xaml.cs">
+      <DependentUpon>EmployeeComboBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Elements\Paginator.xaml.cs">
       <DependentUpon>Paginator.xaml</DependentUpon>
@@ -195,7 +202,6 @@
     <Compile Include="ValidationRules\RequiredValidation.cs" />
     <Compile Include="ValidationRules\SearchRequiredValidation.cs" />
     <Compile Include="ViewModelBase.cs" />
-    <Compile Include="ViewModelBases\EditorViewModelBase.cs" />
     <Compile Include="CompositionRoot.cs" />
     <Page Include="Auth.xaml">
       <SubType>Designer</SubType>
@@ -205,11 +211,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ConnectionLostDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="DeleteDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Elements\DataGridAdaptiveColumn.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Elements\EmployeeComboBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

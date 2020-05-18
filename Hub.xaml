@@ -3,7 +3,6 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="clr-namespace:employees"
       mc:Ignorable="d"
       TextElement.FontWeight="Medium"
       TextElement.FontSize="14"
@@ -14,7 +13,6 @@
       xmlns:converters="clr-namespace:employees.Converters"
       xmlns:employees="clr-namespace:Employees"
       xmlns:model="clr-namespace:Employees.Model"
-      xmlns:converters1="clr-namespace:employees.Converters.Laundry.Utils.Converters"
       DataContext="{Binding Hub,Source={StaticResource Locator}}"
       Title="Hub" d:DesignHeight="549" d:DesignWidth="1205.5">
     <DockPanel LastChildFill="True">
@@ -68,7 +66,7 @@
                 <RadioButton
                     Style="{StaticResource MaterialDesignTabRadioButton}"
                     IsChecked="{Binding IsEmployeeTab}" Height="42" Grid.Row="1" Grid.Column="0"
-                    Content="Работники" />
+                    Content="Работники"/>
                 <RadioButton Grid.Column="1" Grid.ColumnSpan="2" IsChecked="{Binding IsCardTab}"
                              Style="{StaticResource MaterialDesignTabRadioButton}" Height="42" Grid.Row="1"
                              Content="Карточки загруженности" />
@@ -260,7 +258,7 @@
 
                                                               Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                                                               DisplayMemberPath="Description"
-                                                              ItemsSource="{Binding Source={converters1:Enumeration {x:Type model:Role}}}"
+                                                              ItemsSource="{Binding Source={converters:Enumeration {x:Type model:Role}}}"
                                                               SelectedValue="{Binding Entity.Role}"
                                                               SelectedValuePath="Value"
                                                               materialDesign:HintAssist.Hint="Права" />

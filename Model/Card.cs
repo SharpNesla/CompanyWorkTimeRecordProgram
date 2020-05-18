@@ -10,8 +10,8 @@ namespace employees.Model
 {
     public class Card : Entity
     {
-        //public int EmployeeId { get; set; }
-        //public Employee Employee { get; set; }
+        public int EmployeeId { get; set; }
+        public Employee Employee { get; set; }
         public decimal Payment { get; set; } = 200;
         public decimal PaymentFull { get; set; }
         public DateTime DatePass { get; set; }

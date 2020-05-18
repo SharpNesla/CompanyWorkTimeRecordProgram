@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Employees"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:elements="clr-namespace:employees.Elements"
     x:Class="Employees.EmployeeCardEditor"
     mc:Ignorable="d"
     TextElement.FontWeight="Medium"
@@ -46,8 +47,8 @@
                     <StackPanel Margin="2,0,0,0" DockPanel.Dock="Top">
                         <ComboBox Margin="0,0,0,16"
                                   Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                                  materialDesign:HintAssist.Hint="Работник"
-                                  IsEnabled="{Binding IsByEmployee}"/>
+                                  materialDesign:HintAssist.Hint="Работник (поиск, отображается 10 наиболее подходящих вариантов)"/>
+                        <elements:EmployeeComboBox DataContext="{Binding EmployeeComboBoxViewModel}"/>
                         <DatePicker Margin="0,0,0,16"
                                     Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
                                     materialDesign:HintAssist.Hint="Дата сдачи"></DatePicker>
