@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,8 +27,12 @@ namespace employees
 {
     public class HubViewModel : ViewModelBase
     {
-        public bool IsEmployeeTab { get; set; }
-        public bool IsCardTab { get; set; } = true;
+        public bool IsEmployeeTab { get; set; } = true;
+        public bool IsCardTab { get; set; }
+
+        public ICommand ExportEmployeesToExcel { get; }
+        public ICommand ExportCardsToExcel { get; }
+
         public EmployeeDictionaryViewModel EmployeeDictionaryViewModel { get; }
         public CardDictionaryViewModel CardDictionaryViewModel { get; }
 
@@ -35,16 +40,21 @@ namespace employees
             CardDictionaryViewModel cardDictionaryViewModel)
         {
             EmployeeDictionaryViewModel = employeeDictionaryViewModel;
+            ExportCardsToExcel =
+                new RelayCommand(() => this.CardDictionaryViewModel.ExportToExcel());
             CardDictionaryViewModel = cardDictionaryViewModel;
+            ExportEmployeesToExcel =
+                new RelayCommand(() => this.EmployeeDictionaryViewModel.ExportToExcel());
         }
     }
 
     public class DictionaryViewModelBase<TEntity, TFilter> : ViewModelBase where TFilter : new()
     {
-        public bool IsFilterDrawerOpened { get; set; } = true;
+        public bool IsFilterDrawerOpened { get; set; }
         public TFilter FilterDefinition { get; set; } = new TFilter();
+        public ICommand EraseFilters => new RelayCommand(() => this.FilterDefinition = new TFilter());
         public string SearchString { get; set; }
-        public PaginatorViewModel PaginatorViewModel { get; private set; }
+        public PaginatorViewModel PaginatorViewModel { get; }
 
         public DictionaryViewModelBase(PaginatorViewModel paginatorViewModel)
         {
@@ -69,11 +79,13 @@ namespace employees
             new RelayCommand<Employee>(
                 x => _shell.OpenDialogByUri(CompanyUris.EmployeeInfo, true, x.Id));
 
+        public ICommand RefreshCommand => new RelayCommand(() => this.StateChanged?.Invoke());
+
         public ICommand DeleteEmployeeCommand =>
             new RelayCommand<Employee>(x => _shell.OpenDialogByUri(
                 CompanyUris.DeleteDialog, false,
                 () => StateChanged?.Invoke(),
-                new object[] { x.Id, _service }));
+                new object[] {x.Id, _service}));
 
         public EmployeeDictionaryViewModel(IShell shell, EmployeeService service, PaginatorViewModel paginatorViewModel)
             : base(paginatorViewModel)
@@ -87,11 +99,24 @@ namespace employees
 
         public void Refresh(int page, int elements)
         {
-            this.Entities = this._service.Get(SearchString, "", true, FilterDefinition,
-                elements, page * elements);
+            try
+            {
+                this.Entities = this._service.Get(SearchString, "", true, FilterDefinition,
+                    elements, page * elements);
+            }
+            catch (Exception e)
+            {
+                _shell.OpenDialogByUri(CompanyUris.ConnectionLost, false, null);
+            }
+            
         }
 
         public event Action StateChanged;
+
+        public void ExportToExcel()
+        {
+            this._service.SaveExcelDocument(SearchString, "", true, FilterDefinition);
+        }
     }
 
     public class CardDictionaryViewModel : DictionaryViewModelBase<Card, CardFilterDefinition>, IPaginable
@@ -117,6 +142,8 @@ namespace employees
                 () => StateChanged?.Invoke(),
                 new object[] {x.Id, _service}));
 
+        public ICommand RefreshCommand => new RelayCommand(() => this.StateChanged?.Invoke());
+
         public CardDictionaryViewModel(IShell shell, CardService service, PaginatorViewModel paginatorViewModel)
             : base(paginatorViewModel)
         {
@@ -137,30 +164,7 @@ namespace employees
 
         public void ExportToExcel()
         {
-            var workbook = new XSSFWorkbook();
-
-            IWorkbook preparedWorkBook = null; //PrepareWorkBook(workbook);
-
-            var dialog = new SaveFileDialog
-            {
-                InitialDirectory = @"~/Documents",
-                Title = $"Путь к экспортируемой таблице карточек загруженности",
-                AddExtension = true,
-                Filter = "Файлы Excel 2007 (*.xlsx)|*.xlsx|Все остальные файлы (*.*)|*.*"
-            };
-            if (dialog.ShowDialog() == true)
-            {
-                if (!File.Exists(dialog.FileName))
-                {
-                    File.Delete(dialog.FileName);
-                }
-
-                //запись в файл
-                using (var fs = new FileStream(dialog.FileName, FileMode.Create, FileAccess.Write))
-                {
-                    preparedWorkBook.Write(fs);
-                }
-            }
+            this._service.SaveExcelDocument(SearchString, "", true, FilterDefinition);
         }
     }
 }

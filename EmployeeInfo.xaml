@@ -73,9 +73,9 @@
                                        Text="{Binding Entity.DateBirth, StringFormat='Дата рождения: dd.MM.yyyy'}" />
                             <TextBlock Margin="0,8,0,0"
                                        Text="{Binding Entity.PhoneNumber, StringFormat='Номер телефона: {0}'}" />
-                            <TextBlock Text= "Пол: Мужской"
+                            <TextBlock Text="Пол: Мужской"
                                        Margin="0,8,0,0" />
-                            <TextBlock Text= "Серия и номер паспорта: 2333 333212"
+                            <TextBlock Text="Серия и номер паспорта: 2333 333212"
                                        Margin="0,8,0,0" />
                             <TextBlock Margin="0,8,0,0" Text="Комментарий:" />
                         </StackPanel>
@@ -87,7 +87,7 @@
             </materialDesign:Card>
 
             <materialDesign:Card Grid.Column="1" VerticalAlignment="Stretch">
-                <DockPanel>
+                <DockPanel Name="EmployeeCardList">
                     <TextBlock Margin="16,16,16,0" DockPanel.Dock="Top"
                                Style="{StaticResource MaterialDesignHeadline6TextBlock}"
                                Text="Карточки загруженности данного работника (5 последних)" />
@@ -178,15 +178,17 @@
                             <DataGridTemplateColumn CanUserReorder="False">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <local:DialogButton Margin="0"
-                                                            DialogUri="CardInfo.xaml"
-                                                            Foreground="{StaticResource MaterialDesignBodyLight}"
-                                                            Style="{StaticResource MaterialDesignFlatButton}">
+                                        <Button Margin="0"
+                                                Command="{Binding DataContext.ViewCardInfoCommand,
+                                                                ElementName=EmployeeCardList}"
+                                                CommandParameter="{Binding Path=.}"
+                                                Foreground="{StaticResource MaterialDesignBodyLight}"
+                                                Style="{StaticResource MaterialDesignFlatButton}">
                                             <materialDesign:PackIcon
                                                 Kind="InfoOutline"
                                                 Height="24"
                                                 Width="24" />
-                                        </local:DialogButton>
+                                        </Button>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>

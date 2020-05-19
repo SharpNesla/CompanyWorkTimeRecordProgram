@@ -36,6 +36,8 @@ namespace Employees
         public static readonly Uri CardInfo = new Uri("CardInfo.xaml", UriKind.Relative);
         public static readonly Uri DeleteDialog = new Uri("DeleteDialog.xaml", UriKind.Relative);
         public static readonly Uri Hub = new Uri("Hub.xaml", UriKind.Relative);
+        public static readonly Uri Auth = new Uri("Auth.xaml", UriKind.Relative);
+        public static readonly Uri ConnectionLost = new Uri("ConnectionLostDialog", UriKind.Relative);
     }
 
     public interface IShell
@@ -51,11 +53,12 @@ namespace Employees
         void CloseDialogImmediately();
     }
 
-    public class ShellWindowViewModel : IShell
+    public class ShellWindowViewModel : ViewModelBase, IShell
     {
         private Shell _windowDependencyObject;
         private DialogHost _host;
-        public SnackbarMessageQueue MessageQueue { get; set; } = new SnackbarMessageQueue();
+        public SnackbarMessageQueue MessageQueue { get; set; } 
+            = new SnackbarMessageQueue(new TimeSpan(0,0,0,1));
         public ICommand InitializeWindow =>
             new RelayCommand<Shell>(x => this._windowDependencyObject = x);
 

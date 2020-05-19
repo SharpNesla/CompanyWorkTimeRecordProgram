@@ -63,7 +63,7 @@ namespace Employees
             this._cards = cards;
 
             this.EmployeeComboBoxViewModel = new EmployeeComboBoxViewModel(employees,
-                x=>Entity.EmployeeId = x.Id);
+                x=>Entity.Employee = x);
 
             if (shell.LastNavigatedParameter == null)
             {

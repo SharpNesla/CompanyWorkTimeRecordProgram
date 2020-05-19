@@ -18,15 +18,18 @@ using Employees.Model;
 
 namespace Employees
 {
-
     public class CardInfoViewModel : ViewModelBase
     {
         public Card Entity { get; set; }
         public List<Card> CardArray => new List<Card>(new[] {this.Entity});
+        public ICommand ViewEmployeeInfoCommand { get; }
 
         public CardInfoViewModel(IShell shell, CardService service)
         {
             this.Entity = service.GetById((int) shell.LastNavigatedDialogParameter);
+            this.ViewEmployeeInfoCommand =
+                new RelayCommand(
+                    () => shell.OpenDialogByUri(CompanyUris.EmployeeInfo, true, this.Entity.EmployeeId));
         }
     }
 }

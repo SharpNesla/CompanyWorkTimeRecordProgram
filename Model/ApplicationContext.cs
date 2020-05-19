@@ -15,6 +15,7 @@ namespace employees.Model
 
         public ApplicationContext() : base("Default")
         {
+            
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

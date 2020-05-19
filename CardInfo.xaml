@@ -56,7 +56,8 @@
                                        Text="Информация о карточке" />
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <TextBlock Height="15" Margin="0,0,8,0">Работник:</TextBlock>
-                                <Button Margin="0,2,0,0" Style="{StaticResource MaterialDesignFlatButton}">
+                                <Button Margin="0,2,0,0" Style="{StaticResource MaterialDesignFlatButton}"
+                                        Command="{Binding ViewEmployeeInfoCommand}">
                                     <StackPanel Orientation="Horizontal">
                                         <materialDesign:PackIcon Margin="0,0,4,0" Kind="Account" />
                                         <TextBlock>Подробнее...</TextBlock>

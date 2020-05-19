@@ -57,8 +57,8 @@ namespace employees.Elements
             {
                 if (SelectedEntity != null)
                 {
-                    _entityText = this.SelectedEntity.Name;
-                    return this.SelectedEntity.Name;
+                    _entityText = this.SelectedEntity.Signature;
+                    return this.SelectedEntity.Signature;
                 }
                 else
                 {
@@ -90,6 +90,7 @@ namespace employees.Elements
         public EmployeeComboBoxViewModel(EmployeeService service, Action<Employee> OnEntityChangedCallback)
         {
             this._service = service;
+            this.Entities = _service.Get("", "", true, new EmployeeFilterDefinition(), 10, 0);
             this.EntityChanged = OnEntityChangedCallback;
         }
 

@@ -12,17 +12,18 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Employees;
 
 namespace employees
 {
-    /// <summary>
-    /// Interaction logic for ConnectionLostDialog.xaml
-    /// </summary>
-    public partial class ConnectionLostDialog : Page
+    public class ConnectionLostDialogViewModel
     {
-        public ConnectionLostDialog()
+        public ICommand AcceptCommand { get; }
+
+        public ConnectionLostDialogViewModel(IShell shell)
         {
-            InitializeComponent();
+            this.AcceptCommand
+                = new RelayCommand(() => shell.NavigateByUri(CompanyUris.Auth));
         }
     }
 }

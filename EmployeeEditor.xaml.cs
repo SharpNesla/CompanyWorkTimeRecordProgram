@@ -133,7 +133,7 @@ namespace employees
             _employees = employees;
             if (shell.LastNavigatedParameter == null)
             {
-                this.Entity = new Employee(){DateBirth = DateTime.Now.AddYears(-16)};
+                this.Entity = new Employee{DateBirth = DateTime.Now.AddYears(-16)};
             }
             else
             {
@@ -158,7 +158,7 @@ namespace employees
 
         public override void OnIncorrectData()
         {
-
+            this._shell.MessageQueue.Enqueue("Не заполнены необходимые поля");
         }
     }
 }

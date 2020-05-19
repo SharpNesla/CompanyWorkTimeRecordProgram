@@ -18,29 +18,11 @@ using LiveCharts.Wpf;
 
 namespace employees
 {
-    /// <summary>
-    /// Interaction logic for Chart.xaml
-    /// </summary>
-    public partial class Chart : UserControl
-    {
-        public Chart()
-        {
-            InitializeComponent();
-        }
-    }
-
     public class ChartViewModel : ViewModelBase
     {
         public WorkLoadFilterDefinition FilterDefinition { get; set; } = new WorkLoadFilterDefinition();
 
-        public WorkLoadData[] WorkLoadData = new WorkLoadData[]
-        {
-            new WorkLoadData {Min = 845, Average = 900, Max = 945},
-            new WorkLoadData {Min = 845, Average = 900, Max = 945},
-            new WorkLoadData {Min = 845, Average = 900, Max = 945},
-            new WorkLoadData {Min = 845, Average = 900, Max = 945},
-            new WorkLoadData {Min = 845, Average = 900, Max = 945},
-        };
+        public List<WorkLoadData> WorkLoadData;
 
         public SeriesCollection Values =>
             new SeriesCollection
@@ -80,7 +62,21 @@ namespace employees
                 }
             };
 
+        public ICommand EraseFilters =>
+            new RelayCommand(() => this.FilterDefinition = new WorkLoadFilterDefinition());
+
+        public ICommand RefreshCommand { get; }
         public Func<double, string> Formatter { get; set; } = value => value.ToString("#0:00");
         public string[] Labels => new[] {"Понедельник", "Вторник", "Среда", "Четверг", "Пятница"};
+        void ExecuteAction(CardService service)
+        {
+            WorkLoadData = service.GetWorkLoadData(FilterDefinition);
+        }
+        public ChartViewModel(CardService service)
+        {
+            RefreshCommand = new RelayCommand(
+                () => ExecuteAction(service));
+            ExecuteAction(service);
+        }
     }
 }

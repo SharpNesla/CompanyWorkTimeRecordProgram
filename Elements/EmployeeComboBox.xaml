@@ -8,7 +8,7 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <ComboBox
-        materialDesign:HintAssist.Hint="{Binding Label}"
+        materialDesign:HintAssist.Hint="Работник (поиск 10-ти наиболее подходящих вариантов)"
         IsEditable="True"
         Style="{StaticResource MaterialDesignFloatingHintComboBox}"
         ItemsSource="{Binding Entities}"

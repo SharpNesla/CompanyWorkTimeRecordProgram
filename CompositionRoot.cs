@@ -16,6 +16,7 @@ namespace Employees
         private HubViewModel _hub => new HubViewModel(this.EmployeeDictionary, this.CardDictionary);
         private PaginatorViewModel paginator => new PaginatorViewModel();
         private ShellWindowViewModel _shell = new ShellWindowViewModel();
+        
         public ShellWindowViewModel ShellWindowViewModel => _shell;
 
         public EmployeeDictionaryViewModel EmployeeDictionary =>
@@ -33,7 +34,9 @@ namespace Employees
         public CardInfoViewModel CardInfo => new CardInfoViewModel(ShellWindowViewModel, cardService);
         public AuthViewModel Auth => new AuthViewModel(employeeService);
         public DeleteDialogViewModel DeleteDialog => new DeleteDialogViewModel(ShellWindowViewModel);
+
+        public ConnectionLostDialogViewModel ConnectionLostDialog => new ConnectionLostDialogViewModel(ShellWindowViewModel);
         public HubViewModel Hub => _hub;
-        public ChartViewModel Chart => new ChartViewModel();
+        public ChartViewModel Chart => new ChartViewModel(cardService);
     }
 }
