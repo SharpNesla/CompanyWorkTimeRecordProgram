@@ -13,9 +13,9 @@ namespace employees.Model
         public bool IsByDatePass { get; set; }
         public bool IsByEmployee { get; set; }
         public int EmployeeId { get; set; }
-        public int SumWorkTimeLowBound { get; set; }
-        public int SumWorkTimeHighBound { get; set; }
-        public DateTime DatePassLowBound { get; set; }
-        public DateTime DatePassHighBound { get; set; }
+        public int? SumWorkTimeLowBound { get; set; }
+        public int? SumWorkTimeHighBound { get; set; }
+        public DateTime? DatePassLowBound { get; set; }
+        public DateTime? DatePassHighBound { get; set; }
     }
 }

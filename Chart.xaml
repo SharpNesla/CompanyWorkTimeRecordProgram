@@ -20,9 +20,6 @@
                 <Button Grid.Row="0" Visibility="{Binding OrderGridVisibility}" DockPanel.Dock="Right"
                         Style="{StaticResource MaterialDesignToolButton}"
                         Foreground="{StaticResource MaterialDesignDarkForeground}" Width="28">
-                    <Button.Resources>
-                        <converters:BindingProxy x:Key="proxy" Data="{Binding}" />
-                    </Button.Resources>
                     <Button.ContextMenu>
                         <ContextMenu DataContext="{Binding ElementName=Screen, Path=DataContext}">
                             <MenuItem Header="Экспортировать как">

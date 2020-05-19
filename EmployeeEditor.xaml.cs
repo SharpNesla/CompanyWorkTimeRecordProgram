@@ -32,7 +32,7 @@ namespace employees
         {
             var tree = FindVisualChildren<TextBox>(view);
             var comboboxes = FindVisualChildren<ComboBox>(view).Where(x => x.IsEnabled);
-            foreach (TextBox tb in tree.Where(x=>x.Visibility == Visibility.Visible && x.IsEnabled))
+            foreach (TextBox tb in tree.Where(x => x.Visibility == Visibility.Visible && x.IsEnabled))
             {
                 tb.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
             }
@@ -71,6 +71,7 @@ namespace employees
         public abstract void Apply();
 
         public abstract void OnIncorrectData();
+
         /// <summary>
         /// Метод, позволяющий получить всех детей данного
         /// элемента в визуальном дереве элементов View
@@ -103,6 +104,14 @@ namespace employees
     {
         private readonly IShell _shell;
         private readonly EmployeeService _employees;
+        public string Password { get; set; }
+        public string AdditionalPassword { get; set; }
+
+        public ICommand ChangePassword =>
+            new RelayCommand<PasswordBox>(x => Password = x.Password);
+
+        public ICommand ChangeAdditionalPassword =>
+            new RelayCommand<PasswordBox>(x => AdditionalPassword = x.Password);
 
         public Role Role
         {
@@ -133,7 +142,7 @@ namespace employees
             _employees = employees;
             if (shell.LastNavigatedParameter == null)
             {
-                this.Entity = new Employee{DateBirth = DateTime.Now.AddYears(-16)};
+                this.Entity = new Employee {DateBirth = DateTime.Now.AddYears(-16)};
             }
             else
             {
@@ -144,13 +153,34 @@ namespace employees
 
         public override void Apply()
         {
-            if (IsNew)
+            if (IsPasswordChanging && HasRights)
             {
-                _employees.Add(this.Entity);
+                if (AdditionalPassword == Password)
+                {
+                    this.Entity = EmployeeService.SetPassword(Entity, Password);
+                }
+                else
+                {
+                    _shell.MessageQueue.Enqueue("Пароли не совпадают");
+                    return;
+                }
             }
-            else
+
+            try
             {
-                _employees.Update(this.Entity);
+                if (IsNew)
+                {
+                    _employees.Add(this.Entity);
+                }
+                else
+                {
+                    _employees.Update(this.Entity);
+                }
+            }
+            catch (Exception e)
+            {
+                _shell.OpenDialogByUri(CompanyUris.ConnectionLost, false, null);
+                return;
             }
 
             _shell.NavigateByUri(CompanyUris.Hub);

@@ -42,8 +42,6 @@ namespace employees.Elements
         private Employee _selectedEntity;
         private readonly bool _isRequired;
         private string _entityText;
-        public bool IsDropdownOpen { get; set; }
-        public ICommand OnInputChangedCommand => new RelayCommand(OnInputChanged);
         public List<Employee> Entities { get; set; }
 
         /// <summary>
@@ -93,12 +91,7 @@ namespace employees.Elements
             this.Entities = _service.Get("", "", true, new EmployeeFilterDefinition(), 10, 0);
             this.EntityChanged = OnEntityChangedCallback;
         }
-
-        public void OnInputChanged()
-        {
-            IsDropdownOpen = true;
-        }
-
+        
         #region Реализация IDataErrorInfo для валидации
 
         public string this[string columnName]

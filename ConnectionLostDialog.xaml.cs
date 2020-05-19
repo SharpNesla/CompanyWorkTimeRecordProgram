@@ -18,12 +18,16 @@ namespace employees
 {
     public class ConnectionLostDialogViewModel
     {
-        public ICommand AcceptCommand { get; }
+        public ICommand ApplyCommand { get; }
 
         public ConnectionLostDialogViewModel(IShell shell)
         {
-            this.AcceptCommand
-                = new RelayCommand(() => shell.NavigateByUri(CompanyUris.Auth));
+            this.ApplyCommand
+                = new RelayCommand(() =>
+                {
+                    shell.NavigateByUri(CompanyUris.Auth);
+                    shell.CloseDialogImmediately();
+                });
         }
     }
 }

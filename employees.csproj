@@ -150,7 +150,6 @@
     <Compile Include="ConnectionLostDialog.xaml.cs">
       <DependentUpon>ConnectionLostDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\BindingProxy.cs" />
     <Compile Include="Converters\BoolNotConverter.cs" />
     <Compile Include="Converters\BoolVisibilityConverter.cs" />
     <Compile Include="Converters\EnumBooleanConverter.cs" />

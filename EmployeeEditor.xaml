@@ -9,6 +9,7 @@
       xmlns:employees="clr-namespace:Employees"
       xmlns:model="clr-namespace:Employees.Model"
       xmlns:converters="clr-namespace:employees.Converters"
+      xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
       mc:Ignorable="d" d:DesignWidth="800"
       Name="EmployeeEditorView"
       DataContext="{Binding Source={StaticResource Locator}, Path=EmployeeEditor}">
@@ -55,7 +56,7 @@
                             <TextBox.Text>
                                 <Binding Path="Entity.Surname" UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
-                                        <validationRules:PersonTextDataValidation FieldName="Фамилия"
+                                        <validationRules:PersonTextDataValidation FieldName="фамилия"
                                                                                   ValidatesOnTargetUpdated="False" />
                                     </Binding.ValidationRules>
                                 </Binding>
@@ -66,7 +67,7 @@
                             <TextBox.Text>
                                 <Binding Path="Entity.Name" UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
-                                        <validationRules:PersonTextDataValidation FieldName="Имя"
+                                        <validationRules:PersonTextDataValidation FieldName="имя"
                                                                                   ValidatesOnTargetUpdated="False" />
                                     </Binding.ValidationRules>
                                 </Binding>
@@ -78,7 +79,7 @@
                             <TextBox.Text>
                                 <Binding Path="Entity.Patronymic" UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
-                                        <validationRules:PersonTextDataValidation FieldName="Отчество"
+                                        <validationRules:PersonTextDataValidation FieldName="отчество"
                                                                                   IsRequired="False"
                                                                                   ValidatesOnTargetUpdated="False" />
                                     </Binding.ValidationRules>
@@ -103,7 +104,7 @@
                             <TextBox.Text>
                                 <Binding Path="Entity.PassportSerial" UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
-                                        <validationRules:RequiredValidation FieldName="Серия и номер паспорта" />
+                                        <validationRules:RequiredValidation FieldName="серия и номер паспорта" />
                                     </Binding.ValidationRules>
                                 </Binding>
                             </TextBox.Text>
@@ -126,10 +127,18 @@
                                 Не определён
                             </RadioButton>
                         </StackPanel>
-                        <DatePicker SelectedDate="{Binding Entity.DateBirth}"
-                                    materialDesign:HintAssist.Hint="Дата рождения"
+                        <DatePicker
+                            materialDesign:HintAssist.Hint="Дата рождения"
                                     Language="ru"
-                                    Style="{StaticResource MaterialDesignFloatingHintDatePicker}" Margin="0,0,0,16" />
+                                    Style="{StaticResource MaterialDesignFloatingHintDatePicker}" Margin="0,0,0,16">
+                            <DatePicker.SelectedDate>
+                                <Binding Path="Entity.DateBirth" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <validationRules:RequiredValidation FieldName="дата рождения" />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </DatePicker.SelectedDate>
+                        </DatePicker>
                     </StackPanel>
                 </ScrollViewer>
             </materialDesign:Card>
@@ -153,7 +162,7 @@
                             <TextBox.Text>
                                 <Binding Path="Entity.Username" UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
-                                        <validationRules:RequiredValidation FieldName="Логин" />
+                                        <validationRules:RequiredValidation FieldName="логин" />
                                     </Binding.ValidationRules>
                                 </Binding>
                             </TextBox.Text>
@@ -161,18 +170,36 @@
                         <CheckBox VerticalAlignment="Bottom"
                                   Style="{StaticResource MaterialDesignCheckBox}"
                                   IsChecked="{Binding IsPasswordChanging}"
-                                  
+
                                   Visibility="{Binding HasRights, Converter={StaticResource BoolVisibilityConverter}}">
                             Изменить пароль
                         </CheckBox>
                         <PasswordBox Margin="0,0,0,16" Style="{StaticResource MaterialDesignPasswordBox}"
                                      materialDesign:HintAssist.Hint="Пароль"
                                      IsEnabled="{Binding IsPasswordChanging}" Height="40"
-                                     Visibility="{Binding HasRights, Converter={StaticResource BoolVisibilityConverter}}"/>
+                                     Visibility="{Binding HasRights, Converter={StaticResource BoolVisibilityConverter}}"
+                                     Name="PasswordBox">
+                            <b:Interaction.Triggers>
+                                <b:EventTrigger EventName="PasswordChanged">
+                                    <b:InvokeCommandAction
+                                        Command="{Binding ChangePassword}"
+                                        CommandParameter="{Binding ElementName=PasswordBox}" />
+                                </b:EventTrigger>
+                            </b:Interaction.Triggers>
+                        </PasswordBox>
                         <PasswordBox Margin="0,0,0,24" Style="{StaticResource MaterialDesignPasswordBox}"
                                      materialDesign:HintAssist.Hint="Пароль (Повторно)"
                                      IsEnabled="{Binding IsPasswordChanging}" Height="36"
-                                     Visibility="{Binding HasRights, Converter={StaticResource BoolVisibilityConverter}}"/>
+                                     Visibility="{Binding HasRights, Converter={StaticResource BoolVisibilityConverter}}"
+                                     Name="AdditionalPasswordBox">
+                            <b:Interaction.Triggers>
+                                <b:EventTrigger EventName="PasswordChanged">
+                                    <b:InvokeCommandAction
+                                        Command="{Binding ChangeAdditionalPassword}"
+                                        CommandParameter="{Binding ElementName=AdditionalPasswordBox}" />
+                                </b:EventTrigger>
+                            </b:Interaction.Triggers>
+                        </PasswordBox>
 
                     </StackPanel>
                     <TextBox Grid.ColumnSpan="3" Grid.Row="4" Grid.Column="0"

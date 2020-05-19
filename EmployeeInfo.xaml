@@ -41,7 +41,7 @@
         <DockPanel LastChildFill="False" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" Margin="24,0,24,24">
             <Button IsCancel="True" MaxWidth="132" DockPanel.Dock="Left"
                     Style="{StaticResource MaterialDesignFlatButton}"
-                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
+                    Command="{Binding ApplyCommand}">
                 ПРИНЯТЬ
             </Button>
         </DockPanel>
@@ -124,19 +124,7 @@
                         SelectionMode="Single"
                         IsReadOnly="True"
                         AutoGenerateColumns="False"
-                        SelectedItem="{Binding SelectedEntity}"
                         ItemsSource="{Binding Entity.Cards}">
-                        <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem />
-                                <MenuItem />
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
-
-                        <DataGrid.Resources>
-                            <converters:BindingProxy x:Key="proxy" Data="{Binding}" />
-                        </DataGrid.Resources>
-
                         <DataGrid.Columns>
                             <elements:DataGridAdaptiveColumn Binding="{Binding Id}" CanUserReorder="True"
                                                              IsReadOnly="True" MinWidth="32"
@@ -159,8 +147,6 @@
                             <elements:DataGridAdaptiveColumn
                                 Binding="{Binding WorkLoadTimeWednesday, StringFormat='#0:00'}"
                                 CanUserReorder="True"
-
-                                Visibility="{Binding Data.IsCompact, Source={StaticResource proxy}, Converter={StaticResource BoolNotVisibilityConverter}}"
                                 Width="64"
                                 Header="Ср" />
                             <elements:DataGridAdaptiveColumn

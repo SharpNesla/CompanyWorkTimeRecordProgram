@@ -4,6 +4,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:local="clr-namespace:Employees"
+      xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
       mc:Ignorable="d"
       DataContext="{Binding Auth, Source={StaticResource Locator}}"
       d:DesignHeight="450" d:DesignWidth="800">
@@ -27,23 +28,21 @@
                 <Border Padding="16">
                     <StackPanel>
                         <TextBox Name="Username" Style="{StaticResource MaterialDesignFilledTextFieldTextBox}"
+                                 Text="{Binding Username}"
                                  materialDesign:HintAssist.Hint="Логин" Margin="0,0,0,16" />
                         <PasswordBox Style="{StaticResource MaterialDesignFilledPasswordFieldPasswordBox}"
-                                     materialDesign:HintAssist.Hint="Пароль" Margin="0,0,0,16" />
-                        <ToggleButton Visibility="Collapsed"
-                                      Style="{StaticResource MaterialDesignActionToggleButton}"
-                                      Margin="0,-90,-212,0" Focusable="False">
-                            <ToggleButton.Content>
-                                <materialDesign:PackIcon
-                                    Kind="EyeOff" />
-                            </ToggleButton.Content>
-                            <materialDesign:ToggleButtonAssist.OnContent>
-                                <materialDesign:PackIcon
-                                    Kind="Eye" />
-                            </materialDesign:ToggleButtonAssist.OnContent>
-                        </ToggleButton>
-                        <local:NavigateButton Style="{StaticResource MaterialDesignRaisedButton}"
-                                              Content="Войти" NavigateUri="Hub.xaml" />
+                                     materialDesign:HintAssist.Hint="Пароль" Margin="0,0,0,16"
+                                     Name="PasswordBox">
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="PasswordChanged">
+                                <b:InvokeCommandAction
+                                    Command="{Binding ChangePassword}"
+                                    CommandParameter="{Binding ElementName=PasswordBox}" />
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
+                        </PasswordBox>
+                        <Button Command="{Binding TryAuthCommand}" Content="Войти" 
+                                Style="{StaticResource MaterialDesignRaisedButton}"/>
                     </StackPanel>
                 </Border>
             </StackPanel>

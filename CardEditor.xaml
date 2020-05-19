@@ -6,13 +6,15 @@
     xmlns:local="clr-namespace:Employees"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:elements="clr-namespace:employees.Elements"
+    xmlns:validationRules="clr-namespace:Employees.ValidationRules"
     x:Class="Employees.EmployeeCardEditor"
     mc:Ignorable="d"
     TextElement.FontWeight="Medium"
       TextElement.FontSize="14"
       FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
     d:DesignHeight="600" d:DesignWidth="800"
-    DataContext="{Binding Source={StaticResource Locator}, Path=CardEditor}">
+    DataContext="{Binding Source={StaticResource Locator}, Path=CardEditor}"
+    Name="CardEditorView">
 
     <DockPanel VerticalAlignment="Stretch">
         <materialDesign:ColorZone DockPanel.Dock="Top" materialDesign:ShadowAssist.ShadowDepth="Depth1"
@@ -35,7 +37,7 @@
                 ОТМЕНИТЬ
             </local:NavigateButton>
             <Button DockPanel.Dock="Left" MaxWidth="132" Command="{Binding ApplyCommand}"
-                    CommandParameter="{Binding ElementName=EmployeeEditorView}"
+                    CommandParameter="{Binding ElementName=CardEditorView}"
                     Style="{StaticResource MaterialDesignFlatButton}" Margin="0,0,20,0">
                 ПРИНЯТЬ
             </Button>
@@ -48,12 +50,27 @@
                         <elements:EmployeeComboBox Margin="0,0,0,16" DataContext="{Binding EmployeeComboBoxViewModel}"/>
                         <DatePicker Margin="0,0,0,16"
                                     Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
-                                    materialDesign:HintAssist.Hint="Дата сдачи"></DatePicker>
+                                    materialDesign:HintAssist.Hint="Дата сдачи">
+                            <DatePicker.SelectedDate>
+                                <Binding Path="Entity.DatePass" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <validationRules:RequiredValidation FieldName="дата сдачи" />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </DatePicker.SelectedDate>
+                        </DatePicker>
                         <TextBox materialDesign:HintAssist.Hint="Почасовая заработная плата"
                                  materialDesign:TextFieldAssist.SuffixText="₽"
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                                 Text="{Binding Entity.Payment}"
-                                 Margin="0,0,0,16"/>
+                                 Margin="0,0,0,16">
+                            <TextBox.Text>
+                                <Binding Path="Entity.Payment" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <validationRules:RequiredValidation FieldName="почасовая З/П" />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
                         <TextBlock Text="{Binding Entity.PaymentFull, StringFormat='Отработанное время:'}"
                                    Margin="0,0,0,8"/>
                         <Grid Margin="0,0,0,16">

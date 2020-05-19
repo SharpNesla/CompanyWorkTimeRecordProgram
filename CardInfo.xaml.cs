@@ -23,6 +23,7 @@ namespace Employees
         public Card Entity { get; set; }
         public List<Card> CardArray => new List<Card>(new[] {this.Entity});
         public ICommand ViewEmployeeInfoCommand { get; }
+        public ICommand ApplyCommand { get; }
 
         public CardInfoViewModel(IShell shell, CardService service)
         {
@@ -30,6 +31,7 @@ namespace Employees
             this.ViewEmployeeInfoCommand =
                 new RelayCommand(
                     () => shell.OpenDialogByUri(CompanyUris.EmployeeInfo, true, this.Entity.EmployeeId));
+            ApplyCommand = new RelayCommand(() => shell.TryCloseDialog());
         }
     }
 }

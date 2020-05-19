@@ -13,6 +13,7 @@
       xmlns:converters="clr-namespace:employees.Converters"
       xmlns:employees="clr-namespace:Employees"
       xmlns:model="clr-namespace:Employees.Model"
+      xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
       DataContext="{Binding Hub,Source={StaticResource Locator}}"
       Title="Hub" d:DesignHeight="549" d:DesignWidth="1205.5">
     <DockPanel LastChildFill="True">
@@ -297,44 +298,34 @@
                                 CellStyle="{StaticResource CellStyle}"
                                 SelectionMode="Single"
                                 AutoGenerateColumns="False"
-                                SelectedItem="{Binding SelectedEntity}"
                                 ItemsSource="{Binding Entities}">
-                                <DataGrid.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem />
-                                        <MenuItem />
-                                    </ContextMenu>
-                                </DataGrid.ContextMenu>
-
-                                <DataGrid.Resources>
-                                    <converters:BindingProxy x:Key="proxy" Data="{Binding}" />
-                                </DataGrid.Resources>
-
+                                <b:Interaction.Triggers>
+                                    <b:EventTrigger EventName="Sorting">
+                                        <b:InvokeCommandAction Command="{Binding SortEmployeeCommand}"
+                                                               PassEventArgsToCommand="True"/>
+                                    </b:EventTrigger>
+                                </b:Interaction.Triggers>
                                 <DataGrid.Columns>
                                     <elements:DataGridAdaptiveColumn Binding="{Binding Id}" CanUserReorder="True"
                                                                      IsReadOnly="True" MinWidth="32"
-
                                                                      Header="№" />
                                     <elements:DataGridAdaptiveColumn Binding="{Binding Surname}" CanUserReorder="True"
-
                                                                      MinWidth="96"
-                                                                     Header="Фамилия" />
+                                                                     Header="Фамилия"
+                                                                       />
                                     <elements:DataGridAdaptiveColumn Binding="{Binding Name}" CanUserReorder="True"
-
-
                                                                      Header="Имя" />
                                     <elements:DataGridAdaptiveColumn Binding="{Binding Patronymic}"
                                                                      CanUserReorder="True"
-
-                                                                     MinWidth="96" SortMemberPath="Surname"
+                                                                     MinWidth="96"
                                                                      Header="Отчество" />
                                     <elements:DataGridAdaptiveColumn Binding="{Binding PhoneNumber}" MinWidth="128"
                                                                      Header="Номер телефона"
-                                                                     CanUserReorder="True"
-                                                                     SortMemberPath="PhoneNumber" />
+                                                                     CanUserSort="False"
+                                                                     CanUserReorder="True"/>
                                     <elements:DataGridAdaptiveColumn
                                         Binding="{Binding DateBirth, StringFormat='dd.MM.yyyy'}" CanUserReorder="True"
-                                        SortMemberPath="DateBirth" MinWidth="128"
+                                        MinWidth="128"
                                         Header="Дата рождения" />
                                     <DataGridTemplateColumn CanUserReorder="True" Width="*" />
 
@@ -518,47 +509,47 @@
                                                 </Button>
                                             </StackPanel>
                                             <StackPanel VerticalAlignment="Stretch" Margin="7,0,0,0"
-                                                        Orientation="Horizontal" Height="128">
+                                                        Orientation="Horizontal" Height="128"
+                                                        DataContext="{Binding FilterDefinition}">
                                                 <StackPanel Width="152" Margin="16,8,0,0" VerticalAlignment="Stretch"
                                                             HorizontalAlignment="Left">
-                                                    <CheckBox IsChecked="{Binding FilterDefinition.IsByDatePass}">По дате сдачи</CheckBox>
+                                                    <CheckBox IsChecked="{Binding IsByDatePass}">По дате сдачи</CheckBox>
                                                     <DatePicker
-                                                        SelectedDate="{Binding FilterDefinition.DatePassLowBound}"
+                                                        SelectedDate="{Binding DatePassLowBound}"
                                                         materialDesign:HintAssist.Hint="Нижняя граница"
                                                         Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
                                                         Margin="0,4,0,0"
                                                         HorizontalAlignment="Stretch"
-                                                        IsEnabled="{Binding FilterDefinition.IsByDatePass}" />
+                                                        IsEnabled="{Binding IsByDatePass}" />
                                                     <DatePicker
-                                                        SelectedDate="{Binding FilterDefinition.DatePassHighBound}"
+                                                        SelectedDate="{Binding DatePassHighBound}"
                                                         materialDesign:HintAssist.Hint="Верхняя граница"
                                                         Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
                                                         Margin="0,4,0,0"
                                                         HorizontalAlignment="Stretch"
-                                                        IsEnabled="{Binding FilterDefinition.IsByDatePass}" />
+                                                        IsEnabled="{Binding IsByDatePass}" />
                                                 </StackPanel>
                                                 <StackPanel Width="225" Margin="16,8,0,0" VerticalAlignment="Stretch"
                                                             HorizontalAlignment="Left">
-                                                    <CheckBox IsChecked="{Binding FilterDefinition.IsBySumWorkTime}">По сумме отработанных часов</CheckBox>
+                                                    <CheckBox IsChecked="{Binding IsBySumWorkTime}">По сумме отработанных часов</CheckBox>
                                                     <TextBox Margin="0,4,0,0"
                                                              materialDesign:HintAssist.Hint="Нижняя граница"
                                                              Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                                                              HorizontalAlignment="Stretch"
-                                                             IsEnabled="{Binding FilterDefinition.IsBySumWorkTime}" />
+                                                             Text="{Binding SumWorkTimeLowBound}"
+                                                             IsEnabled="{Binding IsBySumWorkTime}" />
                                                     <TextBox Margin="0,4,0,0"
                                                              materialDesign:HintAssist.Hint="Верхняя граница"
                                                              Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                                                              HorizontalAlignment="Stretch"
-                                                             IsEnabled="{Binding FilterDefinition.IsBySumWorkTime}" />
+                                                             Text="{Binding SumWorkTimeHighBound}"
+                                                             IsEnabled="{Binding IsBySumWorkTime}" />
                                                 </StackPanel>
 
                                                 <StackPanel Width="197" Margin="16,8,0,0" VerticalAlignment="Stretch"
                                                             HorizontalAlignment="Left">
-                                                    <CheckBox IsChecked="{Binding FilterDefinition.IsByEmployee}">По работнику</CheckBox>
-                                                    <ComboBox Margin="0,1,0,0"
-                                                              Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                                                              materialDesign:HintAssist.Hint="Работник"
-                                                              IsEnabled="{Binding FilterDefinition.IsByEmployee}" />
+                                                    <CheckBox IsChecked="{Binding IsByEmployee}">По работнику</CheckBox>
+                                                    <elements:EmployeeComboBox Margin="0,1,0,0"/>
                                                 </StackPanel>
                                             </StackPanel>
                                         </StackPanel>
@@ -574,24 +565,19 @@
                                       CellStyle="{StaticResource CellStyle}"
                                       SelectionMode="Single"
                                       AutoGenerateColumns="False"
-                                      SelectedItem="{Binding SelectedEntity}"
                                       ItemsSource="{Binding Entities}">
-                                <DataGrid.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem />
-                                        <MenuItem />
-                                    </ContextMenu>
-                                </DataGrid.ContextMenu>
-
-                                <DataGrid.Resources>
-                                    <converters:BindingProxy x:Key="proxy" Data="{Binding}" />
-                                </DataGrid.Resources>
-
+                                <b:Interaction.Triggers>
+                                    <b:EventTrigger EventName="Sorting">
+                                        <b:InvokeCommandAction Command="{Binding SortEmployeeCommand}"
+                                                               PassEventArgsToCommand="True"/>
+                                    </b:EventTrigger>
+                                </b:Interaction.Triggers>
                                 <DataGrid.Columns>
-                                    <elements:DataGridAdaptiveColumn Binding="{Binding Id}" CanUserReorder="True"
+                                    <elements:DataGridAdaptiveColumn
+                                        Binding="{Binding Id}" CanUserReorder="True"
                                                                      IsReadOnly="True" MinWidth="32"
-
-                                                                     Header="№" />
+                                        SortMemberPath="Empty"
+                                        Header="№" />
                                     <elements:DataGridAdaptiveColumn
                                         Binding="{Binding WorkLoadTimeMonday, StringFormat='00:00'}"
                                         CanUserReorder="True"

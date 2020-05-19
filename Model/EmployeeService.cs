@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace employees.Model
 {
     public class EmployeeService
     {
+        public Employee CurrentUser { get; private set; }
         private readonly ApplicationContext _applicationContext;
 
         public EmployeeService(ApplicationContext applicationContext)
@@ -72,12 +74,34 @@ namespace employees.Model
                     request = request.Where(x => x.SumWorkTime <= filter.SumWorkTimeHighBound);
                 }
             }
-
-
+            
             if (filter.IsByRole)
                 request = request.Where(x => x.Role == filter.Role);
-            
-            return request.OrderBy(x => x.Id).Skip(offset).Take(limit).ToList();
+
+            switch (sortBy)
+            {
+                case "Name":
+                    request = sortDirection ? request.OrderBy(x => x.Name):
+                        request.OrderByDescending(x => x.Name);
+                    break;
+                case "Surname":
+                    request = sortDirection ? request.OrderBy(x => x.Surname):
+                        request.OrderByDescending(x => x.Surname);
+                    break;
+                case "Patronymic":
+                    request = sortDirection ? request.OrderBy(x => x.Patronymic):
+                        request.OrderByDescending(x => x.Name);
+                    break;
+                case "DateBirth":
+                    request = sortDirection ? request.OrderBy(x => x.DateBirth):
+                        request.OrderByDescending(x => x.DateBirth);
+                    break;
+                default:
+                    request = request.OrderBy(x => x.Id);
+                    break;
+            }
+
+            return request.Skip(offset).Take(limit).ToList();
         }
 
         public Employee GetById(int id)
@@ -134,10 +158,9 @@ namespace employees.Model
                 }
             }
 
-
             if (filter.IsByRole)
                 request = request.Where(x => x.Role == filter.Role);
-
+            
             return request.Count();
         }
 
@@ -172,8 +195,11 @@ namespace employees.Model
 
             var header = sheet.CreateRow(0);
 
-            var tableSheetHeader = new[] {"№", "Имя", "Фамилия", "Отчество", "Номер телефона",
-                "Серия и номер паспорта", "Дата рождения", "Отработано всего", "Имя пользователя"};
+            var tableSheetHeader = new[]
+            {
+                "№", "Имя", "Фамилия", "Отчество", "Номер телефона",
+                "Серия и номер паспорта", "Дата рождения", "Отработано всего", "Имя пользователя"
+            };
 
             for (var i = 0; i < tableSheetHeader.Length; i++)
             {
@@ -220,6 +246,54 @@ namespace employees.Model
                     workbook.Write(fs);
                 }
             }
+        }
+
+        public Employee Auth(string username, string password)
+        {
+            Employee user = null;
+
+            try
+            {
+                user = _applicationContext.Employees.First(x => x.Username == username);
+            }
+            catch (Exception e)
+            {
+                throw new UnauthorizedAccessException("User with username is not found! ");
+            }
+
+
+            byte[] hashBytes = Convert.FromBase64String(user.PasswordHash);
+            // Получение соли 
+            byte[] salt = new byte[16];
+            Array.Copy(hashBytes, 0, salt, 0, 16);
+            // Вычисление хэша вводимого пароля
+            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 10000);
+            byte[] hash = pbkdf2.GetBytes(20);
+            // Сравнение хэшей
+            for (int i = 0; i < 20; i++)
+                if (hashBytes[i + 16] != hash[i])
+                    throw new UnauthorizedAccessException();
+            CurrentUser = user;
+            return user;
+        }
+
+        public static Employee SetPassword(Employee employee, string password)
+        {
+            byte[] salt;
+            new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
+
+            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 10000);
+            byte[] hash = pbkdf2.GetBytes(20);
+
+            byte[] hashBytes = new byte[36];
+            Array.Copy(salt, 0, hashBytes, 0, 16);
+            Array.Copy(hash, 0, hashBytes, 16, 20);
+
+            string savedPasswordHash = Convert.ToBase64String(hashBytes);
+
+            employee.PasswordHash = savedPasswordHash;
+
+            return employee;
         }
 
         private static string MakeSearchRegexp(string searchString)

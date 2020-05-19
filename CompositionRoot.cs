@@ -13,11 +13,8 @@ namespace Employees
         private ApplicationContext _applicationContext = new ApplicationContext();
         private EmployeeService employeeService => new EmployeeService(_applicationContext);
         private CardService cardService => new CardService(_applicationContext);
-        private HubViewModel _hub => new HubViewModel(this.EmployeeDictionary, this.CardDictionary);
         private PaginatorViewModel paginator => new PaginatorViewModel();
-        private ShellWindowViewModel _shell = new ShellWindowViewModel();
-        
-        public ShellWindowViewModel ShellWindowViewModel => _shell;
+        public ShellWindowViewModel ShellWindowViewModel { get; } = new ShellWindowViewModel();
 
         public EmployeeDictionaryViewModel EmployeeDictionary =>
             new EmployeeDictionaryViewModel(ShellWindowViewModel, employeeService, paginator);
@@ -28,15 +25,18 @@ namespace Employees
         public EmployeeInfoViewModel EmployeeInfo => new EmployeeInfoViewModel(ShellWindowViewModel, employeeService);
 
         public CardDictionaryViewModel CardDictionary =>
-            new CardDictionaryViewModel(ShellWindowViewModel, cardService, paginator);
+            new CardDictionaryViewModel(ShellWindowViewModel, employeeService, cardService, paginator);
 
-        public CardEditorViewModel CardEditor => new CardEditorViewModel(ShellWindowViewModel, cardService, employeeService);
+        public CardEditorViewModel CardEditor =>
+            new CardEditorViewModel(ShellWindowViewModel, cardService, employeeService);
+
         public CardInfoViewModel CardInfo => new CardInfoViewModel(ShellWindowViewModel, cardService);
-        public AuthViewModel Auth => new AuthViewModel(employeeService);
+        public AuthViewModel Auth => new AuthViewModel(ShellWindowViewModel, employeeService);
         public DeleteDialogViewModel DeleteDialog => new DeleteDialogViewModel(ShellWindowViewModel);
 
-        public ConnectionLostDialogViewModel ConnectionLostDialog => new ConnectionLostDialogViewModel(ShellWindowViewModel);
-        public HubViewModel Hub => _hub;
+        public ConnectionLostDialogViewModel ConnectionLostDialog =>
+            new ConnectionLostDialogViewModel(ShellWindowViewModel);
+        public HubViewModel Hub => new HubViewModel(this.EmployeeDictionary, this.CardDictionary);
         public ChartViewModel Chart => new ChartViewModel(cardService);
     }
 }

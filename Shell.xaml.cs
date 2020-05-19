@@ -37,7 +37,8 @@ namespace Employees
         public static readonly Uri DeleteDialog = new Uri("DeleteDialog.xaml", UriKind.Relative);
         public static readonly Uri Hub = new Uri("Hub.xaml", UriKind.Relative);
         public static readonly Uri Auth = new Uri("Auth.xaml", UriKind.Relative);
-        public static readonly Uri ConnectionLost = new Uri("ConnectionLostDialog", UriKind.Relative);
+        public static readonly Uri ConnectionLost = new Uri("ConnectionLostDialog.xaml", UriKind.Relative);
+
     }
 
     public interface IShell
@@ -58,9 +59,13 @@ namespace Employees
         private Shell _windowDependencyObject;
         private DialogHost _host;
         public SnackbarMessageQueue MessageQueue { get; set; } 
-            = new SnackbarMessageQueue(new TimeSpan(0,0,0,1));
+            = new SnackbarMessageQueue(new TimeSpan(0,0,0,1)) {IgnoreDuplicate = false};
         public ICommand InitializeWindow =>
-            new RelayCommand<Shell>(x => this._windowDependencyObject = x);
+            new RelayCommand<Shell>(x =>
+            {
+                if (x != null) this._windowDependencyObject = x;
+                x.NavigationService.Navigate(CompanyUris.Auth);
+            });
 
         public ICommand InitializeDialogHost =>
             new RelayCommand<DialogHost>(ExecuteAction);
@@ -104,10 +109,10 @@ namespace Employees
         public async void TryCloseDialog()
         {
             var dialogFrame = this._host.DialogContent as Frame;
-            if (dialogFrame.CanGoBack)
+            if (dialogFrame.NavigationService.CanGoBack)
             {
                 dialogFrame.NavigationService.GoBack();
-                dialogFrame.RemoveBackEntry();
+                dialogFrame.NavigationService.RemoveBackEntry();
             }
             else
             {
@@ -120,7 +125,18 @@ namespace Employees
 
         public async void CloseDialogImmediately()
         {
+            var dialogFrame = this._host.DialogContent as Frame;
+            while (dialogFrame.NavigationService.CanGoBack)
+            {
+                dialogFrame.NavigationService.RemoveBackEntry();
+            }
+            this._host.IsOpen = false;
+            OnDialogCloseCallback?.Invoke();
             this.OnDialogCloseCallback = null;
+        }
+
+        public ShellWindowViewModel()
+        {
         }
     }
 }

@@ -43,6 +43,45 @@ namespace employees.Model
                                              x.DatePass <= filter.DatePassHighBound);
             }
 
+            switch (sortBy)
+            {
+                case "WorkLoadTimeMonday":
+                    request = sortDirection ? request.OrderBy(x => x.WorkLoadTimeMonday) :
+                        request.OrderByDescending(x => x.WorkLoadTimeMonday);
+                    break;
+                case "WorkLoadTimeTuesday":
+                    request = sortDirection ? request.OrderBy(x => x.WorkLoadTimeTuesday) :
+                        request.OrderByDescending(x => x.WorkLoadTimeTuesday);
+                    break;
+                case "WorkLoadTimeWednesday":
+                    request = sortDirection ? request.OrderBy(x => x.WorkLoadTimeWednesday) :
+                        request.OrderByDescending(x => x.WorkLoadTimeWednesday);
+                    break;
+                case "WorkLoadTimeThursday":
+                    request = sortDirection ? request.OrderBy(x => x.WorkLoadTimeThursday) :
+                        request.OrderByDescending(x => x.WorkLoadTimeThursday);
+                    break;
+                case "WorkLoadTimeFriday":
+                    request = sortDirection ? request.OrderBy(x => x.WorkLoadTimeFriday) :
+                        request.OrderByDescending(x => x.WorkLoadTimeFriday);
+                    break;
+                case "DatePass":
+                    request = sortDirection ? request.OrderBy(x => x.DatePass) :
+                        request.OrderByDescending(x => x.DatePass);
+                    break;
+                case "Employee":
+                    request = sortDirection ? request.OrderBy(x => x.EmployeeId) :
+                        request.OrderByDescending(x => x.EmployeeId);
+                    break;
+                case "Payment":
+                    request = sortDirection ? request.OrderBy(x => x.Payment) :
+                        request.OrderByDescending(x => x.Payment);
+                    break;
+                default:
+                    request = request.OrderBy(x => x.Id);
+                    break;
+            }
+
             return request.OrderBy(x => x.Id).Skip(offset).Take(limit).ToList();
         }
 

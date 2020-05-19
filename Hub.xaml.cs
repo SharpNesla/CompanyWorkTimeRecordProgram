@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -50,6 +51,10 @@ namespace employees
 
     public class DictionaryViewModelBase<TEntity, TFilter> : ViewModelBase where TFilter : new()
     {
+        protected bool SortDirection = true;
+        protected string SortingColumn;
+
+       
         public bool IsFilterDrawerOpened { get; set; }
         public TFilter FilterDefinition { get; set; } = new TFilter();
         public ICommand EraseFilters => new RelayCommand(() => this.FilterDefinition = new TFilter());
@@ -78,7 +83,15 @@ namespace employees
         public ICommand ViewEmployeeInfoCommand =>
             new RelayCommand<Employee>(
                 x => _shell.OpenDialogByUri(CompanyUris.EmployeeInfo, true, x.Id));
-
+        public ICommand SortEmployeeCommand => new RelayCommand<DataGridSortingEventArgs>(
+            eventArgs =>
+            {
+                SortDirection = eventArgs.Column.SortDirection == ListSortDirection.Ascending;
+                SortingColumn = eventArgs.Column.SortMemberPath.Substring(1);
+                StateChanged?.Invoke();
+                eventArgs.Column.SortDirection =
+                    SortDirection ? ListSortDirection.Ascending : ListSortDirection.Descending;
+            });
         public ICommand RefreshCommand => new RelayCommand(() => this.StateChanged?.Invoke());
 
         public ICommand DeleteEmployeeCommand =>
@@ -96,26 +109,27 @@ namespace employees
         }
 
         public long Count => this._service.GetCount(SearchString, FilterDefinition);
+       
 
         public void Refresh(int page, int elements)
         {
             try
             {
-                this.Entities = this._service.Get(SearchString, "", true, FilterDefinition,
+                this.Entities = this._service.Get(SearchString, SortingColumn,
+                    SortDirection, FilterDefinition,
                     elements, page * elements);
             }
             catch (Exception e)
             {
                 _shell.OpenDialogByUri(CompanyUris.ConnectionLost, false, null);
             }
-            
         }
 
         public event Action StateChanged;
 
         public void ExportToExcel()
         {
-            this._service.SaveExcelDocument(SearchString, "", true, FilterDefinition);
+            this._service.SaveExcelDocument(SearchString, SortingColumn, SortDirection, FilterDefinition);
         }
     }
 
@@ -125,6 +139,7 @@ namespace employees
         private readonly CardService _service;
 
         public List<Card> Entities { get; set; }
+        public EmployeeComboBoxViewModel EmployeeComboBoxViewModel { get; set; }
 
         public ICommand AddCardCommand =>
             new RelayCommand(() => _shell.NavigateByUri(CompanyUris.CardEditor));
@@ -141,14 +156,26 @@ namespace employees
                 CompanyUris.DeleteDialog, false,
                 () => StateChanged?.Invoke(),
                 new object[] {x.Id, _service}));
-
+        public ICommand SortEmployeeCommand => new RelayCommand<DataGridSortingEventArgs>(
+            eventArgs =>
+            {
+                SortDirection = eventArgs.Column.SortDirection == ListSortDirection.Ascending;
+                SortingColumn = eventArgs.Column.SortMemberPath.Substring(1);
+                StateChanged?.Invoke();
+                eventArgs.Column.SortDirection =
+                    SortDirection ? ListSortDirection.Ascending : ListSortDirection.Descending;
+            });
         public ICommand RefreshCommand => new RelayCommand(() => this.StateChanged?.Invoke());
 
-        public CardDictionaryViewModel(IShell shell, CardService service, PaginatorViewModel paginatorViewModel)
+        public CardDictionaryViewModel(IShell shell, EmployeeService employeeService,
+            CardService cardService, PaginatorViewModel paginatorViewModel)
             : base(paginatorViewModel)
         {
             _shell = shell;
-            _service = service;
+            _service = cardService;
+            this.EmployeeComboBoxViewModel =
+                new EmployeeComboBoxViewModel(employeeService,
+                    x => this.FilterDefinition.EmployeeId = x.Id);
             this.PaginatorViewModel.RegisterPaginable(this, true);
         }
 

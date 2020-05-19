@@ -10,7 +10,7 @@
 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
-             DataContext="{Binding DeleteDialog,Source={StaticResource Locator}}"
+             DataContext="{Binding ConnectionLostDialog,Source={StaticResource Locator}}"
              Background="{StaticResource MaterialDesignPaper}">
     <DockPanel Width="525">
         <materialDesign:ColorZone DockPanel.Dock="Top" materialDesign:ShadowAssist.ShadowDepth="Depth1" Mode="PrimaryMid"
@@ -27,7 +27,7 @@
             </DockPanel>
         </materialDesign:ColorZone>
         <StackPanel Orientation="Vertical" Margin="24">
-            <Button DockPanel.Dock="Left" MaxWidth="132"
+            <Button DockPanel.Dock="Left"
                     Command="{Binding ApplyCommand}"
                     Style="{StaticResource MaterialDesignFlatButton}" >
                 ПРИНЯТЬ

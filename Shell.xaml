@@ -11,7 +11,6 @@
                   xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                   xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
                   mc:Ignorable="d"
-                  Source="Auth.xaml"
                   ShowsNavigationUI="False"
                   Title=""
                   DataContext="{Binding Source={StaticResource Locator}, Path=ShellWindowViewModel}"
@@ -19,7 +18,7 @@
                   Name="ShellWindowView"
                   MinHeight="600" MinWidth="800">
     <b:Interaction.Triggers>
-        <b:EventTrigger EventName="LoadCompleted">
+        <b:EventTrigger EventName="Loaded">
             <b:InvokeCommandAction Command="{Binding InitializeWindow}"
                                    CommandParameter="{Binding ElementName=ShellWindowView}"/>
         </b:EventTrigger>
@@ -35,7 +34,7 @@
                         </b:EventTrigger>
                     </b:Interaction.Triggers>
                     <materialDesign:DialogHost.DialogContent>
-                        <Frame></Frame>
+                        <Frame NavigationUIVisibility="Visible"></Frame>
                     </materialDesign:DialogHost.DialogContent>
                     <ContentControl
                         Content="{Binding Content, RelativeSource={RelativeSource AncestorType=NavigationWindow}}" />

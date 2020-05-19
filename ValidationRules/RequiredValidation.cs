@@ -17,7 +17,7 @@ namespace Employees.ValidationRules
             string strValue = Convert.ToString(value);
             if (string.IsNullOrEmpty(strValue))
             {
-                return new ValidationResult(false, $"{FieldName} не может быть пустым");
+                return new ValidationResult(false, $"Поле {FieldName} не может быть незаполненно");
             }
             else
             {

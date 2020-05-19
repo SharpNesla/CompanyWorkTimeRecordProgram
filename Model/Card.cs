@@ -12,7 +12,7 @@ namespace employees.Model
     {
         public int EmployeeId { get; set; }
         public Employee Employee { get; set; }
-        public decimal Payment { get; set; } = 200;
+        public decimal Payment { get; set; }
         public decimal PaymentFull { get; set; }
         public DateTime DatePass { get; set; }
         public int WorkLoadTimeMonday { get; set; }

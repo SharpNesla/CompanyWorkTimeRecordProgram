@@ -20,10 +20,10 @@ namespace Employees.ValidationRules
         {
             string strValue = Convert.ToString(value);
             if (string.IsNullOrEmpty(strValue) && IsRequired)
-                return new ValidationResult(false, $"{FieldName} не может быть пустым");
+                return new ValidationResult(false, $"Поле {FieldName} не может быть незаполненным");
             if (!Regex.IsMatch(strValue, @"^[а-яА-Я-а-яА-Я ]*([а-я])$"))
             {
-                return new ValidationResult(false, $"{FieldName} содержит некорректные символы");
+                return new ValidationResult(false, $"Поле {FieldName} содержит некорректные символы или не заполнено");
             }
             else
             {

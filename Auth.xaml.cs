@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using employees;
 
 namespace Employees
 {
@@ -20,12 +21,30 @@ namespace Employees
     /// Interaction logic for Auth.xaml
     /// </summary>
     public class AuthViewModel
-    {
-        private readonly EmployeeService employeeService;
+    { 
+        public string Username { get; set; }
+        private string _password;
+        public ICommand TryAuthCommand { get; set; }
 
-        public AuthViewModel(EmployeeService employeeService)
+        public ICommand ChangePassword => new RelayCommand<PasswordBox>(x=>_password = x.Password);
+
+        public AuthViewModel(IShell shell, EmployeeService employeeService)
         {
-            this.employeeService = employeeService;
+            this.TryAuthCommand = new RelayCommand(() =>
+            {
+                try
+                {
+                    employeeService.Auth(Username, _password);
+                    shell.NavigateByUri(CompanyUris.Hub);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    var messageQueue = shell.MessageQueue;
+                    var message = "Неправильное имя пользователя или пароль";
+
+                    messageQueue.Enqueue(message);
+                }
+            });
         }
     }
 }
