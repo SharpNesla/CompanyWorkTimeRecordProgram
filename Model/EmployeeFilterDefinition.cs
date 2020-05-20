@@ -7,6 +7,11 @@ using Employees.Model;
 
 namespace employees.Model
 {
+    /// <summary>
+    /// Ввспомогательный класс, использующийся для
+    /// хранения информации о критериях выбора данных
+    /// списка работников.
+    /// </summary>
     public class EmployeeFilterDefinition
     {
         public bool IsByGender { get; set; }

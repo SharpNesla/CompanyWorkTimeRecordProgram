@@ -2,6 +2,10 @@
 
 namespace Employees.Model
 {
+    /// <summary>
+    /// Перечисление Role используется для хранения данных
+    /// о правах пользователей в системе. 
+    /// </summary>
     public enum Role
     {
         [Description("Чтение и запись")]

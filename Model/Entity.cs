@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace employees.Model
 {
+    /// <summary>
+    /// Абстрактный базовый класс данных.
+    /// </summary>
     public abstract class Entity
     {
         [Key]

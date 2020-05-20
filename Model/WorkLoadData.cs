@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace employees.Model
 {
+    /// <summary>
+    /// Вспомогательный класс данных, использующийся при
+    /// построении диаграмм загруженности работников по дням недели.
+    /// </summary>
     public class WorkLoadData
     {
         public int Max { get; set; }

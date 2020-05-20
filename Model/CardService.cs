@@ -12,13 +12,26 @@ namespace employees.Model
 {
     public class CardService
     {
+        /// <summary>
+        /// Класс-контекст, зависимость от Entity Framework 6
+        /// </summary>
         private readonly ApplicationContext _applicationContext;
 
         public CardService(ApplicationContext applicationContext)
         {
             _applicationContext = applicationContext;
         }
-
+        /// <summary>
+        /// Функция возвращает список записей о карточках
+        /// отработанного времени
+        /// </summary>
+        /// <param name="searchString">Строка поиска</param>
+        /// <param name="sortBy">Поле, по которому сортируется спиоск</param>
+        /// <param name="sortDirection">Направление сортировки true - возрастание, false - убывание</param>
+        /// <param name="filter">Критерии выбора данных</param>
+        /// <param name="limit">Ограничение величины списка</param>
+        /// <param name="offset">Смещение относительно начала списка</param>
+        /// <returns>Список записей работников</returns>
         public List<Card> Get(string searchString, string sortBy, bool sortDirection,
             CardFilterDefinition filter, int limit, int offset)
         {
@@ -84,29 +97,48 @@ namespace employees.Model
 
             return request.OrderBy(x => x.Id).Skip(offset).Take(limit).ToList();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="searchString"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
         public long GetCount(string searchString, CardFilterDefinition filter)
         {
             return this._applicationContext.Cards.Count();
         }
-
+        /// <summary>
+        /// Функция, возвращает запись карточки по её идентификационному номеру
+        /// </summary>
+        /// <param name="id">Идентификационный номер</param>
+        /// <returns></returns>s>
         public Card GetById(int id)
         {
             return this._applicationContext.Cards.Find(id);
         }
-
+        /// <summary>
+        /// Функция, добавляющая информацию о карточке загруженности в систему
+        /// </summary>
+        /// <param name="card">Карточка</param>
         public void Add(Card card)
         {
+            card.CreatedAt = DateTime.Now;
             _applicationContext.Cards.Add(card);
             _applicationContext.SaveChangesAsync();
         }
-
+        /// <summary>
+        /// Функция, обновляющая информацию о карточке загруженности
+        /// </summary>
+        /// <param name="card">Карточка</param>
         public void Update(Card card)
         {
             _applicationContext.Entry(card).State = EntityState.Modified;
             _applicationContext.SaveChangesAsync();
         }
-
+        /// <summary>
+        /// Функция, удаляющая информацию о карточке загруженности
+        /// </summary>
+        /// <param name="id">Идентификационный номер</param>
         public void Remove(int id)
         {
             var card = GetById(id);
@@ -114,7 +146,14 @@ namespace employees.Model
             _applicationContext.Entry(card).State = EntityState.Modified;
             _applicationContext.SaveChangesAsync();
         }
-
+        /// <summary>
+        /// Функция, экспортирующая список карточек загруженности
+        /// в файл MS Excel.
+        /// </summary>
+        /// <param name="searchString">Строка поиска</param>
+        /// <param name="sortBy">Поле, по которому производится сортировка</param>
+        /// <param name="sortDirection">Направление сортировки</param>
+        /// <param name="filter">Критерии выбора данных</param>
         public void SaveExcelDocument(string searchString, string sortBy, bool sortDirection,
             CardFilterDefinition filter)
         {
@@ -180,7 +219,11 @@ namespace employees.Model
                 }
             }
         }
-
+        /// <summary>
+        /// Получение данных для построения диаграммы загруженности
+        /// </summary>
+        /// <param name="filterDefinition">Критерии выбора данных</param>
+        /// <returns>Данные</returns>
         public List<WorkLoadData> GetWorkLoadData(WorkLoadFilterDefinition filterDefinition)
         {
             var data = new List<WorkLoadData>();

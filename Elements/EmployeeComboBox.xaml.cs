@@ -85,8 +85,10 @@ namespace employees.Elements
 
         public Action<Employee> EntityChanged;
 
-        public EmployeeComboBoxViewModel(EmployeeService service, Action<Employee> OnEntityChangedCallback)
+        public EmployeeComboBoxViewModel(EmployeeService service, Action<Employee> OnEntityChangedCallback,
+            bool isRequired = true)
         {
+            this._isRequired = isRequired;
             this._service = service;
             this.Entities = _service.Get("", "", true, new EmployeeFilterDefinition(), 10, 0);
             this.EntityChanged = OnEntityChangedCallback;
@@ -103,7 +105,7 @@ namespace employees.Elements
                 {
                     if (this.SelectedEntity == null)
                     {
-                        errorString = "Поле \"Работник\" не может быть пустым";
+                        errorString = "Поле работник не может быть пустым";
                     }
                 }
 

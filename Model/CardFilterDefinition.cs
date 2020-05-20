@@ -7,6 +7,11 @@ using Employees.Model;
 
 namespace employees.Model
 {
+    /// <summary>
+    /// Класс EmployeeFilterDefinition, вспомогательный класс,
+    /// использующийся для хранения информации о критериях выбора
+    /// данных списка карточек.
+    /// </summary>
     public class CardFilterDefinition
     {
         public bool IsBySumWorkTime { get; set; }

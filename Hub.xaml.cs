@@ -71,7 +71,7 @@ namespace employees
     {
         private readonly IShell _shell;
         private readonly EmployeeService _service;
-
+        public bool IsWriteRights => _service.CurrentUser.Role == Role.Manager;
         public List<Employee> Entities { get; set; }
 
         public ICommand AddEmployeeCommand =>
@@ -109,8 +109,6 @@ namespace employees
         }
 
         public long Count => this._service.GetCount(SearchString, FilterDefinition);
-       
-
         public void Refresh(int page, int elements)
         {
             try
@@ -136,8 +134,10 @@ namespace employees
     public class CardDictionaryViewModel : DictionaryViewModelBase<Card, CardFilterDefinition>, IPaginable
     {
         private readonly IShell _shell;
+        private readonly EmployeeService _employeeService;
         private readonly CardService _service;
 
+        public bool IsWriteRights => _employeeService.CurrentUser.Role == Role.Manager;
         public List<Card> Entities { get; set; }
         public EmployeeComboBoxViewModel EmployeeComboBoxViewModel { get; set; }
 
@@ -172,6 +172,7 @@ namespace employees
             : base(paginatorViewModel)
         {
             _shell = shell;
+            _employeeService = employeeService;
             _service = cardService;
             this.EmployeeComboBoxViewModel =
                 new EmployeeComboBoxViewModel(employeeService,

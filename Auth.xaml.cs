@@ -34,7 +34,7 @@ namespace Employees
             {
                 try
                 {
-                    employeeService.Auth(Username, _password);
+                    //employeeService.Auth(Username, _password);
                     shell.NavigateByUri(CompanyUris.Hub);
                 }
                 catch (UnauthorizedAccessException)

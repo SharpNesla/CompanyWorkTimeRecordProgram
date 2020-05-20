@@ -28,6 +28,47 @@ namespace Employees
         private readonly IShell _shell;
         private readonly CardService _cards;
 
+        public short WorkLoadTimeMonday
+        {
+            get { return Entity.WorkLoadTimeMonday; }
+            set { Entity.WorkLoadTimeMonday = value; }
+        }
+
+        public short WorkLoadTimeTuesday
+        {
+            get { return Entity.WorkLoadTimeTuesday; }
+            set { Entity.WorkLoadTimeTuesday = value; }
+        }
+
+        public short WorkLoadTimeWednesday
+        {
+            get { return Entity.WorkLoadTimeWednesday; }
+            set { Entity.WorkLoadTimeWednesday = value; }
+        }
+
+        public short WorkLoadTimeThursday
+        {
+            get { return Entity.WorkLoadTimeThursday; }
+            set { Entity.WorkLoadTimeThursday = value; }
+        }
+
+        public short WorkLoadTimeFriday
+        {
+            get { return Entity.WorkLoadTimeFriday; }
+            set { Entity.WorkLoadTimeFriday = value; }
+        }
+
+        public decimal Payment
+        {
+            get { return Entity.Payment; }
+            set { Entity.Payment = value; }
+        }
+
+        [DependsOn(nameof(WorkLoadTimeMonday),
+            nameof(WorkLoadTimeTuesday),
+            nameof(WorkLoadTimeWednesday),
+            nameof(WorkLoadTimeThursday),
+            nameof(WorkLoadTimeFriday))]
         public int SumWorkLoadTime
         {
             get
@@ -44,6 +85,24 @@ namespace Employees
                                this.Entity.WorkLoadTimeThursday / 100 +
                                this.Entity.WorkLoadTimeFriday / 100;
                 return allHours * 100 + (allMinutes / 60) * 100 + allMinutes % 60;
+
+            }
+        }
+        [DependsOn(nameof(Payment),nameof(SumWorkLoadTime))]
+        public decimal PaymentFull
+        {
+            get
+            {
+                var hours = SumWorkLoadTime / 100;
+                var minutes = SumWorkLoadTime % 100;
+
+                if (hours >= 40)
+                {
+                    var overTimeHours = hours - 40;
+                    return 40 * Payment + (overTimeHours * Payment + minutes * Payment / 60) * (decimal) 1.5;
+                }
+
+                return hours * Payment + minutes * Payment / 60;
             }
         }
 
@@ -84,6 +143,11 @@ namespace Employees
 
         public override void Apply()
         {
+            if (this.Entity.Employee == null)
+            {
+                this._shell.MessageQueue.Enqueue("Поле работник не может быть незаполненным");
+            }
+
             try
             {
                 if (IsNew)

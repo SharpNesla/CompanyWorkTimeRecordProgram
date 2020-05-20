@@ -19,7 +19,7 @@
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
                     <materialDesign:PackIcon Kind="Trash" VerticalAlignment="Center" Height="24" Width="24" />
                     <TextBlock
-                        Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
                         VerticalAlignment="Center"
                         Margin="8 0 0 0" Text="Удалить элемент?" />
                 </StackPanel>

@@ -59,18 +59,32 @@
                                 </Binding>
                             </DatePicker.SelectedDate>
                         </DatePicker>
-                        <TextBox materialDesign:HintAssist.Hint="Почасовая заработная плата"
+                        <!--<TextBox materialDesign:HintAssist.Hint="Почасовая заработная плата"
                                  materialDesign:TextFieldAssist.SuffixText="₽"
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                                  Margin="0,0,0,16">
                             <TextBox.Text>
-                                <Binding Path="Entity.Payment" UpdateSourceTrigger="PropertyChanged">
+                                <Binding Path="Payment" UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
                                         <validationRules:RequiredValidation FieldName="почасовая З/П" />
                                     </Binding.ValidationRules>
                                 </Binding>
                             </TextBox.Text>
+                        </TextBox>-->
+
+                        <TextBox materialDesign:HintAssist.Hint="Почасовая заработная плата"
+                                 materialDesign:TextFieldAssist.SuffixText="₽"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                 Margin="0,0,0,16">
+                            <TextBox.Text>
+                                <Binding Path="Payment">
+                                    <Binding.ValidationRules>
+                                        <validationRules:DecimalValidationRule FieldName="почасовая З/П" />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
                         </TextBox>
+
                         <TextBlock Text="{Binding Entity.PaymentFull, StringFormat='Отработанное время:'}"
                                    Margin="0,0,0,8"/>
                         <Grid Margin="0,0,0,16">
@@ -87,38 +101,37 @@
                                                    materialDesign:HintAssist.Hint="Понедельник"
                                                    Is24Hours="True"
                                                    SelectedTimeFormat="Short"
-                                                   SelectedTime="{Binding Entity.WorkLoadTimeMonday, Converter={StaticResource TimeStringIntConverter}}" Height="37" />
+                                                   SelectedTime="{Binding WorkLoadTimeMonday, Converter={StaticResource TimeStringIntConverter}}" Height="37" />
                             <materialDesign:TimePicker Margin="0,0,16,0" Grid.Column="1"
                                                    materialDesign:HintAssist.IsFloating="True"
 
                                                    materialDesign:HintAssist.Hint="Вторник"
                                                    Is24Hours="True"
                                                    SelectedTimeFormat="Short"
-                                                   SelectedTime="{Binding Entity.WorkLoadTimeTuesday, Converter={StaticResource TimeStringIntConverter}}" Height="37" />
+                                                   SelectedTime="{Binding WorkLoadTimeTuesday, Converter={StaticResource TimeStringIntConverter}}" Height="37" />
                             <materialDesign:TimePicker Margin="0,0,15,0"  Grid.Column="2"
                                                    materialDesign:HintAssist.IsFloating="True"
 
                                                    materialDesign:HintAssist.Hint="Среда"
                                                    Is24Hours="True"
                                                    SelectedTimeFormat="Short"
-                                                   SelectedTime="{Binding Entity.WorkLoadTimeWednesday, Converter={StaticResource TimeStringIntConverter}}" Height="37" />
+                                                   SelectedTime="{Binding WorkLoadTimeWednesday, Converter={StaticResource TimeStringIntConverter}}" Height="37" />
                             <materialDesign:TimePicker Margin="1,0,8,0"  Grid.Column="3"
                                                    materialDesign:HintAssist.IsFloating="True"
-
                                                    materialDesign:HintAssist.Hint="Четверг"
                                                    Is24Hours="True"
                                                    SelectedTimeFormat="Short"
-                                                   SelectedTime="{Binding Entity.WorkLoadTimeFriday, Converter={StaticResource TimeStringIntConverter}}" Height="37" />
+                                                   SelectedTime="{Binding WorkLoadTimeThursday, Converter={StaticResource TimeStringIntConverter}}" Height="37" />
                             <materialDesign:TimePicker Margin="8,0,0,0"  Grid.Column="4"
                                                    materialDesign:HintAssist.IsFloating="True"
                                                    materialDesign:HintAssist.Hint="Пятница"
                                                    Is24Hours="True"
                                                    SelectedTimeFormat="Short"
-                                                   SelectedTime="{Binding Entity.WorkLoadTimeMonday, Converter={StaticResource TimeStringIntConverter}}" Height="37" />
+                                                   SelectedTime="{Binding WorkLoadTimeFriday, Converter={StaticResource TimeStringIntConverter}}" Height="37" />
                         </Grid>
                         <TextBlock Text="{Binding SumWorkLoadTime, StringFormat='Отработано всего: ##0:00'}"
                                    Margin="0,0,0,8"/>
-                        <TextBlock Text="{Binding Entity.PaymentFull, StringFormat='Заработная плата за неделю: # ##0₽'}"
+                        <TextBlock Text="{Binding PaymentFull, StringFormat='Заработная плата за неделю: # ##0₽'}"
                                    Margin="0,0,0,8"/>
                         
                     </StackPanel>

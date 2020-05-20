@@ -12,21 +12,24 @@
              mc:Ignorable="d"
              DataContext="{Binding ConnectionLostDialog,Source={StaticResource Locator}}"
              Background="{StaticResource MaterialDesignPaper}">
-    <DockPanel Width="525">
+    <DockPanel Width="470">
         <materialDesign:ColorZone DockPanel.Dock="Top" materialDesign:ShadowAssist.ShadowDepth="Depth1" Mode="PrimaryMid"
                                   Padding="24,20,24,20">
             <DockPanel>
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
                     <materialDesign:PackIcon Kind="LanDisconnect" VerticalAlignment="Center" Height="24" Width="24" />
                     <TextBlock
-                        Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
                         VerticalAlignment="Center"
-                        Margin="8 0 0 0" Text="Потеряно соединение с базой данных" />
+                        Margin="8 0 0 0" Text="Потеряно соединение с сервером" />
                 </StackPanel>
 
             </DockPanel>
         </materialDesign:ColorZone>
         <StackPanel Orientation="Vertical" Margin="24">
+            <TextBlock
+                Margin="0,0,0,24"
+                HorizontalAlignment="Center">Вы будете перенаправлены на экран входа в систему.</TextBlock>
             <Button DockPanel.Dock="Left"
                     Command="{Binding ApplyCommand}"
                     Style="{StaticResource MaterialDesignFlatButton}" >

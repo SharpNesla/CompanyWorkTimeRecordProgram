@@ -8,18 +8,21 @@ using Employees.Model;
 
 namespace employees.Model
 {
+    /// <summary>
+    /// Класс данных, хранит информацию о карточке отработанного времени.
+    /// </summary>
     public class Card : Entity
     {
-        public int EmployeeId { get; set; }
+        public int? EmployeeId { get; set; }
         public Employee Employee { get; set; }
         public decimal Payment { get; set; }
         public decimal PaymentFull { get; set; }
         public DateTime DatePass { get; set; }
-        public int WorkLoadTimeMonday { get; set; }
-        public int WorkLoadTimeTuesday { get; set; }
-        public int WorkLoadTimeWednesday { get; set; }
-        public int WorkLoadTimeThursday { get; set; }
-        public int WorkLoadTimeFriday { get; set; }
-        [NotMapped] public int SumWorkLoadTime { get; set; }
+        public short WorkLoadTimeMonday { get; set; }
+        public short WorkLoadTimeTuesday { get; set; }
+        public short WorkLoadTimeWednesday { get; set; }
+        public short WorkLoadTimeThursday { get; set; }
+        public short WorkLoadTimeFriday { get; set; }
+        public short SumWorkLoadTime { get; set; }
     }
 }

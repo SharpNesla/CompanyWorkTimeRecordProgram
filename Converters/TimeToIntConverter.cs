@@ -16,7 +16,7 @@ namespace employees.Converters
             
 
 
-            var integer = (int)value;
+            var integer = (short)value;
             return new DateTime(1, 1, 1, integer / 100, integer % 100, 0);
         }
 
@@ -24,11 +24,17 @@ namespace employees.Converters
         {
             try
             {
-                
-                var time = (DateTime)value;
-                return time.Hour * 100 + time.Minute;
+                if (value != null)
+                {
+                    var time = (DateTime)value;
+                    return time.Hour * 100 + time.Minute;
+                }
+                else
+                {
+                    return 0;
+                }
             }
-            catch (Exception e)
+            catch (Exception)
             {
             
                 return 0;

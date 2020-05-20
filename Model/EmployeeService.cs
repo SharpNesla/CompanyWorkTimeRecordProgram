@@ -1,24 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using employees.Annotations;
 using Employees.Model;
-using LiveCharts.Dtos;
 using NPOI.XSSF.UserModel;
 
 namespace employees.Model
 {
+    /// <summary>
+    /// Класс операций над рабониками
+    /// </summary>
     public class EmployeeService
     {
+        /// <summary>
+        /// Пользователь, вошедший в систему
+        /// </summary>
         public Employee CurrentUser { get; private set; }
+
+        /// <summary>
+        /// Класс-контекст, зависимость от Entity Framework 6
+        /// </summary>
         private readonly ApplicationContext _applicationContext;
 
         public EmployeeService(ApplicationContext applicationContext)
@@ -26,10 +30,23 @@ namespace employees.Model
             _applicationContext = applicationContext;
         }
 
+        /// <summary>
+        /// Функция возвращает список записей работников
+        /// </summary>
+        /// <param name="searchString">Строка поиска</param>
+        /// <param name="sortBy">Поле, по которому сортируется спиоск</param>
+        /// <param name="sortDirection">Направление сортировки true - возрастание, false - убывание</param>
+        /// <param name="filter">Критерии выбора данных</param>
+        /// <param name="limit">Ограничение величины списка</param>
+        /// <param name="offset">Смещение относительно начала списка</param>
+        /// <returns>Список записей работников</returns>
         public List<Employee> Get(string searchString, string sortBy, bool sortDirection,
             EmployeeFilterDefinition filter, int limit, int offset)
         {
             IQueryable<Employee> request;
+
+            //RAW (сырой) начало построения запроса
+            //для применения текстового поиска
             if (!string.IsNullOrEmpty(searchString))
             {
                 request = _applicationContext.Employees
@@ -45,6 +62,8 @@ namespace employees.Model
             }
 
             request = request.Where(x => x.DeletedAt == null);
+
+            #region Применение критериев выбора к запросу
 
             if (filter.IsByGender)
                 request = request.Where(x => x.Gender == filter.Gender);
@@ -74,27 +93,32 @@ namespace employees.Model
                     request = request.Where(x => x.SumWorkTime <= filter.SumWorkTimeHighBound);
                 }
             }
-            
+
             if (filter.IsByRole)
                 request = request.Where(x => x.Role == filter.Role);
 
+            #endregion
+
+            //Применение сортировки к запросу
             switch (sortBy)
             {
                 case "Name":
-                    request = sortDirection ? request.OrderBy(x => x.Name):
-                        request.OrderByDescending(x => x.Name);
+                    request = sortDirection ? request.OrderBy(x => x.Name) : request.OrderByDescending(x => x.Name);
                     break;
                 case "Surname":
-                    request = sortDirection ? request.OrderBy(x => x.Surname):
-                        request.OrderByDescending(x => x.Surname);
+                    request = sortDirection
+                        ? request.OrderBy(x => x.Surname)
+                        : request.OrderByDescending(x => x.Surname);
                     break;
                 case "Patronymic":
-                    request = sortDirection ? request.OrderBy(x => x.Patronymic):
-                        request.OrderByDescending(x => x.Name);
+                    request = sortDirection
+                        ? request.OrderBy(x => x.Patronymic)
+                        : request.OrderByDescending(x => x.Name);
                     break;
                 case "DateBirth":
-                    request = sortDirection ? request.OrderBy(x => x.DateBirth):
-                        request.OrderByDescending(x => x.DateBirth);
+                    request = sortDirection
+                        ? request.OrderBy(x => x.DateBirth)
+                        : request.OrderByDescending(x => x.DateBirth);
                     break;
                 default:
                     request = request.OrderBy(x => x.Id);
@@ -104,12 +128,23 @@ namespace employees.Model
             return request.Skip(offset).Take(limit).ToList();
         }
 
+        /// <summary>
+        /// Функция, возвращает запись работника по его идентификационному номеру
+        /// </summary>
+        /// <param name="id">Идентификационный номер</param>
+        /// <returns></returns>
         public Employee GetById(int id)
         {
             return this._applicationContext.Employees.Find(id);
         }
 
-        public long GetCount(string searchString, EmployeeFilterDefinition filter)
+        /// <summary>
+        /// Функция, возвращающая количество записей о работниках
+        /// </summary>
+        /// <param name="searchString">Строка поиска</param>
+        /// <param name="filter">Критерии выбора данных</param>
+        /// <returns>Количество записей</returns>
+        public int GetCount(string searchString, EmployeeFilterDefinition filter)
         {
             IQueryable<Employee> request;
 
@@ -128,6 +163,8 @@ namespace employees.Model
             }
 
             request = request.Where(x => x.DeletedAt == null);
+
+            #region Применение критериев выбора к запросу
 
             if (filter.IsByGender)
                 request = request.Where(x => x.Gender == filter.Gender);
@@ -160,22 +197,38 @@ namespace employees.Model
 
             if (filter.IsByRole)
                 request = request.Where(x => x.Role == filter.Role);
-            
+
+            #endregion
+
             return request.Count();
         }
 
+        /// <summary>
+        /// Процедура добавления информации о работнике в систему.
+        /// </summary>
+        /// <param name="employee">Добавляемый работник</param>
         public void Add(Employee employee)
         {
+            employee.CreatedAt = DateTime.Now;
             _applicationContext.Employees.Add(employee);
             _applicationContext.SaveChanges();
         }
 
+        /// <summary>
+        /// Процедура, производит обновление информации о работнике.
+        /// </summary>
+        /// <param name="employee"></param>
         public void Update(Employee employee)
         {
             _applicationContext.Entry(employee).State = EntityState.Modified;
             _applicationContext.SaveChanges();
         }
 
+        /// <summary>
+        /// Процедура, производит удаление информации о работнике
+        /// по идентификационному номеру.
+        /// </summary>
+        /// <param name="id">Id</param>
         public void Remove(int id)
         {
             var employee = GetById(id);
@@ -184,6 +237,13 @@ namespace employees.Model
             _applicationContext.SaveChanges();
         }
 
+        /// <summary>
+        /// Процедура, сохраняющая список работников в таблицу MS Excel.
+        /// </summary>
+        /// <param name="searchString">Строка поиска</param>
+        /// <param name="sortBy">Поле, по которому производится сортировка</param>
+        /// <param name="sortDirection">Направление сортировки</param>
+        /// <param name="filter">Критерии выбора данных</param>
         public void SaveExcelDocument(string searchString, string sortBy, bool sortDirection,
             EmployeeFilterDefinition filter)
         {
@@ -248,6 +308,14 @@ namespace employees.Model
             }
         }
 
+        /// <summary>
+        /// Функция авторизации работника в системе,
+        /// при несовпадении пары имя пользователя-пароль или отсутствия информации о работнике
+        /// с заданным именем пользователя в системе
+        /// </summary>
+        /// <param name="username">Имя пользователя</param>
+        /// <param name="password">Пароль</param>
+        /// <returns>Работник</returns>
         public Employee Auth(string username, string password)
         {
             Employee user = null;
@@ -277,6 +345,12 @@ namespace employees.Model
             return user;
         }
 
+        /// <summary>
+        /// Задание хэша пароля для работника.
+        /// </summary>
+        /// <param name="employee">Работник</param>
+        /// <param name="password">Пароль</param>
+        /// <returns>Работник</returns>
         public static Employee SetPassword(Employee employee, string password)
         {
             byte[] salt;
@@ -296,6 +370,12 @@ namespace employees.Model
             return employee;
         }
 
+        /// <summary>
+        /// Функция, строящая регулярное выражение для
+        /// поиска по подстрокам.
+        /// </summary>
+        /// <param name="searchString">Строка поиска</param>
+        /// <returns>Строка регулярного выражения</returns>
         private static string MakeSearchRegexp(string searchString)
         {
             var searchChunks = searchString.Split(' ');
