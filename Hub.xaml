@@ -91,6 +91,7 @@
                         <Button Panel.ZIndex="1" HorizontalAlignment="Right" Margin="0 0 16 -32"
                                 materialDesign:ShadowAssist.ShadowDepth="Depth3"
                                 Command="{Binding AddEmployeeCommand}"
+                                Visibility="{Binding IsWriteRights, Converter={StaticResource BoolVisibilityConverter}}"
                                 Style="{StaticResource MaterialDesignFloatingActionAccentButton}">
                             <materialDesign:PackIcon Kind="Plus" Height="24" Width="24" />
                         </Button>
@@ -333,9 +334,12 @@
                                     <DataGridTemplateColumn CanUserReorder="False" MinWidth="190" IsReadOnly="True">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <StackPanel Orientation="Horizontal">
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                                     <Button Margin="0"
                                                             Command="{Binding DataContext.DeleteEmployeeCommand,
+                                                                ElementName=EmployeeDictionaryTab}"
+                                                            Visibility="{Binding DataContext.IsWriteRights,
+                                                                Converter={StaticResource BoolVisibilityConverter},
                                                                 ElementName=EmployeeDictionaryTab}"
                                                             CommandParameter="{Binding Path=.}"
                                                             Foreground="{StaticResource MaterialDesignBodyLight}"
@@ -349,6 +353,9 @@
                                                             Command="{Binding DataContext.EditEmployeeCommand,
                                                                 ElementName=EmployeeDictionaryTab}"
                                                             CommandParameter="{Binding Path=.}"
+                                                            Visibility="{Binding DataContext.IsWriteRights,
+                                                                Converter={StaticResource BoolVisibilityConverter},
+                                                                ElementName=EmployeeDictionaryTab}"
                                                             Foreground="{StaticResource MaterialDesignBodyLight}"
                                                             Style="{StaticResource MaterialDesignFlatButton}">
                                                         <materialDesign:PackIcon
@@ -380,7 +387,7 @@
             </Grid>
             <Grid Visibility="{Binding IsCardTab, Converter={StaticResource BoolVisibilityConverter}}">
                 <DockPanel LastChildFill="True"
-                           Name="CardDictionaryTab"
+                           x:Name="CardDictionaryTab"
                            DataContext="{Binding CardDictionaryViewModel}">
                     <StackPanel Panel.ZIndex="3" DockPanel.Dock="Bottom">
                         <Button Command="{Binding AddCardCommand}"
@@ -551,7 +558,7 @@
                                                 <StackPanel Width="197" Margin="16,8,0,0" VerticalAlignment="Stretch"
                                                             HorizontalAlignment="Left">
                                                     <CheckBox IsChecked="{Binding IsByEmployee}">По работнику</CheckBox>
-                                                    <elements:EmployeeComboBox Margin="0,1,0,0"/>
+                                                    <elements:EmployeeComboBox Margin="0,1,0,0" DataContext="{Binding ElementName=CardDictionaryTab, Path=DataContext.EmployeeComboBoxViewModel}"></elements:EmployeeComboBox>
                                                 </StackPanel>
                                             </StackPanel>
                                         </StackPanel>
@@ -639,12 +646,14 @@
                                     <DataGridTemplateColumn CanUserReorder="False" MinWidth="190">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <StackPanel Orientation="Horizontal">
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                                     <Button Margin="0"
+                                                            Visibility="{Binding DataContext.IsWriteRights,
+                                                                Converter={StaticResource BoolVisibilityConverter},
+                                                                ElementName=CardDictionaryTab}"
                                                             Command="{Binding DataContext.DeleteCardCommand,
                                                                 ElementName=CardDictionaryTab}"
                                                             CommandParameter="{Binding Path=.}"
-                                                            Visibility="{Binding IsWriteRights, Converter={StaticResource BoolVisibilityConverter}}"
                                                             Foreground="{StaticResource MaterialDesignBodyLight}"
                                                             Style="{StaticResource MaterialDesignFlatButton}">
                                                         <materialDesign:PackIcon
@@ -653,7 +662,9 @@
                                                             Width="24" />
                                                     </Button>
                                                     <Button Margin="0"
-                                                            Visibility="{Binding IsWriteRights, Converter={StaticResource BoolVisibilityConverter}}"
+                                                            Visibility="{Binding DataContext.IsWriteRights,
+                                                                Converter={StaticResource BoolVisibilityConverter},
+                                                                ElementName=CardDictionaryTab}"
                                                             Command="{Binding DataContext.EditCardCommand,
                                                                 ElementName=CardDictionaryTab}"
                                                             CommandParameter="{Binding Path=.}"

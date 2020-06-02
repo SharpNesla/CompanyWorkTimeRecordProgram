@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Windows.Input;
 using Employees;
 using employees.Model;
 using Employees.Model;
@@ -11,13 +12,22 @@ namespace employees
         public string InfoTitle => $"Работник №{Entity.Id}";
         public ICommand ViewCardInfoCommand { get; }
         public ICommand ApplyCommand { get; set; }
+
         public EmployeeInfoViewModel(IShell shell, EmployeeService service)
         {
-            this.Entity = service.GetById((int)shell.LastNavigatedDialogParameter);
+            try
+            {
+                this.Entity = service.GetById((int) shell.LastNavigatedDialogParameter);
+            }
+            catch (Exception e)
+            {
+                shell.OpenDialogByUri(CompanyUris.ConnectionLost, false, null);
+                return;
+            }
+
             ViewCardInfoCommand = new RelayCommand<Card>(
                 x => shell.OpenDialogByUri(CompanyUris.CardInfo, true, x.Id));
             ApplyCommand = new RelayCommand(() => shell.TryCloseDialog());
         }
-
     }
 }

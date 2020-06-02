@@ -307,7 +307,8 @@ namespace employees.Model
                 var maxThursday = request.Max(x => x.WorkLoadTimeThursday);
                 var maxFriday = request.Max(x => x.WorkLoadTimeFriday);
 
-                var avgMonday = (int)request.Select(x => (double)x.WorkLoadTimeMonday)
+                var avgMonday = (int)request
+                    .Select(x => (double)x.WorkLoadTimeMonday)
                     .Average(x => x);
                 var avgTuesday = (int)
                     request.Select(x => (double)x.WorkLoadTimeTuesday)
@@ -325,11 +326,11 @@ namespace employees.Model
                     new WorkLoadData{ Min = minTuesday,Average = avgTuesday, Max = maxTuesday},
                     new WorkLoadData{ Min = minWednesday,Average = avgWednesday, Max = maxWednesday},
                     new WorkLoadData{ Min = minThursday,Average = avgThursday, Max = maxThursday},
-                    new WorkLoadData{ Min = minFriday,Average = avgFriday, Max = maxMonday},
+                    new WorkLoadData{ Min = minFriday,Average = avgFriday, Max = maxFriday},
                 });
 
             }
-            catch (Exception e)
+            catch (InvalidOperationException e)
             {
                 for (int i = 0; i < 5; i++)
                 {

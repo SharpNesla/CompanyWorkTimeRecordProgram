@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Employees;
 using employees.Model;
 using LiveCharts;
 using LiveCharts.Wpf;
@@ -21,14 +22,14 @@ namespace employees
 {
     public class ChartViewModel : ViewModelBase
     {
+        private readonly IShell _shell;
         public WorkLoadFilterDefinition FilterDefinition { get; set; } = new WorkLoadFilterDefinition();
 
         public List<WorkLoadData> WorkLoadData;
 
         [DependsOn(nameof(WorkLoadData))]
         public SeriesCollection Values { get; private set; }
-           
-
+        
         public ICommand EraseFilters =>
             new RelayCommand(() => this.FilterDefinition = new WorkLoadFilterDefinition());
 
@@ -37,46 +38,56 @@ namespace employees
         public string[] Labels => new[] {"Понедельник", "Вторник", "Среда", "Четверг", "Пятница"};
         void Refresh(CardService service)
         {
-            WorkLoadData = service.GetWorkLoadData(FilterDefinition);
-            Values = new SeriesCollection
+            try
             {
-                new ColumnSeries
+                WorkLoadData = service.GetWorkLoadData(FilterDefinition);
+                Values = new SeriesCollection
                 {
-                    FontFamily =
-                        new FontFamily(
-                            "pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"),
-                    FontWeight = FontWeights.Normal,
-                    FontSize = 14,
-                    DataLabels = true,
-                    Title = "Минимальное",
-                    Values = new ChartValues<int>(WorkLoadData.Select(x => x.Min))
-                },
-                new ColumnSeries
-                {
-                    FontFamily =
-                        new FontFamily(
-                            "pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"),
-                    FontWeight = FontWeights.Normal,
-                    FontSize = 14,
-                    DataLabels = true,
-                    Title = "Среднее",
-                    Values = new ChartValues<int>(WorkLoadData.Select(x => x.Average))
-                },
-                new ColumnSeries
-                {
-                    FontFamily =
-                        new FontFamily(
-                            "pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"),
-                    FontWeight = FontWeights.Normal,
-                    FontSize = 14,
-                    DataLabels = true,
-                    Title = "Максимальное",
-                    Values = new ChartValues<int>(WorkLoadData.Select(x => x.Max))
-                }
-            };
+                    new ColumnSeries
+                    {
+                        FontFamily =
+                            new FontFamily(
+                                "pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"),
+                        FontWeight = FontWeights.Normal,
+                        FontSize = 14,
+                        DataLabels = true,
+                        Title = "Минимальное",
+                        Values = new ChartValues<int>(WorkLoadData.Select(x => x.Min))
+                    },
+                    new ColumnSeries
+                    {
+                        FontFamily =
+                            new FontFamily(
+                                "pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"),
+                        FontWeight = FontWeights.Normal,
+                        FontSize = 14,
+                        DataLabels = true,
+                        Title = "Среднее",
+                        Values = new ChartValues<int>(WorkLoadData.Select(x => x.Average))
+                    },
+                    new ColumnSeries
+                    {
+                        FontFamily =
+                            new FontFamily(
+                                "pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"),
+                        FontWeight = FontWeights.Normal,
+                        FontSize = 14,
+                        DataLabels = true,
+                        Title = "Максимальное",
+                        Values = new ChartValues<int>(WorkLoadData.Select(x => x.Max))
+                    }
+                };
+            }
+            catch (Exception e)
+            {
+                _shell.OpenDialogByUri(CompanyUris.ConnectionLost, false, null);
+            }
+
+            
         }
-        public ChartViewModel(CardService service)
+        public ChartViewModel(IShell shell, CardService service)
         {
+            _shell = shell;
             RefreshCommand = new RelayCommand(
                 () => Refresh(service));
             Refresh(service);

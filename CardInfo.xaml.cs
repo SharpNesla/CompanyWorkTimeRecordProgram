@@ -27,7 +27,16 @@ namespace Employees
 
         public CardInfoViewModel(IShell shell, CardService service)
         {
-            this.Entity = service.GetById((int) shell.LastNavigatedDialogParameter);
+            try
+            {
+                this.Entity = service.GetById((int) shell.LastNavigatedDialogParameter);
+            }
+            catch (Exception e)
+            {
+                shell.OpenDialogByUri(CompanyUris.ConnectionLost, false, null);
+                return;
+            }
+
             this.ViewEmployeeInfoCommand =
                 new RelayCommand(
                     () => shell.OpenDialogByUri(CompanyUris.EmployeeInfo, true, this.Entity.EmployeeId));

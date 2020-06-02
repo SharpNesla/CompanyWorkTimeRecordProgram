@@ -33,7 +33,6 @@ namespace employees
 
         public ICommand ExportEmployeesToExcel { get; }
         public ICommand ExportCardsToExcel { get; }
-        public ICommand ExitCommand { get; }
 
         public EmployeeDictionaryViewModel EmployeeDictionaryViewModel { get; }
         public CardDictionaryViewModel CardDictionaryViewModel { get; }
@@ -54,7 +53,7 @@ namespace employees
     {
         protected bool SortDirection = true;
         protected string SortingColumn;
-
+        protected bool IsDisconnected;
 
         public bool IsFilterDrawerOpened { get; set; }
         public TFilter FilterDefinition { get; set; } = new TFilter();
@@ -111,19 +110,31 @@ namespace employees
             this.PaginatorViewModel.RegisterPaginable(this, true);
         }
 
-        public long Count => this._service.GetCount(SearchString, FilterDefinition);
+        public long Count
+        {
+            get
+            {
+                try
+                {
+                    return this._service.GetCount(SearchString, FilterDefinition);
+                }
+                catch (Exception e)
+                {
+                    IsDisconnected = true;
+                    _shell.OpenDialogByUri(CompanyUris.ConnectionLost, false, null);
+                    return 0;
+                }
+            }
+        }
 
         public void Refresh(int page, int elements)
         {
-            try
+            if (!IsDisconnected)
             {
+
                 this.Entities = this._service.Get(SearchString, SortingColumn,
                     SortDirection, FilterDefinition,
                     elements, page * elements);
-            }
-            catch (Exception e)
-            {
-                _shell.OpenDialogByUri(CompanyUris.ConnectionLost, false, null);
             }
         }
 
@@ -131,7 +142,15 @@ namespace employees
 
         public void ExportToExcel()
         {
-            this._service.SaveExcelDocument(SearchString, SortingColumn, SortDirection, FilterDefinition);
+            try
+            {
+                this._service.SaveExcelDocument(SearchString, SortingColumn, SortDirection, FilterDefinition);
+            }
+            catch (Exception e)
+            {
+                IsDisconnected = true;
+                _shell.OpenDialogByUri(CompanyUris.ConnectionLost, false, null);
+            }
         }
     }
 
@@ -141,7 +160,7 @@ namespace employees
         private readonly EmployeeService _employeeService;
         private readonly CardService _service;
 
-        // public bool IsWriteRights => _employeeService.CurrentUser.Role == Role.Manager;
+        public bool IsWriteRights => _employeeService.CurrentUser.Role == Role.Manager;
         public List<Card> Entities { get; set; }
         public EmployeeComboBoxViewModel EmployeeComboBoxViewModel { get; set; }
 
@@ -186,19 +205,45 @@ namespace employees
             this.PaginatorViewModel.RegisterPaginable(this, true);
         }
 
-        public long Count => this._service.GetCount(SearchString, FilterDefinition);
+        public long Count
+        {
+            get
+            {
+                try
+                {
+                    return this._service.GetCount(SearchString, FilterDefinition);
+                }
+                catch (Exception e)
+                {
+                    IsDisconnected = true;
+                    _shell.OpenDialogByUri(CompanyUris.ConnectionLost, false, null);
+                    return 0;
+                }
+            }
+        }
 
         public void Refresh(int page, int elements)
         {
-            this.Entities = this._service.Get(SearchString, "", true, FilterDefinition,
-                elements, page * elements);
+            if (!IsDisconnected)
+            {
+                this.Entities = this._service.Get(SearchString, "", true, FilterDefinition,
+                    elements, page * elements);
+            }
         }
 
         public event Action StateChanged;
 
         public void ExportToExcel()
         {
-            this._service.SaveExcelDocument(SearchString, "", true, FilterDefinition);
+            try
+            {
+                this._service.SaveExcelDocument(SearchString, "", true, FilterDefinition);
+            }
+            catch (Exception e)
+            {
+                IsDisconnected = true;
+                _shell.OpenDialogByUri(CompanyUris.ConnectionLost, false, null);
+            }
         }
     }
 }
