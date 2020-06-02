@@ -29,6 +29,12 @@ namespace employees
 
         public List<WorkLoadData> WorkLoadData;
 
+        private static string Func(double value)
+        {
+            var time = (int) value;
+            return (time / 60 * 100 + time % 60).ToString("#0:00");
+        }
+
         [DependsOn(nameof(WorkLoadData))]
         public SeriesCollection Values { get; private set; }
         public bool IsByEmployee
@@ -46,7 +52,9 @@ namespace employees
             new RelayCommand(() => this.FilterDefinition = new WorkLoadFilterDefinition());
 
         public ICommand RefreshCommand { get; }
-        public Func<double, string> Formatter { get; set; } = value => value.ToString("#0:00");
+
+        public Func<double, string> Formatter { get; set; } = Func;
+
         public string[] Labels => new[] {"Понедельник", "Вторник", "Среда", "Четверг", "Пятница"};
         void Refresh(CardService service)
         {
@@ -64,7 +72,7 @@ namespace employees
                         FontSize = 14,
                         DataLabels = true,
                         Title = "Минимальное",
-                        Values = new ChartValues<int>(WorkLoadData.Select(x => x.Min))
+                        Values = new ChartValues<int>(WorkLoadData.Select(x => x.Min / 100 * 60 + x.Min % 100))
                     },
                     new ColumnSeries
                     {
@@ -75,7 +83,7 @@ namespace employees
                         FontSize = 14,
                         DataLabels = true,
                         Title = "Среднее",
-                        Values = new ChartValues<int>(WorkLoadData.Select(x => x.Average))
+                        Values = new ChartValues<int>(WorkLoadData.Select(x => x.Average / 100 * 60 + x.Average % 100))
                     },
                     new ColumnSeries
                     {
@@ -86,7 +94,7 @@ namespace employees
                         FontSize = 14,
                         DataLabels = true,
                         Title = "Максимальное",
-                        Values = new ChartValues<int>(WorkLoadData.Select(x => x.Max))
+                        Values = new ChartValues<int>(WorkLoadData.Select(x => x.Max / 100 * 60 + x.Max % 100))
                     }
                 };
             }
