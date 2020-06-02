@@ -309,28 +309,38 @@ namespace employees.Model
                 var maxThursday = request.Max(x => x.WorkLoadTimeThursday);
                 var maxFriday = request.Max(x => x.WorkLoadTimeFriday);
 
-                var avgMonday = (int)request
-                    .Select(x => (double)x.WorkLoadTimeMonday)
+                var avgMonday = (int) request
+                    .Select(x => x.WorkLoadTimeMonday / 100 * 60 + x.WorkLoadTimeMonday % 100)
+                    .Select(x=> (double) x)
                     .Average(x => x);
                 var avgTuesday = (int)
-                    request.Select(x => (double)x.WorkLoadTimeTuesday)
+                    request.Select(x => x.WorkLoadTimeTuesday / 100 * 60 + x.WorkLoadTimeTuesday % 100)
+                        .Select(x => (double)x)
                         .Average(x => x);
-                var avgWednesday = (int)request.Select(x => (double)x.WorkLoadTimeWednesday)
+                var avgWednesday = (int) request.Select(x => x.WorkLoadTimeWednesday / 100 * 60 + x.WorkLoadTimeWednesday % 100)
+                    .Select(x => (double)x)
                     .Average(x => x);
-                var avgThursday = (int)request.Select(x => (double)x.WorkLoadTimeThursday)
+                var avgThursday = (int) request.Select(x => x.WorkLoadTimeThursday / 100 * 60 + x.WorkLoadTimeThursday % 100)
+                    .Select(x => (double)x)
                     .Average(x => x);
-                var avgFriday = (int)request.Select(x => (double)x.WorkLoadTimeFriday)
+                var avgFriday = (int) request.Select(x => x.WorkLoadTimeFriday / 100 * 60 + x.WorkLoadTimeFriday % 100)
+                    .Select(x => (double)x)
                     .Average(x => x);
+
+                avgMonday = avgMonday / 60 * 100 + avgMonday % 60;
+                avgTuesday = avgTuesday / 60 * 100 + avgTuesday % 60;
+                avgWednesday = avgWednesday / 60 * 100 + avgWednesday % 60;
+                avgThursday = avgThursday / 60 * 100 + avgThursday % 60;
+                avgFriday = avgFriday / 60 * 100 + avgFriday % 60;
 
                 data.AddRange(new[]
                 {
-                    new WorkLoadData{ Min = minMonday,Average = avgMonday, Max = maxMonday},
-                    new WorkLoadData{ Min = minTuesday,Average = avgTuesday, Max = maxTuesday},
-                    new WorkLoadData{ Min = minWednesday,Average = avgWednesday, Max = maxWednesday},
-                    new WorkLoadData{ Min = minThursday,Average = avgThursday, Max = maxThursday},
-                    new WorkLoadData{ Min = minFriday,Average = avgFriday, Max = maxFriday},
+                    new WorkLoadData {Min = minMonday, Average = avgMonday, Max = maxMonday},
+                    new WorkLoadData {Min = minTuesday, Average = avgTuesday, Max = maxTuesday},
+                    new WorkLoadData {Min = minWednesday, Average = avgWednesday, Max = maxWednesday},
+                    new WorkLoadData {Min = minThursday, Average = avgThursday, Max = maxThursday},
+                    new WorkLoadData {Min = minFriday, Average = avgFriday, Max = maxFriday},
                 });
-
             }
             catch (InvalidOperationException e)
             {
