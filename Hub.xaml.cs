@@ -33,6 +33,7 @@ namespace employees
 
         public ICommand ExportEmployeesToExcel { get; }
         public ICommand ExportCardsToExcel { get; }
+        public ICommand ExitCommand { get; }
 
         public EmployeeDictionaryViewModel EmployeeDictionaryViewModel { get; }
         public CardDictionaryViewModel CardDictionaryViewModel { get; }
@@ -54,7 +55,7 @@ namespace employees
         protected bool SortDirection = true;
         protected string SortingColumn;
 
-       
+
         public bool IsFilterDrawerOpened { get; set; }
         public TFilter FilterDefinition { get; set; } = new TFilter();
         public ICommand EraseFilters => new RelayCommand(() => this.FilterDefinition = new TFilter());
@@ -83,6 +84,7 @@ namespace employees
         public ICommand ViewEmployeeInfoCommand =>
             new RelayCommand<Employee>(
                 x => _shell.OpenDialogByUri(CompanyUris.EmployeeInfo, true, x.Id));
+
         public ICommand SortEmployeeCommand => new RelayCommand<DataGridSortingEventArgs>(
             eventArgs =>
             {
@@ -92,6 +94,7 @@ namespace employees
                 eventArgs.Column.SortDirection =
                     SortDirection ? ListSortDirection.Ascending : ListSortDirection.Descending;
             });
+
         public ICommand RefreshCommand => new RelayCommand(() => this.StateChanged?.Invoke());
 
         public ICommand DeleteEmployeeCommand =>
@@ -109,6 +112,7 @@ namespace employees
         }
 
         public long Count => this._service.GetCount(SearchString, FilterDefinition);
+
         public void Refresh(int page, int elements)
         {
             try
@@ -137,7 +141,7 @@ namespace employees
         private readonly EmployeeService _employeeService;
         private readonly CardService _service;
 
-        public bool IsWriteRights => _employeeService.CurrentUser.Role == Role.Manager;
+        // public bool IsWriteRights => _employeeService.CurrentUser.Role == Role.Manager;
         public List<Card> Entities { get; set; }
         public EmployeeComboBoxViewModel EmployeeComboBoxViewModel { get; set; }
 
@@ -156,6 +160,7 @@ namespace employees
                 CompanyUris.DeleteDialog, false,
                 () => StateChanged?.Invoke(),
                 new object[] {x.Id, _service}));
+
         public ICommand SortEmployeeCommand => new RelayCommand<DataGridSortingEventArgs>(
             eventArgs =>
             {
@@ -165,6 +170,7 @@ namespace employees
                 eventArgs.Column.SortDirection =
                     SortDirection ? ListSortDirection.Ascending : ListSortDirection.Descending;
             });
+
         public ICommand RefreshCommand => new RelayCommand(() => this.StateChanged?.Invoke());
 
         public CardDictionaryViewModel(IShell shell, EmployeeService employeeService,
@@ -176,7 +182,7 @@ namespace employees
             _service = cardService;
             this.EmployeeComboBoxViewModel =
                 new EmployeeComboBoxViewModel(employeeService,
-                    x => this.FilterDefinition.EmployeeId = x.Id);
+                    x => this.FilterDefinition.EmployeeId = x.Id, false);
             this.PaginatorViewModel.RegisterPaginable(this, true);
         }
 

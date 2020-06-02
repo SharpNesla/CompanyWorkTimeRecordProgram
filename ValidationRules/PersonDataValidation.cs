@@ -10,25 +10,33 @@ using System.Windows.Controls;
 
 namespace Employees.ValidationRules
 {
+    /// <summary>
+    /// Валидатор, проверяющий поле на заполненность и соответствие русскому алфавиту и символам пробела.
+    /// </summary>
     public class PersonTextDataValidation : ValidationRule
     {
         public string FieldName { get; set; }
 
-        public bool IsRequired { get; set; }
+        public bool IsRequired { get; set; } = true;
 
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            string strValue = Convert.ToString(value);
-            if (string.IsNullOrEmpty(strValue) && IsRequired)
-                return new ValidationResult(false, $"Поле {FieldName} не может быть незаполненным");
-            if (!Regex.IsMatch(strValue, @"^[а-яА-Я-а-яА-Я ]*([а-я])$"))
+            string strValue = value.ToString();
+            if (string.IsNullOrWhiteSpace(strValue))
+            {
+                if (IsRequired)
+                {
+                    return new ValidationResult(false, $"Поле {FieldName} не может быть незаполненным");
+                }
+                return new ValidationResult(true, null);
+            }
+
+            if (!Regex.IsMatch(strValue, @"^[а-яА-Я-а-яА-Я ё]*([а-я])$"))
             {
                 return new ValidationResult(false, $"Поле {FieldName} содержит некорректные символы или не заполнено");
             }
-            else
-            {
-                return new ValidationResult(true, null);
-            }
+
+            return new ValidationResult(true, null);
         }
     }
 }

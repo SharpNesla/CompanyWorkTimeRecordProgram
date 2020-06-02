@@ -85,12 +85,16 @@ namespace employees.Model
             {
                 if (filter.SumWorkTimeLowBound != null)
                 {
-                    request = request.Where(x => x.SumWorkTime >= filter.SumWorkTimeLowBound);
+                    request = request.Where(x =>
+                        x.Cards.OrderBy(y => y.DatePass).Last().SumWorkLoadTime
+                        >= filter.SumWorkTimeLowBound);
                 }
 
                 if (filter.SumWorkTimeHighBound != null)
                 {
-                    request = request.Where(x => x.SumWorkTime <= filter.SumWorkTimeHighBound);
+                    request = request.Where(x =>
+                        x.Cards.OrderBy(y => y.DatePass).Last().SumWorkLoadTime 
+                        <= filter.SumWorkTimeHighBound);
                 }
             }
 
@@ -186,12 +190,16 @@ namespace employees.Model
             {
                 if (filter.SumWorkTimeLowBound != null)
                 {
-                    request = request.Where(x => x.SumWorkTime >= filter.SumWorkTimeLowBound);
+                    request = request.Where(x =>
+                        x.Cards.OrderBy(y => y.DatePass).Last().SumWorkLoadTime
+                        >= filter.SumWorkTimeLowBound);
                 }
 
                 if (filter.SumWorkTimeHighBound != null)
                 {
-                    request = request.Where(x => x.SumWorkTime <= filter.SumWorkTimeHighBound);
+                    request = request.Where(x =>
+                        x.Cards.OrderBy(y => y.DatePass).Last().SumWorkLoadTime
+                        <= filter.SumWorkTimeHighBound);
                 }
             }
 
@@ -277,7 +285,6 @@ namespace employees.Model
                 row.CreateCell(4).SetCellValue(cards[i].PhoneNumber);
                 row.CreateCell(5).SetCellValue(cards[i].PassportSerial);
                 row.CreateCell(6).SetCellValue(cards[i].DateBirth.ToString("dd.MM.yyyy"));
-                row.CreateCell(7).SetCellValue(cards[i].SumWorkTime.ToString("0:00"));
                 row.CreateCell(8).SetCellValue(cards[i].Username);
             }
 
@@ -322,7 +329,8 @@ namespace employees.Model
 
             try
             {
-                user = _applicationContext.Employees.First(x => x.Username == username);
+                user = _applicationContext.Employees.Where(x=>x.Role != Role.Undefined)
+                    .First(x => x.Username == username);
             }
             catch (Exception e)
             {

@@ -33,9 +33,6 @@
                                                    CommandParameter="{Binding Path=.,ElementName=GlobalDialogHost}"/>
                         </b:EventTrigger>
                     </b:Interaction.Triggers>
-                    <materialDesign:DialogHost.DialogContent>
-                        <Frame></Frame>
-                    </materialDesign:DialogHost.DialogContent>
                     <ContentControl
                         Content="{Binding Content, RelativeSource={RelativeSource AncestorType=NavigationWindow}}" />
                 </materialDesign:DialogHost>

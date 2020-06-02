@@ -9,6 +9,9 @@ using System.Windows.Controls;
 
 namespace Employees.ValidationRules
 {
+    /// <summary>
+    /// Валидатор, проверяющий номер телефона
+    /// </summary>
     class PhoneValidation : ValidationRule
     {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)

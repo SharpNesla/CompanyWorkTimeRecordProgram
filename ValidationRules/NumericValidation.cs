@@ -8,10 +8,11 @@ using System.Windows.Controls;
 
 namespace Employees.ValidationRules
 {
-    public class DecimalValidationRule : ValidationRule
+    /// <summary>
+    /// Числовой валидатор
+    /// </summary>
+    public class DoubleValidationRule : ValidationRule
     {
-        public Type ValidationType { get; set; }
-
         public string FieldName { get; set; }
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
@@ -20,7 +21,9 @@ namespace Employees.ValidationRules
             if (string.IsNullOrEmpty(strValue))
                 return new ValidationResult(false, $"Поле {FieldName} не может быть незаполненным.");
             decimal decimalVal = 0;
-            var canConvert = decimal.TryParse(strValue, out decimalVal);
+            CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+            ci.NumberFormat.CurrencyDecimalSeparator = ".";
+            var canConvert = decimal.TryParse(strValue,NumberStyles.Any, ci, out decimalVal);
             return canConvert ? new ValidationResult(true, null) : new ValidationResult(false, $"Поле {FieldName} содержит" +
                                                                                                $" символы, отличные от цифр и знака разделителя.");
         }

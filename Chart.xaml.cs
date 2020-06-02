@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -24,8 +25,20 @@ namespace employees
 
         public List<WorkLoadData> WorkLoadData;
 
-        public SeriesCollection Values =>
-            new SeriesCollection
+        [DependsOn(nameof(WorkLoadData))]
+        public SeriesCollection Values { get; private set; }
+           
+
+        public ICommand EraseFilters =>
+            new RelayCommand(() => this.FilterDefinition = new WorkLoadFilterDefinition());
+
+        public ICommand RefreshCommand { get; }
+        public Func<double, string> Formatter { get; set; } = value => value.ToString("#0:00");
+        public string[] Labels => new[] {"Понедельник", "Вторник", "Среда", "Четверг", "Пятница"};
+        void Refresh(CardService service)
+        {
+            WorkLoadData = service.GetWorkLoadData(FilterDefinition);
+            Values = new SeriesCollection
             {
                 new ColumnSeries
                 {
@@ -61,22 +74,12 @@ namespace employees
                     Values = new ChartValues<int>(WorkLoadData.Select(x => x.Max))
                 }
             };
-
-        public ICommand EraseFilters =>
-            new RelayCommand(() => this.FilterDefinition = new WorkLoadFilterDefinition());
-
-        public ICommand RefreshCommand { get; }
-        public Func<double, string> Formatter { get; set; } = value => value.ToString("#0:00");
-        public string[] Labels => new[] {"Понедельник", "Вторник", "Среда", "Четверг", "Пятница"};
-        void ExecuteAction(CardService service)
-        {
-            WorkLoadData = service.GetWorkLoadData(FilterDefinition);
         }
         public ChartViewModel(CardService service)
         {
             RefreshCommand = new RelayCommand(
-                () => ExecuteAction(service));
-            ExecuteAction(service);
+                () => Refresh(service));
+            Refresh(service);
         }
     }
 }

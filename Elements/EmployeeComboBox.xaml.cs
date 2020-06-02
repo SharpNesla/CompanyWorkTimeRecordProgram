@@ -42,6 +42,8 @@ namespace employees.Elements
         private Employee _selectedEntity;
         private readonly bool _isRequired;
         private string _entityText;
+
+        public bool IsEnabled { get; set; }
         public List<Employee> Entities { get; set; }
 
         /// <summary>
@@ -90,6 +92,7 @@ namespace employees.Elements
         {
             this._isRequired = isRequired;
             this._service = service;
+
             this.Entities = _service.Get("", "", true, new EmployeeFilterDefinition(), 10, 0);
             this.EntityChanged = OnEntityChangedCallback;
         }

@@ -66,10 +66,11 @@
                         <materialDesign:PackIcon Kind="FileTableOutline" Height="24" Width="24" />
                     </Button>
 
-                    <Button Style="{StaticResource MaterialDesignToolButton}" Width="32" Height="32"
-                            Foreground="{StaticResource MaterialDesignDarkForeground}">
+                    <employees:NavigateButton Style="{StaticResource MaterialDesignToolButton}" Width="32" Height="32"
+                            Foreground="{StaticResource MaterialDesignDarkForeground}"
+                            NavigateUri="Auth.xaml">
                         <materialDesign:PackIcon Kind="ExitToApp" Height="24" Width="24" />
-                    </Button>
+                    </employees:NavigateButton>
                 </StackPanel>
                 <RadioButton
                     Style="{StaticResource MaterialDesignTabRadioButton}"
@@ -383,6 +384,7 @@
                            DataContext="{Binding CardDictionaryViewModel}">
                     <StackPanel Panel.ZIndex="3" DockPanel.Dock="Bottom">
                         <Button Command="{Binding AddCardCommand}"
+                                Visibility="{Binding IsWriteRights, Converter={StaticResource BoolVisibilityConverter}}"
                                 Panel.ZIndex="1" HorizontalAlignment="Right" Margin="0 0 16 -32"
                                 materialDesign:ShadowAssist.ShadowDepth="Depth3"
                                 Style="{StaticResource MaterialDesignFloatingActionAccentButton}">
@@ -609,23 +611,29 @@
                                         Width="64"
                                         CanUserReorder="True" />
                                     <elements:DataGridAdaptiveColumn
-                                        Binding="{Binding Payment, StringFormat='### ### ##0₽'}"
+                                        Binding="{Binding SumWorkLoadTime, StringFormat='##00:00'}"
+                                        CanUserReorder="True"
+                                        CanUserResize="False"
+                                        Width="90"
+                                        Header="За неделю" />
+                                    <elements:DataGridAdaptiveColumn
+                                        Binding="{Binding Payment, StringFormat='### ### ##0.00 ₽'}"
                                         Header="Почасовая З/П"
                                         CanUserResize="False"
                                         Width="120"
                                         CanUserReorder="True" />
                                     <elements:DataGridAdaptiveColumn
-                                        Binding="{Binding PaymentFull, StringFormat='### ### ##0₽'}"
-                                        Header="Почасовая З/П"
+                                        Binding="{Binding PaymentFull, StringFormat='### ### ##0.00 ₽'}"
+                                        Header="З/П за неделю"
                                         CanUserResize="False"
                                         Width="150"
                                         CanUserReorder="True" />
                                     <elements:DataGridAdaptiveColumn
-                                        Binding="{Binding WorkLoadTimeMonday}"
+                                        Binding="{Binding Employee.Signature}"
                                         CanUserReorder="True"
                                         CanUserResize="False"
                                         Width="180"
-                                        Header="Идентификатор работника" />
+                                        Header="Работник" />
                                     <DataGridTemplateColumn CanUserReorder="True" Width="*" />
 
                                     <DataGridTemplateColumn CanUserReorder="False" MinWidth="190">
@@ -636,7 +644,7 @@
                                                             Command="{Binding DataContext.DeleteCardCommand,
                                                                 ElementName=CardDictionaryTab}"
                                                             CommandParameter="{Binding Path=.}"
-
+                                                            Visibility="{Binding IsWriteRights, Converter={StaticResource BoolVisibilityConverter}}"
                                                             Foreground="{StaticResource MaterialDesignBodyLight}"
                                                             Style="{StaticResource MaterialDesignFlatButton}">
                                                         <materialDesign:PackIcon
@@ -645,6 +653,7 @@
                                                             Width="24" />
                                                     </Button>
                                                     <Button Margin="0"
+                                                            Visibility="{Binding IsWriteRights, Converter={StaticResource BoolVisibilityConverter}}"
                                                             Command="{Binding DataContext.EditCardCommand,
                                                                 ElementName=CardDictionaryTab}"
                                                             CommandParameter="{Binding Path=.}"

@@ -14,6 +14,7 @@
         ItemsSource="{Binding Entities}"
         IsTextSearchEnabled="True"
         SelectedValuePath="Id"
+        IsEnabled="{Binding IsEnabled}"
         DisplayMemberPath="Signature"
         Text="{Binding EntityText}">
         <b:Interaction.Triggers>

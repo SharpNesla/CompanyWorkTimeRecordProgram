@@ -84,11 +84,13 @@ namespace Employees
                                this.Entity.WorkLoadTimeWednesday / 100 +
                                this.Entity.WorkLoadTimeThursday / 100 +
                                this.Entity.WorkLoadTimeFriday / 100;
-                return allHours * 100 + (allMinutes / 60) * 100 + allMinutes % 60;
-
+                var sumWorkTime = (short) (allHours * 100 + (allMinutes / 60) * 100 + allMinutes % 60);
+                this.Entity.SumWorkLoadTime = sumWorkTime;
+                return sumWorkTime;
             }
         }
-        [DependsOn(nameof(Payment),nameof(SumWorkLoadTime))]
+
+        [DependsOn(nameof(Payment), nameof(SumWorkLoadTime))]
         public decimal PaymentFull
         {
             get
@@ -99,10 +101,15 @@ namespace Employees
                 if (hours >= 40)
                 {
                     var overTimeHours = hours - 40;
-                    return 40 * Payment + (overTimeHours * Payment + minutes * Payment / 60) * (decimal) 1.5;
+                    var overTimedPayment =
+                        40 * Payment + (overTimeHours * Payment + minutes * Payment / 60) * (decimal) 1.5;
+                    this.Entity.PaymentFull = overTimedPayment;
+                    return overTimedPayment;
                 }
 
-                return hours * Payment + minutes * Payment / 60;
+                var regularPayment = hours * Payment + minutes * Payment / 60;
+                this.Entity.PaymentFull = regularPayment;
+                return regularPayment;
             }
         }
 
@@ -135,8 +142,17 @@ namespace Employees
             }
             else
             {
-                this.Entity = cards.GetById((int) shell.LastNavigatedParameter);
-                this.EmployeeComboBoxViewModel.SelectedEntity = Entity.Employee;
+                try
+                {
+                    this.Entity = cards.GetById((int) shell.LastNavigatedParameter);
+                    this.EmployeeComboBoxViewModel.SelectedEntity = Entity.Employee;
+                }
+                catch (Exception e)
+                {
+                    _shell.OpenDialogByUri(CompanyUris.ConnectionLost, false, null);
+                    return;
+                }
+
                 this.IsNew = false;
             }
         }
@@ -170,7 +186,7 @@ namespace Employees
 
         public override void OnIncorrectData()
         {
-            this._shell.MessageQueue.Enqueue("Не заполнены необходимые поля");
+            this._shell.MessageQueue.Enqueue("Необходимые поля не заполнены или заполнены некорректно");
         }
     }
 }

@@ -196,7 +196,6 @@
       <DependentUpon>Shell.xaml</DependentUpon>
     </Compile>
     <Compile Include="ValidationRules\NumericValidation.cs" />
-    <Compile Include="ValidationRules\PassportDataValidator.cs" />
     <Compile Include="ValidationRules\PersonDataValidation.cs" />
     <Compile Include="ValidationRules\PhoneValidation.cs" />
     <Compile Include="ValidationRules\RequiredValidation.cs" />
@@ -296,9 +295,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Frame 1 %281%29.png" />
   </ItemGroup>

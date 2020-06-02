@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Microsoft.SqlServer.Server;
+using NPOI.XSSF.Extractor;
 using NPOI.XSSF.UserModel;
 
 namespace employees.Model
@@ -21,6 +22,7 @@ namespace employees.Model
         {
             _applicationContext = applicationContext;
         }
+
         /// <summary>
         /// Функция возвращает список записей о карточках
         /// отработанного времени
@@ -46,49 +48,71 @@ namespace employees.Model
 
             if (filter.IsBySumWorkTime)
             {
-                request = request.Where(x => x.SumWorkLoadTime >= filter.SumWorkTimeLowBound &&
-                                             x.SumWorkLoadTime <= filter.SumWorkTimeHighBound);
+                if (filter.SumWorkTimeLowBound != null)
+                {
+                    request = request.Where(x => x.SumWorkLoadTime >= filter.SumWorkTimeLowBound);
+                }
+
+                if (filter.SumWorkTimeHighBound != null)
+                {
+                    request = request.Where(x => x.SumWorkLoadTime <= filter.SumWorkTimeHighBound);
+                }
             }
 
             if (filter.IsByDatePass)
             {
-                request = request.Where(x => x.DatePass >= filter.DatePassLowBound &&
-                                             x.DatePass <= filter.DatePassHighBound);
+                if (filter.DatePassLowBound != null)
+                {
+                    request = request.Where(x => x.DatePass >= filter.DatePassLowBound);
+                }
+
+                if (filter.DatePassHighBound != null)
+                {
+                    request = request.Where(x => x.DatePass <= filter.DatePassHighBound);
+                }
             }
 
             switch (sortBy)
             {
                 case "WorkLoadTimeMonday":
-                    request = sortDirection ? request.OrderBy(x => x.WorkLoadTimeMonday) :
-                        request.OrderByDescending(x => x.WorkLoadTimeMonday);
+                    request = sortDirection
+                        ? request.OrderBy(x => x.WorkLoadTimeMonday)
+                        : request.OrderByDescending(x => x.WorkLoadTimeMonday);
                     break;
                 case "WorkLoadTimeTuesday":
-                    request = sortDirection ? request.OrderBy(x => x.WorkLoadTimeTuesday) :
-                        request.OrderByDescending(x => x.WorkLoadTimeTuesday);
+                    request = sortDirection
+                        ? request.OrderBy(x => x.WorkLoadTimeTuesday)
+                        : request.OrderByDescending(x => x.WorkLoadTimeTuesday);
                     break;
                 case "WorkLoadTimeWednesday":
-                    request = sortDirection ? request.OrderBy(x => x.WorkLoadTimeWednesday) :
-                        request.OrderByDescending(x => x.WorkLoadTimeWednesday);
+                    request = sortDirection
+                        ? request.OrderBy(x => x.WorkLoadTimeWednesday)
+                        : request.OrderByDescending(x => x.WorkLoadTimeWednesday);
                     break;
                 case "WorkLoadTimeThursday":
-                    request = sortDirection ? request.OrderBy(x => x.WorkLoadTimeThursday) :
-                        request.OrderByDescending(x => x.WorkLoadTimeThursday);
+                    request = sortDirection
+                        ? request.OrderBy(x => x.WorkLoadTimeThursday)
+                        : request.OrderByDescending(x => x.WorkLoadTimeThursday);
                     break;
                 case "WorkLoadTimeFriday":
-                    request = sortDirection ? request.OrderBy(x => x.WorkLoadTimeFriday) :
-                        request.OrderByDescending(x => x.WorkLoadTimeFriday);
+                    request = sortDirection
+                        ? request.OrderBy(x => x.WorkLoadTimeFriday)
+                        : request.OrderByDescending(x => x.WorkLoadTimeFriday);
                     break;
                 case "DatePass":
-                    request = sortDirection ? request.OrderBy(x => x.DatePass) :
-                        request.OrderByDescending(x => x.DatePass);
+                    request = sortDirection
+                        ? request.OrderBy(x => x.DatePass)
+                        : request.OrderByDescending(x => x.DatePass);
                     break;
                 case "Employee":
-                    request = sortDirection ? request.OrderBy(x => x.EmployeeId) :
-                        request.OrderByDescending(x => x.EmployeeId);
+                    request = sortDirection
+                        ? request.OrderBy(x => x.EmployeeId)
+                        : request.OrderByDescending(x => x.EmployeeId);
                     break;
                 case "Payment":
-                    request = sortDirection ? request.OrderBy(x => x.Payment) :
-                        request.OrderByDescending(x => x.Payment);
+                    request = sortDirection
+                        ? request.OrderBy(x => x.Payment)
+                        : request.OrderByDescending(x => x.Payment);
                     break;
                 default:
                     request = request.OrderBy(x => x.Id);
@@ -97,6 +121,7 @@ namespace employees.Model
 
             return request.OrderBy(x => x.Id).Skip(offset).Take(limit).ToList();
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -107,6 +132,7 @@ namespace employees.Model
         {
             return this._applicationContext.Cards.Count();
         }
+
         /// <summary>
         /// Функция, возвращает запись карточки по её идентификационному номеру
         /// </summary>
@@ -116,6 +142,7 @@ namespace employees.Model
         {
             return this._applicationContext.Cards.Find(id);
         }
+
         /// <summary>
         /// Функция, добавляющая информацию о карточке загруженности в систему
         /// </summary>
@@ -126,6 +153,7 @@ namespace employees.Model
             _applicationContext.Cards.Add(card);
             _applicationContext.SaveChangesAsync();
         }
+
         /// <summary>
         /// Функция, обновляющая информацию о карточке загруженности
         /// </summary>
@@ -135,6 +163,7 @@ namespace employees.Model
             _applicationContext.Entry(card).State = EntityState.Modified;
             _applicationContext.SaveChangesAsync();
         }
+
         /// <summary>
         /// Функция, удаляющая информацию о карточке загруженности
         /// </summary>
@@ -146,6 +175,7 @@ namespace employees.Model
             _applicationContext.Entry(card).State = EntityState.Modified;
             _applicationContext.SaveChangesAsync();
         }
+
         /// <summary>
         /// Функция, экспортирующая список карточек загруженности
         /// в файл MS Excel.
@@ -219,45 +249,94 @@ namespace employees.Model
                 }
             }
         }
+
         /// <summary>
         /// Получение данных для построения диаграммы загруженности
         /// </summary>
-        /// <param name="filterDefinition">Критерии выбора данных</param>
+        /// <param name="filter">Критерии выбора данных</param>
         /// <returns>Данные</returns>
-        public List<WorkLoadData> GetWorkLoadData(WorkLoadFilterDefinition filterDefinition)
+        public List<WorkLoadData> GetWorkLoadData(WorkLoadFilterDefinition filter)
         {
             var data = new List<WorkLoadData>();
 
-            data.Add(new WorkLoadData
+            var request = _applicationContext.Cards.AsQueryable();
+
+            if (filter.IsByEmployee)
+                request = request.Where(x => x.EmployeeId == filter.EmployeeId);
+
+            if (filter.IsByGender)
+                request = request.Where(x => x.Employee.Gender == filter.Gender);
+
+            if (filter.IsByDatePass)
             {
-                Min = 0,
-                Average = 0,
-                Max = 0,
-            });
-            data.Add(new WorkLoadData
+                if (filter.DatePassLowBound != null)
+                {
+                    request = request.Where(x => x.DatePass >= filter.DatePassLowBound);
+                }
+
+                if (filter.DatePassHighBound != null)
+                {
+                    request = request.Where(x => x.DatePass <= filter.DatePassHighBound);
+                }
+            }
+
+            if (filter.IsByDateBirth)
             {
-                Min = 0,
-                Average = 0,
-                Max = 0,
-            });
-            data.Add(new WorkLoadData
+                if (filter.DateBirthLowBound != null)
+                {
+                    request = request.Where(x => x.Employee.DateBirth >= filter.DateBirthLowBound);
+                }
+
+                if (filter.DateBirthHighBound != null)
+                {
+                    request = request.Where(x => x.Employee.DateBirth <= filter.DateBirthHighBound);
+                }
+            }
+
+            try
             {
-                Min = 0,
-                Average = 0,
-                Max = 0,
-            });
-            data.Add(new WorkLoadData
+                var minMonday = request.Min(x => x.WorkLoadTimeMonday);
+                var minTuesday = request.Min(x => x.WorkLoadTimeTuesday);
+                var minWednesday = request.Min(x => x.WorkLoadTimeWednesday);
+                var minThursday = request.Min(x => x.WorkLoadTimeThursday);
+                var minFriday = request.Min(x => x.WorkLoadTimeFriday);
+
+                var maxMonday = request.Max(x => x.WorkLoadTimeMonday);
+                var maxTuesday = request.Max(x => x.WorkLoadTimeTuesday);
+                var maxWednesday = request.Max(x => x.WorkLoadTimeWednesday);
+                var maxThursday = request.Max(x => x.WorkLoadTimeThursday);
+                var maxFriday = request.Max(x => x.WorkLoadTimeFriday);
+
+                var avgMonday = (int)request.Select(x => (double)x.WorkLoadTimeMonday)
+                    .Average(x => x);
+                var avgTuesday = (int)
+                    request.Select(x => (double)x.WorkLoadTimeTuesday)
+                        .Average(x => x);
+                var avgWednesday = (int)request.Select(x => (double)x.WorkLoadTimeWednesday)
+                    .Average(x => x);
+                var avgThursday = (int)request.Select(x => (double)x.WorkLoadTimeThursday)
+                    .Average(x => x);
+                var avgFriday = (int)request.Select(x => (double)x.WorkLoadTimeFriday)
+                    .Average(x => x);
+
+                data.AddRange(new[]
+                {
+                    new WorkLoadData{ Min = minMonday,Average = avgMonday, Max = maxMonday},
+                    new WorkLoadData{ Min = minTuesday,Average = avgTuesday, Max = maxTuesday},
+                    new WorkLoadData{ Min = minWednesday,Average = avgWednesday, Max = maxWednesday},
+                    new WorkLoadData{ Min = minThursday,Average = avgThursday, Max = maxThursday},
+                    new WorkLoadData{ Min = minFriday,Average = avgFriday, Max = maxMonday},
+                });
+
+            }
+            catch (Exception e)
             {
-                Min = 0,
-                Average = 0,
-                Max = 0,
-            });
-            data.Add(new WorkLoadData
-            {
-                Min = 0,
-                Average = 0,
-                Max = 0,
-            });
+                for (int i = 0; i < 5; i++)
+                {
+                    data.Add(new WorkLoadData());
+                }
+            }
+
 
             return data;
         }

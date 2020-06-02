@@ -93,52 +93,62 @@
                                     Margin="7,0,0,0" Orientation="Horizontal" Height="128">
 
                             <StackPanel Width="119" Margin="16,8,0,0" VerticalAlignment="Stretch"
-                                        HorizontalAlignment="Left">
+                                                            HorizontalAlignment="Left">
                                 <CheckBox IsChecked="{Binding IsByGender}">По полу</CheckBox>
-                                <RadioButton Margin="0,18,0,0" IsEnabled="{Binding IsByGender}"
-                                             Style="{StaticResource MaterialDesignRadioButton}">
+                                <RadioButton Margin="0,18,0,0"
+                                                                 IsEnabled="{Binding IsByGender}"
+                                                                 IsChecked="{Binding Path=Gender, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Male}"
+                                                                 Style="{StaticResource MaterialDesignRadioButton}">
                                     Мужской
                                 </RadioButton>
-                                <RadioButton Margin="0,2,0,0" IsEnabled="{Binding IsByGender}"
-                                             Style="{StaticResource MaterialDesignRadioButton}">
+                                <RadioButton Margin="0,2,0,0"
+                                                                 IsEnabled="{Binding IsByGender}"
+                                                                 IsChecked="{Binding Path=Gender, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Female}"
+                                                                 Style="{StaticResource MaterialDesignRadioButton}">
                                     Женский
                                 </RadioButton>
-                                <RadioButton Margin="0,2,0,0" IsEnabled="{Binding IsByGender}"
-                                             Style="{StaticResource MaterialDesignRadioButton}">
+                                <RadioButton Margin="0,2,0,0"
+                                                                 IsEnabled="{Binding IsByGender}"
+                                                                 IsChecked="{Binding Path=Gender, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Unrecognized}"
+                                                                 Style="{StaticResource MaterialDesignRadioButton}">
                                     Не определён
                                 </RadioButton>
                             </StackPanel>
                             <StackPanel Width="152" Margin="16,8,0,0" VerticalAlignment="Stretch"
-                                        HorizontalAlignment="Left">
+                                                            HorizontalAlignment="Left">
                                 <CheckBox IsChecked="{Binding IsByDateBirth}">По дате рождения</CheckBox>
-                                <DatePicker SelectedDate="{Binding LowDateBirthBound}"
-                                            materialDesign:HintAssist.Hint="Нижняя граница"
-                                            Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
-                                            Margin="0,4,0,0"
-                                            HorizontalAlignment="Stretch"
-                                            IsEnabled="{Binding IsByDateBirth}" />
-                                <DatePicker SelectedDate="{Binding HighDateBirthBound}"
-                                            materialDesign:HintAssist.Hint="Верхняя граница"
-                                            Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
-                                            Margin="0,4,0,0"
-                                            HorizontalAlignment="Stretch"
-                                            IsEnabled="{Binding IsByDateBirth}" />
+                                <DatePicker
+                                                        SelectedDate="{Binding DateBirthLowBound}"
+                                                        materialDesign:HintAssist.Hint="Нижняя граница"
+                                                        Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                                                        Margin="0,4,0,0"
+                                                        HorizontalAlignment="Stretch"
+                                                        IsEnabled="{Binding IsByDateBirth}" />
+                                <DatePicker
+                                                        SelectedDate="{Binding DateBirthHighBound}"
+                                                        materialDesign:HintAssist.Hint="Верхняя граница"
+                                                        Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                                                        Margin="0,4,0,0"
+                                                        HorizontalAlignment="Stretch"
+                                                        IsEnabled="{Binding IsByDateBirth}" />
                             </StackPanel>
                             <StackPanel Width="152" Margin="16,8,0,0" VerticalAlignment="Stretch"
                                         HorizontalAlignment="Left">
                                 <CheckBox IsChecked="{Binding IsByDatePass}">По дате сдачи</CheckBox>
-                                <DatePicker SelectedDate="{Binding LowDateBirthBound}"
-                                            materialDesign:HintAssist.Hint="Нижняя граница"
-                                            Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
-                                            Margin="0,4,0,0"
-                                            HorizontalAlignment="Stretch"
-                                            IsEnabled="{Binding IsByDatePass}" />
-                                <DatePicker SelectedDate="{Binding HighDateBirthBound}"
-                                            materialDesign:HintAssist.Hint="Верхняя граница"
-                                            Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
-                                            Margin="0,4,0,0"
-                                            HorizontalAlignment="Stretch"
-                                            IsEnabled="{Binding IsByDatePass}" />
+                                <DatePicker
+                                    SelectedDate="{Binding DatePassLowBound}"
+                                    materialDesign:HintAssist.Hint="Нижняя граница"
+                                    Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                                    Margin="0,4,0,0"
+                                    HorizontalAlignment="Stretch"
+                                    IsEnabled="{Binding IsByDatePass}" />
+                                <DatePicker
+                                    SelectedDate="{Binding DatePassHighBound}"
+                                    materialDesign:HintAssist.Hint="Верхняя граница"
+                                    Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                                    Margin="0,4,0,0"
+                                    HorizontalAlignment="Stretch"
+                                    IsEnabled="{Binding IsByDatePass}" />
                             </StackPanel>
 
                             <StackPanel Width="197" Margin="16,8,0,0" VerticalAlignment="Stretch"

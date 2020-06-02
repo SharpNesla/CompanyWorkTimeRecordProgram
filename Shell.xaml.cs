@@ -38,7 +38,6 @@ namespace Employees
         public static readonly Uri Hub = new Uri("Hub.xaml", UriKind.Relative);
         public static readonly Uri Auth = new Uri("Auth.xaml", UriKind.Relative);
         public static readonly Uri ConnectionLost = new Uri("ConnectionLostDialog.xaml", UriKind.Relative);
-
     }
 
     public interface IShell
@@ -48,8 +47,10 @@ namespace Employees
         object LastNavigatedDialogParameter { get; }
         void NavigateByUri(Uri uri, object parameter = null);
         void OpenDialogByUri(Uri uri, bool closeByClickAway = false, object parameter = null);
+
         void OpenDialogByUri(Uri uri, bool closeByClickAway = false, Action onDialogCloseCallback = null,
             object parameter = null);
+
         void TryCloseDialog();
         void CloseDialogImmediately();
     }
@@ -58,8 +59,10 @@ namespace Employees
     {
         private Shell _windowDependencyObject;
         private DialogHost _host;
-        public SnackbarMessageQueue MessageQueue { get; set; } 
-            = new SnackbarMessageQueue(new TimeSpan(0,0,0,1)) {IgnoreDuplicate = false};
+
+        public SnackbarMessageQueue MessageQueue { get; set; }
+            = new SnackbarMessageQueue(new TimeSpan(0, 0, 0, 1)) {IgnoreDuplicate = false};
+
         public ICommand InitializeWindow =>
             new RelayCommand<Shell>(x =>
             {
@@ -78,6 +81,7 @@ namespace Employees
         public object LastNavigatedParameter { get; private set; }
         public object LastNavigatedDialogParameter { get; private set; }
         public Action OnDialogCloseCallback { get; set; }
+
         public async void NavigateByUri(Uri uri, object parameter = null)
         {
             await Task.Delay(220);
@@ -88,49 +92,34 @@ namespace Employees
         public async void OpenDialogByUri(Uri uri, bool closeByClickAway = false, object parameter = null)
         {
             await Task.Delay(220);
-            var dialogFrame = this._host.DialogContent as Frame;
             this.LastNavigatedDialogParameter = parameter;
-            dialogFrame.NavigationService.Navigate(uri);
-            this._host.IsOpen = true;
+            _host.CloseOnClickAway = closeByClickAway;
+            _host.CurrentSession?.Close();
+            await Task.Delay(400);
+            await _host.ShowDialog(Application.LoadComponent(uri) as Page);
         }
-      
+
         public async void OpenDialogByUri(Uri uri, bool closeByClickAway = false, Action onDialogCloseCallback = null,
             object parameter = null)
         {
             await Task.Delay(220);
-            var dialogFrame = this._host.DialogContent as Frame;
             this.LastNavigatedDialogParameter = parameter;
-            dialogFrame.NavigationService.Navigate(uri);
-            this._host.IsOpen = true;
+            _host.CloseOnClickAway = closeByClickAway;
+            await _host.ShowDialog(Application.LoadComponent(uri) as Page);
             this.OnDialogCloseCallback = onDialogCloseCallback;
         }
 
 
         public async void TryCloseDialog()
         {
-            var dialogFrame = this._host.DialogContent as Frame;
-            if (dialogFrame.NavigationService.CanGoBack)
-            {
-                dialogFrame.NavigationService.GoBack();
-                dialogFrame.NavigationService.RemoveBackEntry();
-            }
-            else
-            {
-                this._host.IsOpen = false;
-            }
-
+            _host.CurrentSession.Close();
             OnDialogCloseCallback?.Invoke();
             this.OnDialogCloseCallback = null;
         }
 
         public async void CloseDialogImmediately()
         {
-            var dialogFrame = this._host.DialogContent as Frame;
-            while (dialogFrame.NavigationService.CanGoBack)
-            {
-                dialogFrame.NavigationService.RemoveBackEntry();
-            }
-            this._host.IsOpen = false;
+            _host.IsOpen = false;
             OnDialogCloseCallback?.Invoke();
             this.OnDialogCloseCallback = null;
         }

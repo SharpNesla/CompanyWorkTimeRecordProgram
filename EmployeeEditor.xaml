@@ -98,13 +98,25 @@
                                 </Binding>
                             </TextBox.Text>
                         </TextBox>
-                        <TextBox Margin="0,0,0,16" Name="PassportSerial"
+                        <TextBox Margin="0,0,0,16"
                                  materialDesign:HintAssist.Hint="Серия и номер паспорта"
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}">
                             <TextBox.Text>
                                 <Binding Path="Entity.PassportSerial" UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
                                         <validationRules:RequiredValidation FieldName="серия и номер паспорта" />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+
+                        <TextBox Margin="0,0,0,16"
+                                 materialDesign:HintAssist.Hint="Паспорт выдан (выдающий орган)"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                            <TextBox.Text>
+                                <Binding Path="Entity.PassportDistributor" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <validationRules:RequiredValidation FieldName="выдающий орган" />
                                     </Binding.ValidationRules>
                                 </Binding>
                             </TextBox.Text>

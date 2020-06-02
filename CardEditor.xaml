@@ -79,7 +79,7 @@
                             <TextBox.Text>
                                 <Binding Path="Payment">
                                     <Binding.ValidationRules>
-                                        <validationRules:DecimalValidationRule FieldName="почасовая З/П" />
+                                        <validationRules:DoubleValidationRule FieldName="почасовая З/П" />
                                     </Binding.ValidationRules>
                                 </Binding>
                             </TextBox.Text>

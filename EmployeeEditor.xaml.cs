@@ -146,7 +146,16 @@ namespace employees
             }
             else
             {
-                this.Entity = employees.GetById((int) shell.LastNavigatedParameter);
+                try
+                {
+                    this.Entity = employees.GetById((int) shell.LastNavigatedParameter);
+                }
+                catch (Exception e)
+                {
+                    _shell.OpenDialogByUri(CompanyUris.ConnectionLost, false, null);
+                    return;
+                }
+
                 IsNew = false;
             }
         }
@@ -188,7 +197,7 @@ namespace employees
 
         public override void OnIncorrectData()
         {
-            this._shell.MessageQueue.Enqueue("Не заполнены необходимые поля");
+            this._shell.MessageQueue.Enqueue("Необходимые поля не заполнены или заполнены некорректно");
         }
     }
 }

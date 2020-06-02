@@ -129,11 +129,12 @@
                                 </DataGrid.Columns>
                             </DataGrid>
                             <TextBlock Margin="0,8,0,0"
-                                       Text="Отработанное время (всего): 43:45" />
+                                       Text="{Binding Entity.SumWorkLoadTime,
+                                            StringFormat='Отработанное время (всего): ##00:00'}" />
                             <TextBlock Margin="0,8,0,0"
-                                       Text="{Binding Entity.Payment, StringFormat='Почасовая З/П: 200₽'}" />
+                                       Text="{Binding Entity.Payment, StringFormat='Почасовая З/П:  ### ### ##0.00₽'}" />
                             <TextBlock Margin="0,8,0,0"
-                                       Text="{Binding Entity.PaymentFull, StringFormat='З/П за неделю: ### ### ##0₽'}" />
+                                       Text="{Binding Entity.PaymentFull, StringFormat='З/П за неделю: ### ### ##0.00 ₽'}" />
                             <TextBlock Margin="0,8,0,0" Text="Комментарий:" />
 
                         </StackPanel>
