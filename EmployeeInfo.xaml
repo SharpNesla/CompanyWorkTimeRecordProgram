@@ -4,10 +4,7 @@
 
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="clr-namespace:employees"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-      xmlns:employees="clr-namespace:Employees"
-      xmlns:converters="clr-namespace:employees.Converters"
       xmlns:elements="clr-namespace:employees.Elements"
       mc:Ignorable="d"
       TextElement.FontWeight="Medium"
@@ -22,12 +19,13 @@
                                   Mode="PrimaryMid"
                                   Padding="24,20,24,20">
             <DockPanel>
-                <employees:NavigateButton NavigateUri="EmployeeEditor.xaml" DockPanel.Dock="Right"
+                <Button Visibility="{Binding IsWriteRights, Converter={StaticResource BoolVisibilityConverter}}"
+                                          DockPanel.Dock="Right"
                                           Style="{StaticResource MaterialDesignToolButton}"
                                           Foreground="{StaticResource MaterialDesignDarkForeground}" Width="33"
                                           Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
                     <materialDesign:PackIcon Kind="SquareEditOutline" VerticalAlignment="Center" Height="24" Width="24" />
-                </employees:NavigateButton>
+                </Button>
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
                     <materialDesign:PackIcon Kind="Account" VerticalAlignment="Center" Height="24" Width="24" />
                     <TextBlock

@@ -125,7 +125,9 @@ namespace employees.Model
                         : request.OrderByDescending(x => x.DateBirth);
                     break;
                 default:
-                    request = request.OrderBy(x => x.Id);
+                    request = sortDirection
+                        ? request.OrderBy(x => x.Id)
+                        : request.OrderByDescending(x => x.Id);
                     break;
             }
 

@@ -25,11 +25,14 @@ namespace Employees
         public ICommand ViewEmployeeInfoCommand { get; }
         public ICommand ApplyCommand { get; }
 
-        public CardInfoViewModel(IShell shell, CardService service)
+        public bool IsWriteRights { get; }
+
+        public CardInfoViewModel(IShell shell, CardService service, EmployeeService employeeService)
         {
             try
             {
                 this.Entity = service.GetById((int) shell.LastNavigatedDialogParameter);
+                this.IsWriteRights = employeeService.CurrentUser.Role == Role.Manager;
             }
             catch (Exception e)
             {

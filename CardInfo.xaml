@@ -21,12 +21,13 @@
                                   Mode="PrimaryMid"
                                   Padding="24,20,24,20">
             <DockPanel>
-                <local:NavigateButton NavigateUri="EmployeeEditor.xaml" DockPanel.Dock="Right"
-                                      Style="{StaticResource MaterialDesignToolButton}"
+                <Button DockPanel.Dock="Right"
+                        Visibility="{Binding IsWriteRights, Converter={StaticResource BoolVisibilityConverter}}"
+                        Style="{StaticResource MaterialDesignToolButton}"
                                       Foreground="{StaticResource MaterialDesignDarkForeground}" Width="33"
                                       Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
                     <materialDesign:PackIcon Kind="SquareEditOutline" VerticalAlignment="Center" Height="24" Width="24" />
-                </local:NavigateButton>
+                </Button>
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
                     <materialDesign:PackIcon Kind="Account" VerticalAlignment="Center" Height="24" Width="24" />
                     <TextBlock

@@ -164,6 +164,17 @@ namespace employees
         public List<Card> Entities { get; set; }
         public EmployeeComboBoxViewModel EmployeeComboBoxViewModel { get; set; }
 
+        public bool IsByEmployee
+        {
+            get => this.FilterDefinition.IsByEmployee;
+
+            set
+            {
+                this.EmployeeComboBoxViewModel.IsEnabled = value;
+                this.FilterDefinition.IsByEmployee = value;
+            }
+        }
+
         public ICommand AddCardCommand =>
             new RelayCommand(() => _shell.NavigateByUri(CompanyUris.CardEditor));
 
@@ -201,7 +212,8 @@ namespace employees
             _service = cardService;
             this.EmployeeComboBoxViewModel =
                 new EmployeeComboBoxViewModel(employeeService,
-                    x => this.FilterDefinition.EmployeeId = x.Id, false);
+                    x => this.FilterDefinition.EmployeeId = x?.Id, false)
+                    {IsEnabled = false};
             this.PaginatorViewModel.RegisterPaginable(this, true);
         }
 
@@ -226,7 +238,7 @@ namespace employees
         {
             if (!IsDisconnected)
             {
-                this.Entities = this._service.Get(SearchString, "", true, FilterDefinition,
+                this.Entities = this._service.Get(SearchString, SortingColumn, SortDirection, FilterDefinition,
                     elements, page * elements);
             }
         }

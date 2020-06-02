@@ -8,6 +8,7 @@
              xmlns:converters="clr-namespace:employees.Converters"
              xmlns:employees="clr-namespace:Employees"
              xmlns:wpf="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+             xmlns:elements="clr-namespace:employees.Elements"
              mc:Ignorable="d"
              DataContext="{Binding Chart, Source={StaticResource Locator}}"
              d:DesignHeight="600" d:DesignWidth="800">
@@ -17,20 +18,6 @@
                                   Padding="16">
             <DockPanel>
 
-                <Button Grid.Row="0" Visibility="{Binding OrderGridVisibility}" DockPanel.Dock="Right"
-                        Style="{StaticResource MaterialDesignToolButton}"
-                        Foreground="{StaticResource MaterialDesignDarkForeground}" Width="28">
-                    <Button.ContextMenu>
-                        <ContextMenu DataContext="{Binding ElementName=Screen, Path=DataContext}">
-                            <MenuItem Header="Экспортировать как">
-                                <MenuItem Header="*.csv" />
-                                <MenuItem Header="*.xlsx" />
-                            </MenuItem>
-                            <MenuItem Header="Удалить выбраное"
-                                      Visibility="{Binding Visibilities.DirectorAdvisor, Converter={StaticResource BoolVisibilityConverter}}" />
-                        </ContextMenu>
-                    </Button.ContextMenu>
-                </Button>
                 <StackPanel Orientation="Horizontal">
                     <employees:NavigateButton
                         Foreground="{StaticResource MaterialDesignDarkForeground}"
@@ -89,75 +76,75 @@
                                 </Button.Content>
                             </Button>
                         </StackPanel>
-                        <StackPanel DataContext="{Binding FilterDefinition}" VerticalAlignment="Stretch"
+                        <StackPanel VerticalAlignment="Stretch"
                                     Margin="7,0,0,0" Orientation="Horizontal" Height="128">
 
                             <StackPanel Width="119" Margin="16,8,0,0" VerticalAlignment="Stretch"
                                                             HorizontalAlignment="Left">
-                                <CheckBox IsChecked="{Binding IsByGender}">По полу</CheckBox>
+                                <CheckBox IsChecked="{Binding FilterDefinition.IsByGender}">По полу</CheckBox>
                                 <RadioButton Margin="0,18,0,0"
-                                                                 IsEnabled="{Binding IsByGender}"
-                                                                 IsChecked="{Binding Path=Gender, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Male}"
+                                                                 IsEnabled="{Binding FilterDefinition.IsByGender}"
+                                                                 IsChecked="{Binding Path=FilterDefinition.Gender,
+                                    Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Male}"
                                                                  Style="{StaticResource MaterialDesignRadioButton}">
                                     Мужской
                                 </RadioButton>
                                 <RadioButton Margin="0,2,0,0"
-                                                                 IsEnabled="{Binding IsByGender}"
-                                                                 IsChecked="{Binding Path=Gender, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Female}"
+                                                                 IsEnabled="{Binding FilterDefinition.IsByGender}"
+                                                                 IsChecked="{Binding Path=FilterDefinition.Gender,
+                                            Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Female}"
                                                                  Style="{StaticResource MaterialDesignRadioButton}">
                                     Женский
                                 </RadioButton>
                                 <RadioButton Margin="0,2,0,0"
-                                                                 IsEnabled="{Binding IsByGender}"
-                                                                 IsChecked="{Binding Path=Gender, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Unrecognized}"
+                                                                 IsEnabled="{Binding FilterDefinition.IsByGender}"
+                                                                 IsChecked="{Binding Path=FilterDefinition.Gender, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Unrecognized}"
                                                                  Style="{StaticResource MaterialDesignRadioButton}">
                                     Не определён
                                 </RadioButton>
                             </StackPanel>
                             <StackPanel Width="152" Margin="16,8,0,0" VerticalAlignment="Stretch"
                                                             HorizontalAlignment="Left">
-                                <CheckBox IsChecked="{Binding IsByDateBirth}">По дате рождения</CheckBox>
+                                <CheckBox IsChecked="{Binding FilterDefinition.IsByDateBirth}">По дате рождения</CheckBox>
                                 <DatePicker
-                                                        SelectedDate="{Binding DateBirthLowBound}"
+                                                        SelectedDate="{Binding FilterDefinition.DateBirthLowBound}"
                                                         materialDesign:HintAssist.Hint="Нижняя граница"
                                                         Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
                                                         Margin="0,4,0,0"
                                                         HorizontalAlignment="Stretch"
-                                                        IsEnabled="{Binding IsByDateBirth}" />
+                                                        IsEnabled="{Binding FilterDefinition.IsByDateBirth}" />
                                 <DatePicker
-                                                        SelectedDate="{Binding DateBirthHighBound}"
+                                                        SelectedDate="{Binding FilterDefinition.DateBirthHighBound}"
                                                         materialDesign:HintAssist.Hint="Верхняя граница"
                                                         Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
                                                         Margin="0,4,0,0"
                                                         HorizontalAlignment="Stretch"
-                                                        IsEnabled="{Binding IsByDateBirth}" />
+                                                        IsEnabled="{Binding FilterDefinition.IsByDateBirth}" />
                             </StackPanel>
                             <StackPanel Width="152" Margin="16,8,0,0" VerticalAlignment="Stretch"
                                         HorizontalAlignment="Left">
-                                <CheckBox IsChecked="{Binding IsByDatePass}">По дате сдачи</CheckBox>
+                                <CheckBox IsChecked="{Binding FilterDefinition.IsByDatePass}">По дате сдачи</CheckBox>
                                 <DatePicker
-                                    SelectedDate="{Binding DatePassLowBound}"
+                                    SelectedDate="{Binding FilterDefinition.DatePassLowBound}"
                                     materialDesign:HintAssist.Hint="Нижняя граница"
                                     Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
                                     Margin="0,4,0,0"
                                     HorizontalAlignment="Stretch"
-                                    IsEnabled="{Binding IsByDatePass}" />
+                                    IsEnabled="{Binding FilterDefinition.IsByDatePass}" />
                                 <DatePicker
-                                    SelectedDate="{Binding DatePassHighBound}"
+                                    SelectedDate="{Binding FilterDefinition.DatePassHighBound}"
                                     materialDesign:HintAssist.Hint="Верхняя граница"
                                     Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
                                     Margin="0,4,0,0"
                                     HorizontalAlignment="Stretch"
-                                    IsEnabled="{Binding IsByDatePass}" />
+                                    IsEnabled="{Binding FilterDefinition.IsByDatePass}" />
                             </StackPanel>
 
                             <StackPanel Width="197" Margin="16,8,0,0" VerticalAlignment="Stretch"
                                         HorizontalAlignment="Left">
                                 <CheckBox IsChecked="{Binding IsByEmployee}">По работнику</CheckBox>
-                                <ComboBox
-                                    Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                                    materialDesign:HintAssist.Hint="Работник"
-                                    IsEnabled="{Binding IsByEmployee}" />
+                                <elements:EmployeeComboBox DataContext="{Binding EmployeeComboBoxViewModel}"
+                                                           Margin="0,1,0,0"></elements:EmployeeComboBox>
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>

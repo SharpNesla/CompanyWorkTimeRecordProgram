@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Employees;
+using employees.Elements;
 using employees.Model;
 using LiveCharts;
 using LiveCharts.Wpf;
@@ -23,13 +24,24 @@ namespace employees
     public class ChartViewModel : ViewModelBase
     {
         private readonly IShell _shell;
+        public EmployeeComboBoxViewModel EmployeeComboBoxViewModel { get; set; }
         public WorkLoadFilterDefinition FilterDefinition { get; set; } = new WorkLoadFilterDefinition();
 
         public List<WorkLoadData> WorkLoadData;
 
         [DependsOn(nameof(WorkLoadData))]
         public SeriesCollection Values { get; private set; }
-        
+        public bool IsByEmployee
+        {
+            get => this.FilterDefinition.IsByEmployee;
+
+            set
+            {
+                this.EmployeeComboBoxViewModel.IsEnabled = value;
+                this.FilterDefinition.IsByEmployee = value;
+            }
+        }
+
         public ICommand EraseFilters =>
             new RelayCommand(() => this.FilterDefinition = new WorkLoadFilterDefinition());
 
@@ -85,12 +97,17 @@ namespace employees
 
             
         }
-        public ChartViewModel(IShell shell, CardService service)
+        public ChartViewModel(IShell shell, CardService service, EmployeeService employeeService)
         {
             _shell = shell;
+            this.EmployeeComboBoxViewModel =
+                new EmployeeComboBoxViewModel(employeeService,
+                        x => this.FilterDefinition.EmployeeId = x?.Id, false)
+                    { IsEnabled = false };
             RefreshCommand = new RelayCommand(
                 () => Refresh(service));
             Refresh(service);
         }
+
     }
 }

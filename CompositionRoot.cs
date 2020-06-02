@@ -37,7 +37,7 @@ namespace Employees
         public CardEditorViewModel CardEditor =>
             new CardEditorViewModel(ShellWindowViewModel, _cardService, _employeeService);
 
-        public CardInfoViewModel CardInfo => new CardInfoViewModel(ShellWindowViewModel, _cardService);
+        public CardInfoViewModel CardInfo => new CardInfoViewModel(ShellWindowViewModel, _cardService, _employeeService);
         public AuthViewModel Auth => new AuthViewModel(ShellWindowViewModel, _employeeService);
         public DeleteDialogViewModel DeleteDialog => new DeleteDialogViewModel(ShellWindowViewModel);
 
@@ -45,6 +45,6 @@ namespace Employees
             new ConnectionLostDialogViewModel(ShellWindowViewModel);
 
         public HubViewModel Hub => new HubViewModel(this.EmployeeDictionary, this.CardDictionary);
-        public ChartViewModel Chart => new ChartViewModel(ShellWindowViewModel, _cardService);
+        public ChartViewModel Chart => new ChartViewModel(ShellWindowViewModel, _cardService, _employeeService);
     }
 }

@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
-             xmlns:cal="http://www.caliburnproject.org"
              >
     <StackPanel Orientation="Horizontal">
         <TextBlock  Text="Элементов на странице"

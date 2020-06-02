@@ -20,7 +20,7 @@ namespace employees.Model
         public bool IsByDateBirth { get; set; }
         public Gender Gender { get; set; }
         public DateTime? DatePassLowBound { get; set; }
-        public int EmployeeId { get; set; }
+        public int? EmployeeId { get; set; }
         public DateTime? DatePassHighBound { get; set; }
         public DateTime? DateBirthLowBound { get; set; }
         public DateTime? DateBirthHighBound { get; set; }

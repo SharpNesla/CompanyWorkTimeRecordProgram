@@ -43,7 +43,7 @@ namespace employees.Model
                 request = request.Where(x => x.Id.ToString().Contains(searchString));
             }
 
-            if (filter.IsByEmployee)
+            if (filter.IsByEmployee && filter.EmployeeId != null)
                 request = request.Where(x => x.EmployeeId == filter.EmployeeId);
 
             if (filter.IsBySumWorkTime)
@@ -115,11 +115,13 @@ namespace employees.Model
                         : request.OrderByDescending(x => x.Payment);
                     break;
                 default:
-                    request = request.OrderBy(x => x.Id);
+                    request = sortDirection
+                        ? request.OrderBy(x => x.Id)
+                        : request.OrderByDescending(x => x.Id);
                     break;
             }
 
-            return request.OrderBy(x => x.Id).Skip(offset).Take(limit).ToList();
+            return request.Skip(offset).Take(limit).ToList();
         }
 
         /// <summary>
@@ -261,7 +263,7 @@ namespace employees.Model
 
             var request = _applicationContext.Cards.AsQueryable();
 
-            if (filter.IsByEmployee)
+            if (filter.IsByEmployee && filter.EmployeeId != null)
                 request = request.Where(x => x.EmployeeId == filter.EmployeeId);
 
             if (filter.IsByGender)

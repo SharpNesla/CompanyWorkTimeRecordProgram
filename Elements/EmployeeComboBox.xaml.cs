@@ -43,7 +43,7 @@ namespace employees.Elements
         private readonly bool _isRequired;
         private string _entityText;
 
-        public bool IsEnabled { get; set; }
+        public bool IsEnabled { get; set; } = true;
         public List<Employee> Entities { get; set; }
 
         /// <summary>
