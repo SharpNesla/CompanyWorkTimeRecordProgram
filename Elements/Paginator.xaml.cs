@@ -59,6 +59,7 @@ namespace employees.Elements
         public ICommand MovePreviousCommand => new RelayCommand(MovePrevious);
 
         public ICommand MoveNextCommand => new RelayCommand(MoveNext);
+        public ICommand ChangeElementsPerPageCommand => new RelayCommand(ChangeElementsPerPage);
 
         private int _currentPage;
         private long _count;
@@ -118,7 +119,6 @@ namespace employees.Elements
             this.ComboValues = new int[] { 5, 10, 20, 50, 100 };
             this.ElementsPerPage = 10;
             this.CurrentPage = 1;
-            CheckButtons();
         }
 
         public bool IsMoveNextEnabled { get; private set; }

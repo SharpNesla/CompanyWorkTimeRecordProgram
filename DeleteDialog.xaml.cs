@@ -26,17 +26,27 @@ namespace employees
             {
                 var parameters = _shell.LastNavigatedDialogParameter as object[];
                 var id = (int) parameters[0];
-                if (parameters[1] is EmployeeService)
+                try
                 {
-                    (parameters[1] as EmployeeService).Remove(id);
+                    if (parameters[1] is EmployeeService)
+                    {
+                        (parameters[1] as EmployeeService).Remove(id);
+                    }
+                    else
+                    {
+                        (parameters[1] as CardService).Remove(id);
+                    }
+
+                    _shell.TryCloseDialog();
                 }
-                else
+                catch (Exception e)
                 {
-                    (parameters[1] as CardService).Remove(id);
+                    _shell.OpenDialogByUri(CompanyUris.ConnectionLost, false, null);
                 }
-                _shell.TryCloseDialog();
             });
-        public ICommand RejectCommand => new RelayCommand(()=>_shell.TryCloseDialog());
+
+        public ICommand RejectCommand => new RelayCommand(() => _shell.TryCloseDialog());
+
         public DeleteDialogViewModel(IShell shell)
         {
             _shell = shell;
