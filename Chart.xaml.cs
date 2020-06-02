@@ -21,15 +21,25 @@ using LiveCharts.Wpf;
 
 namespace employees
 {
+    /// <summary>
+    /// ViewModel-прослойка, отвечающая за форму построения диаграмм
+    /// </summary>
     public class ChartViewModel : ViewModelBase
     {
         private readonly IShell _shell;
+        private readonly EmployeeService _employeeService;
         public EmployeeComboBoxViewModel EmployeeComboBoxViewModel { get; set; }
         public WorkLoadFilterDefinition FilterDefinition { get; set; } = new WorkLoadFilterDefinition();
 
         public List<WorkLoadData> WorkLoadData;
 
-        private static string Func(double value)
+        /// <summary>
+        /// Функция форматирования значений диаграммы и меток вертикальной оси
+        /// (производит обратный перевод из минут в часы)
+        /// </summary>
+        /// <param name="value">Минуты</param>
+        /// <returns>Строка времени в формате чч:мм</returns>
+        private static string FormatterFunc(double value)
         {
             var time = (int) value;
             return (time / 60 * 100 + time % 60).ToString("#0:00");
@@ -37,6 +47,7 @@ namespace employees
 
         [DependsOn(nameof(WorkLoadData))]
         public SeriesCollection Values { get; private set; }
+        
         public bool IsByEmployee
         {
             get => this.FilterDefinition.IsByEmployee;
@@ -49,13 +60,26 @@ namespace employees
         }
 
         public ICommand EraseFilters =>
-            new RelayCommand(() => this.FilterDefinition = new WorkLoadFilterDefinition());
+            new RelayCommand(() =>
+            {
+                this.FilterDefinition = new WorkLoadFilterDefinition();
+                this.IsByEmployee = false;
+                OnPropertyChanged(nameof(IsByEmployee));
+                this.EmployeeComboBoxViewModel = new EmployeeComboBoxViewModel(_employeeService,
+                        x => this.FilterDefinition.EmployeeId = x?.Id, false)
+                    { IsEnabled = false };
+            });
 
         public ICommand RefreshCommand { get; }
 
-        public Func<double, string> Formatter { get; set; } = Func;
+        public Func<double, string> Formatter { get; set; } = FormatterFunc;
 
         public string[] Labels => new[] {"Понедельник", "Вторник", "Среда", "Четверг", "Пятница"};
+        /// <summary>
+        /// Метод, обновляющий колонки диаграммы
+        /// (производится перевод в минуты)
+        /// </summary>
+        /// <param name="service"></param>
         void Refresh(CardService service)
         {
             try
@@ -108,6 +132,7 @@ namespace employees
         public ChartViewModel(IShell shell, CardService service, EmployeeService employeeService)
         {
             _shell = shell;
+            _employeeService = employeeService;
             this.EmployeeComboBoxViewModel =
                 new EmployeeComboBoxViewModel(employeeService,
                         x => this.FilterDefinition.EmployeeId = x?.Id, false)

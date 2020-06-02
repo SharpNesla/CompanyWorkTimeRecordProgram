@@ -20,10 +20,11 @@
                                   Padding="24,20,24,20">
             <DockPanel>
                 <Button Visibility="{Binding IsWriteRights, Converter={StaticResource BoolVisibilityConverter}}"
-                                          DockPanel.Dock="Right"
-                                          Style="{StaticResource MaterialDesignToolButton}"
-                                          Foreground="{StaticResource MaterialDesignDarkForeground}" Width="33"
-                                          Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
+                        DockPanel.Dock="Right"
+                        ToolTip="Перейти к редактиованию работника"
+                        Style="{StaticResource MaterialDesignToolButton}"
+                        Foreground="{StaticResource MaterialDesignDarkForeground}" Width="33"
+                        Command="{Binding OpenEditor}">
                     <materialDesign:PackIcon Kind="SquareEditOutline" VerticalAlignment="Center" Height="24" Width="24" />
                 </Button>
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
@@ -94,22 +95,6 @@
                         <TextBlock Margin="0,0,16,0" VerticalAlignment="Center"
 
                                    Text="{Binding Path=Entity.Cards.Count, StringFormat='{}Всего карточек: {0}'}" />
-                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
-
-
-                            <!--Заказ от 21.01.2019, 13:30. Цена: 1300р/!-->
-                            <Button Name="ShowOrdersForClint" DockPanel.Dock="Right" Margin="0,0,9,0"
-                                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
-                                    Style="{StaticResource MaterialDesignFlatButton}"
-                                    HorizontalAlignment="Left" ToolTip="Просмотреть все заказы данного клиента">
-
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Margin="0,0,4,0" Kind="FormatListNumbered" />
-                                    <TextBlock>Перейти к списку</TextBlock>
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
-                        <StackPanel DockPanel.Dock="Left" />
                     </DockPanel>
 
                     <DataGrid

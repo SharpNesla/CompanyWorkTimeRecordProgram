@@ -42,6 +42,8 @@
                     <employees:NavigateButton NavigateUri="Chart.xaml"
                                               Style="{StaticResource MaterialDesignToolButton}" Width="32"
                                               Margin="0,0,16,0" Height="32"
+                                              
+                                              ToolTip="Перейти к диаграмме загруженности"
                                               Foreground="{StaticResource MaterialDesignDarkForeground}">
                         <materialDesign:PackIcon Height="24" Width="24" Kind="ChartBar" />
                     </employees:NavigateButton>
@@ -68,7 +70,8 @@
 
                     <employees:NavigateButton Style="{StaticResource MaterialDesignToolButton}" Width="32" Height="32"
                             Foreground="{StaticResource MaterialDesignDarkForeground}"
-                            NavigateUri="Auth.xaml">
+                            NavigateUri="Auth.xaml"
+                            ToolTip="Выйти из системы">
                         <materialDesign:PackIcon Kind="ExitToApp" Height="24" Width="24" />
                     </employees:NavigateButton>
                 </StackPanel>
@@ -189,7 +192,7 @@
                                                     Command="{Binding Path=EraseFilters}"
                                                     Margin="0,0,0,0"
                                                     Style="{StaticResource MaterialDesignFlatButton}"
-                                                    ToolTip="Icon">
+                                                    ToolTip="Сброс критериев поиска">
                                                     <Button.Content>
                                                         <StackPanel Orientation="Horizontal">
                                                             <materialDesign:PackIcon Margin="0,0,4,0" Kind="Eraser" />
@@ -202,7 +205,7 @@
                                                     Command="{Binding RefreshCommand}"
                                                     Margin="4,0,0,0"
                                                     Style="{StaticResource MaterialDesignFlatButton}"
-                                                    ToolTip="Icon">
+                                                    ToolTip="Обновление списка в соответствии с критериями">
                                                     <Button.Content>
                                                         <StackPanel Orientation="Horizontal">
                                                             <materialDesign:PackIcon Kind="Refresh" />
@@ -498,7 +501,8 @@
                                                     Command="{Binding EraseFilters}"
                                                     Margin="0,0,0,0"
                                                     Style="{StaticResource MaterialDesignFlatButton}"
-                                                    ToolTip="Icon">
+                                                    ToolTip="Сброс критериев поиска"
+                                                    >
                                                     <Button.Content>
                                                         <StackPanel Orientation="Horizontal">
                                                             <materialDesign:PackIcon Margin="0,0,4,0" Kind="Eraser" />
@@ -511,7 +515,7 @@
                                                     Command="{Binding RefreshCommand}"
                                                     Margin="4,0,0,0"
                                                     Style="{StaticResource MaterialDesignFlatButton}"
-                                                    ToolTip="Icon">
+                                                    ToolTip="Обновление списка в соответствии с критериями">
                                                     <Button.Content>
                                                         <StackPanel Orientation="Horizontal">
                                                             <materialDesign:PackIcon Kind="Refresh" />

@@ -43,6 +43,8 @@ namespace employees.Model
                 request = request.Where(x => x.Id.ToString().Contains(searchString));
             }
 
+            #region Применение фильтров
+
             if (filter.IsByEmployee && filter.EmployeeId != null)
                 request = request.Where(x => x.EmployeeId == filter.EmployeeId);
 
@@ -72,6 +74,9 @@ namespace employees.Model
                 }
             }
 
+            #endregion
+
+            //Применение сортировки
             switch (sortBy)
             {
                 case "WorkLoadTimeMonday":
@@ -125,14 +130,54 @@ namespace employees.Model
         }
 
         /// <summary>
-        /// 
+        /// Функция, возвращающая количество записей о карточках
         /// </summary>
         /// <param name="searchString"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
         public long GetCount(string searchString, CardFilterDefinition filter)
         {
-            return this._applicationContext.Cards.Count();
+            var request = _applicationContext.Cards.AsQueryable().Where(x => x.DeletedAt == null);
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                request = request.Where(x => x.Id.ToString().Contains(searchString));
+            }
+
+            #region Применение фильтров
+
+            if (filter.IsByEmployee && filter.EmployeeId != null)
+                request = request.Where(x => x.EmployeeId == filter.EmployeeId);
+
+            if (filter.IsBySumWorkTime)
+            {
+                if (filter.SumWorkTimeLowBound != null)
+                {
+                    request = request.Where(x => x.SumWorkLoadTime >= filter.SumWorkTimeLowBound);
+                }
+
+                if (filter.SumWorkTimeHighBound != null)
+                {
+                    request = request.Where(x => x.SumWorkLoadTime <= filter.SumWorkTimeHighBound);
+                }
+            }
+
+            if (filter.IsByDatePass)
+            {
+                if (filter.DatePassLowBound != null)
+                {
+                    request = request.Where(x => x.DatePass >= filter.DatePassLowBound);
+                }
+
+                if (filter.DatePassHighBound != null)
+                {
+                    request = request.Where(x => x.DatePass <= filter.DatePassHighBound);
+                }
+            }
+
+            #endregion
+
+            return request.Count();
         }
 
         /// <summary>
@@ -196,7 +241,7 @@ namespace employees.Model
             workbook.SetSheetName(0, "Карточки загруженности");
 
             var header = sheet.CreateRow(0);
-
+            //Создание строки заголовка
             var tableSheetHeader = new[]
             {
                 "№", "Работник", "Дата сдачи", "Пн", "Вт",
@@ -207,7 +252,7 @@ namespace employees.Model
             {
                 header.CreateCell(i).SetCellValue(tableSheetHeader[i]);
             }
-
+            //Заполнение строк таблицы
             for (int i = 0; i < cards.Count; i++)
             {
                 var row = sheet.CreateRow(sheet.PhysicalNumberOfRows);
@@ -263,11 +308,30 @@ namespace employees.Model
 
             var request = _applicationContext.Cards.AsQueryable();
 
-            if (filter.IsByEmployee && filter.EmployeeId != null)
-                request = request.Where(x => x.EmployeeId == filter.EmployeeId);
+            #region Применение фильтров
 
-            if (filter.IsByGender)
-                request = request.Where(x => x.Employee.Gender == filter.Gender);
+            if (filter.IsByEmployee)
+            {
+                if (filter.EmployeeId != null) request = request.Where(x => x.EmployeeId == filter.EmployeeId);
+            }
+            else
+            {
+                if (filter.IsByGender)
+                    request = request.Where(x => x.Employee.Gender == filter.Gender);
+                if (filter.IsByDateBirth)
+                {
+                    if (filter.DateBirthLowBound != null)
+                    {
+                        request = request.Where(x => x.Employee.DateBirth >= filter.DateBirthLowBound);
+                    }
+
+                    if (filter.DateBirthHighBound != null)
+                    {
+                        request = request.Where(x => x.Employee.DateBirth <= filter.DateBirthHighBound);
+                    }
+                }
+                
+            }
 
             if (filter.IsByDatePass)
             {
@@ -281,19 +345,8 @@ namespace employees.Model
                     request = request.Where(x => x.DatePass <= filter.DatePassHighBound);
                 }
             }
-
-            if (filter.IsByDateBirth)
-            {
-                if (filter.DateBirthLowBound != null)
-                {
-                    request = request.Where(x => x.Employee.DateBirth >= filter.DateBirthLowBound);
-                }
-
-                if (filter.DateBirthHighBound != null)
-                {
-                    request = request.Where(x => x.Employee.DateBirth <= filter.DateBirthHighBound);
-                }
-            }
+            
+            #endregion
 
             try
             {
@@ -308,6 +361,8 @@ namespace employees.Model
                 var maxWednesday = request.Max(x => x.WorkLoadTimeWednesday);
                 var maxThursday = request.Max(x => x.WorkLoadTimeThursday);
                 var maxFriday = request.Max(x => x.WorkLoadTimeFriday);
+
+                #region Вычисление среднего, путём перевода в минуты, и обратного перевода в часы
 
                 var avgMonday = (int) request
                     .Select(x => x.WorkLoadTimeMonday / 100 * 60 + x.WorkLoadTimeMonday % 100)
@@ -333,6 +388,8 @@ namespace employees.Model
                 avgThursday = avgThursday / 60 * 100 + avgThursday % 60;
                 avgFriday = avgFriday / 60 * 100 + avgFriday % 60;
 
+                #endregion
+
                 data.AddRange(new[]
                 {
                     new WorkLoadData {Min = minMonday, Average = avgMonday, Max = maxMonday},
@@ -342,6 +399,7 @@ namespace employees.Model
                     new WorkLoadData {Min = minFriday, Average = avgFriday, Max = maxFriday},
                 });
             }
+            //Обработка ошибки в случае, если карточек с данными критериями не существует
             catch (InvalidOperationException e)
             {
                 for (int i = 0; i < 5; i++)

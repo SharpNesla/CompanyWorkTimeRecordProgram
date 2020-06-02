@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -57,7 +58,7 @@ namespace employees
 
         public bool IsFilterDrawerOpened { get; set; }
         public TFilter FilterDefinition { get; set; } = new TFilter();
-        public ICommand EraseFilters => new RelayCommand(() => this.FilterDefinition = new TFilter());
+        public virtual ICommand EraseFilters => new RelayCommand(() => this.FilterDefinition = new TFilter());
         public string SearchString { get; set; }
         public PaginatorViewModel PaginatorViewModel { get; }
 
@@ -163,10 +164,10 @@ namespace employees
         public bool IsWriteRights => _employeeService.CurrentUser.Role == Role.Manager;
         public List<Card> Entities { get; set; }
         public EmployeeComboBoxViewModel EmployeeComboBoxViewModel { get; set; }
-
+        [DependsOn(nameof(EraseFilters))]
         public bool IsByEmployee
         {
-            get => this.FilterDefinition.IsByEmployee;
+            get { return this.FilterDefinition.IsByEmployee; }
 
             set
             {
@@ -200,6 +201,18 @@ namespace employees
                 eventArgs.Column.SortDirection =
                     SortDirection ? ListSortDirection.Ascending : ListSortDirection.Descending;
             });
+        
+        public override ICommand EraseFilters => new RelayCommand(EraseFiltersAction);
+
+        private void EraseFiltersAction()
+        {
+            this.FilterDefinition = new CardFilterDefinition();
+            this.IsByEmployee = false;
+            OnPropertyChanged(nameof(IsByEmployee));
+            this.EmployeeComboBoxViewModel = new EmployeeComboBoxViewModel(_employeeService,
+                    x => this.FilterDefinition.EmployeeId = x?.Id, false)
+                { IsEnabled = false };
+        }
 
         public ICommand RefreshCommand => new RelayCommand(() => this.StateChanged?.Invoke());
 

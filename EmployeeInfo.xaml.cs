@@ -8,12 +8,16 @@ namespace employees
 {
     public class EmployeeInfoViewModel : ViewModelBase
     {
+        public bool IsWriteRights { get; }
         public Employee Entity { get; set; }
-        public string InfoTitle => $"Работник №{Entity.Id}";
+
+        #region Команды нажатий на кнопки
+
         public ICommand ViewCardInfoCommand { get; }
         public ICommand ApplyCommand { get; set; }
-        public bool IsWriteRights { get; }
+        public ICommand OpenEditor { get; }
 
+        #endregion
         public EmployeeInfoViewModel(IShell shell, EmployeeService service)
         {
             try
@@ -29,6 +33,13 @@ namespace employees
 
             ViewCardInfoCommand = new RelayCommand<Card>(
                 x => shell.OpenDialogByUri(CompanyUris.CardInfo, true, x.Id));
+
+            this.OpenEditor = new RelayCommand(() =>
+            {
+                shell.NavigateByUri(CompanyUris.EmployeeEditor, this.Entity.Id);
+                shell.TryCloseDialog();
+            });
+
             ApplyCommand = new RelayCommand(() => shell.TryCloseDialog());
         }
 

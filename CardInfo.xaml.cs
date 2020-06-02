@@ -18,15 +18,19 @@ using Employees.Model;
 
 namespace Employees
 {
+    /// <summary>
+    /// ViewModel, 
+    /// </summary>
     public class CardInfoViewModel : ViewModelBase
     {
         public Card Entity { get; set; }
         public List<Card> CardArray => new List<Card>(new[] {this.Entity});
+        #region Команды нажатий на кнопки
         public ICommand ViewEmployeeInfoCommand { get; }
         public ICommand ApplyCommand { get; }
-
+        public ICommand OpenEditor { get; } 
+        #endregion
         public bool IsWriteRights { get; }
-
         public CardInfoViewModel(IShell shell, CardService service, EmployeeService employeeService)
         {
             try
@@ -43,7 +47,14 @@ namespace Employees
             this.ViewEmployeeInfoCommand =
                 new RelayCommand(
                     () => shell.OpenDialogByUri(CompanyUris.EmployeeInfo, true, this.Entity.EmployeeId));
-            ApplyCommand = new RelayCommand(() => shell.TryCloseDialog());
+            this.OpenEditor = new RelayCommand(() =>
+            {
+                shell.NavigateByUri(CompanyUris.CardEditor, this.Entity.Id);
+                shell.TryCloseDialog();
+            });
+
+
+            this.ApplyCommand = new RelayCommand(() => shell.TryCloseDialog());
         }
     }
 }

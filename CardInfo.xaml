@@ -25,7 +25,8 @@
                         Visibility="{Binding IsWriteRights, Converter={StaticResource BoolVisibilityConverter}}"
                         Style="{StaticResource MaterialDesignToolButton}"
                                       Foreground="{StaticResource MaterialDesignDarkForeground}" Width="33"
-                                      Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
+                                      Command="{Binding OpenEditor}"
+                        ToolTip="Перейти к редактированию карточки">
                     <materialDesign:PackIcon Kind="SquareEditOutline" VerticalAlignment="Center" Height="24" Width="24" />
                 </Button>
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
