@@ -21,7 +21,7 @@ namespace Employees.ValidationRules
 
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            string strValue = value.ToString();
+            string strValue = value?.ToString();
             if (string.IsNullOrWhiteSpace(strValue))
             {
                 if (IsRequired)
