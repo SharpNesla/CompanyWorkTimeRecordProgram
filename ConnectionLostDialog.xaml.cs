@@ -26,7 +26,7 @@ namespace employees
                 = new RelayCommand(() =>
                 {
                     shell.NavigateByUri(CompanyUris.Auth);
-                    shell.CloseDialogImmediately();
+                    shell.CloseDialog();
                 });
         }
     }

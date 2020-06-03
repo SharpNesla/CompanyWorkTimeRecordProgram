@@ -27,6 +27,10 @@ using NPOI.XSSF.UserModel;
 
 namespace employees
 {
+    /// <summary>
+    /// ViewModel-прослойка, обеспечивающая логику
+    /// работы главной формы
+    /// </summary>
     public class HubViewModel : ViewModelBase
     {
         public bool IsEmployeeTab { get; set; } = true;
@@ -67,7 +71,10 @@ namespace employees
             PaginatorViewModel = paginatorViewModel;
         }
     }
-
+    /// <summary>
+    /// ViewModel-прослойка, обеспечивающая логику
+    /// работы вкладки списка работников.
+    /// </summary>
     public class EmployeeDictionaryViewModel : DictionaryViewModelBase<Employee, EmployeeFilterDefinition>, IPaginable
     {
         private readonly IShell _shell;
@@ -154,7 +161,10 @@ namespace employees
             }
         }
     }
-
+    /// <summary>
+    /// ViewModel-прослойка, обеспечивающая логику
+    /// работы вкладки списка карточек
+    /// </summary>
     public class CardDictionaryViewModel : DictionaryViewModelBase<Card, CardFilterDefinition>, IPaginable
     {
         private readonly IShell _shell;

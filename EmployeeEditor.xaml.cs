@@ -18,6 +18,9 @@ using Employees.Model;
 
 namespace employees
 {
+    /// <summary>
+    /// Базовый класс редактора сущности
+    /// </summary>
     public abstract class EditorBase : ViewModelBase
     {
         public ICommand ApplyCommand => new RelayCommand<DependencyObject>(ApplyChanges);
@@ -99,7 +102,10 @@ namespace employees
             }
         }
     }
-
+    /// <summary>
+    /// ViewModel-прослойка, обеспечивающая логику редактирования
+    /// информации о работнике.
+    /// </summary>
     public class EmployeeEditorViewModel : EditorBase
     {
         private readonly IShell _shell;

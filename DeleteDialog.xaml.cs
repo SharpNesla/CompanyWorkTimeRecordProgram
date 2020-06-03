@@ -17,6 +17,9 @@ using employees.Model;
 
 namespace employees
 {
+    /// <summary>
+    /// ViewModel-прослойка, обеспечивающая логику удаления сущности
+    /// </summary>
     public class DeleteDialogViewModel
     {
         private readonly IShell _shell;
@@ -37,7 +40,7 @@ namespace employees
                         (parameters[1] as CardService).Remove(id);
                     }
 
-                    _shell.TryCloseDialog();
+                    _shell.CloseDialog();
                 }
                 catch (Exception e)
                 {
@@ -45,7 +48,7 @@ namespace employees
                 }
             });
 
-        public ICommand RejectCommand => new RelayCommand(() => _shell.TryCloseDialog());
+        public ICommand RejectCommand => new RelayCommand(() => _shell.CloseDialog());
 
         public DeleteDialogViewModel(IShell shell)
         {

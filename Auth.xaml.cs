@@ -18,22 +18,23 @@ using employees;
 namespace Employees
 {
     /// <summary>
-    /// Interaction logic for Auth.xaml
+    /// ViewModel-прослойка, обеспечивающая логку входа в систему
     /// </summary>
     public class AuthViewModel
-    { 
+    {
         public string Username { get; set; }
         private string _password;
         public ICommand TryAuthCommand { get; set; }
 
-        public ICommand ChangePassword => new RelayCommand<PasswordBox>(x=>_password = x.Password);
+        public ICommand ChangePassword => new RelayCommand<PasswordBox>(x => _password = x.Password);
 
         public AuthViewModel(IShell shell, EmployeeService employeeService)
         {
+            //Команда входа в систему
             this.TryAuthCommand = new RelayCommand(() =>
             {
                 try
-                { 
+                {
                     employeeService.Auth(Username, _password);
                     shell.NavigateByUri(CompanyUris.Hub);
                 }

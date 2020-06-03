@@ -21,7 +21,7 @@ using PropertyChanged;
 namespace Employees
 {
     /// <summary>
-    /// Interaction logic for EmployeeCardEditor.xaml
+    /// ViewModel редактора карточки, обеспечивает логику редактирования
     /// </summary>
     public class CardEditorViewModel : EditorBase
     {

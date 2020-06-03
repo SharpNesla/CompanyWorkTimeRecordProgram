@@ -39,22 +39,40 @@ namespace Employees
         public static readonly Uri Auth = new Uri("Auth.xaml", UriKind.Relative);
         public static readonly Uri ConnectionLost = new Uri("ConnectionLostDialog.xaml", UriKind.Relative);
     }
-
+    /// <summary>
+    /// Интерфейс, через который происходит взаимодействие
+    /// компонентов приложения и ViewModel-и главного окна 
+    /// </summary>
     public interface IShell
     {
         SnackbarMessageQueue MessageQueue { get; }
         object LastNavigatedParameter { get; }
         object LastNavigatedDialogParameter { get; }
+        /// <summary>
+        /// Переход по адресу формы
+        /// </summary>
+        /// <param name="uri">URI-адрес формы</param>
+        /// <param name="parameter">Объект-параметр</param>
         void NavigateByUri(Uri uri, object parameter = null);
+        /// <summary>
+        /// Открытие диалога по адресу формы
+        /// </summary>
+        /// <param name="uri">URI-адрес формы диалога</param>
+        /// <param name="closeByClickAway">Флаг возможности выхода из диалога по клику вне области</param>
+        /// <param name="parameter">Параметр</param>
         void OpenDialogByUri(Uri uri, bool closeByClickAway = false, object parameter = null);
 
         void OpenDialogByUri(Uri uri, bool closeByClickAway = false, Action onDialogCloseCallback = null,
             object parameter = null);
-
-        void TryCloseDialog();
-        void CloseDialogImmediately();
+        /// <summary>
+        /// Закрытие открытого диалога
+        /// </summary>
+        void CloseDialog();
     }
-
+    /// <summary>
+    /// ViewModel-прослойка, обеспечивающая логику
+    /// работы окна приложения
+    /// </summary>
     public class ShellWindowViewModel : ViewModelBase, IShell
     {
         private Shell _windowDependencyObject;
@@ -110,20 +128,13 @@ namespace Employees
         }
 
 
-        public async void TryCloseDialog()
+        public async void CloseDialog()
         {
             _host.CurrentSession.Close();
             OnDialogCloseCallback?.Invoke();
             this.OnDialogCloseCallback = null;
         }
-
-        public async void CloseDialogImmediately()
-        {
-            _host.IsOpen = false;
-            OnDialogCloseCallback?.Invoke();
-            this.OnDialogCloseCallback = null;
-        }
-
+        
         public ShellWindowViewModel()
         {
         }

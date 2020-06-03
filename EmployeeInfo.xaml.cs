@@ -6,6 +6,10 @@ using Employees.Model;
 
 namespace employees
 {
+    /// <summary>
+    /// ViewModel-прослойка, обеспечивающая логику
+    /// демонстрации информации о работнике
+    /// </summary>
     public class EmployeeInfoViewModel : ViewModelBase
     {
         public bool IsWriteRights { get; }
@@ -37,10 +41,10 @@ namespace employees
             this.OpenEditor = new RelayCommand(() =>
             {
                 shell.NavigateByUri(CompanyUris.EmployeeEditor, this.Entity.Id);
-                shell.TryCloseDialog();
+                shell.CloseDialog();
             });
 
-            ApplyCommand = new RelayCommand(() => shell.TryCloseDialog());
+            ApplyCommand = new RelayCommand(() => shell.CloseDialog());
         }
 
     }

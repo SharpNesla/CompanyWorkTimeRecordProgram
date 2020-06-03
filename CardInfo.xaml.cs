@@ -19,7 +19,7 @@ using Employees.Model;
 namespace Employees
 {
     /// <summary>
-    /// ViewModel, 
+    /// ViewModel-прослойка, обеспечивающая логику демонстрации информации о карточке
     /// </summary>
     public class CardInfoViewModel : ViewModelBase
     {
@@ -50,11 +50,11 @@ namespace Employees
             this.OpenEditor = new RelayCommand(() =>
             {
                 shell.NavigateByUri(CompanyUris.CardEditor, this.Entity.Id);
-                shell.TryCloseDialog();
+                shell.CloseDialog();
             });
 
 
-            this.ApplyCommand = new RelayCommand(() => shell.TryCloseDialog());
+            this.ApplyCommand = new RelayCommand(() => shell.CloseDialog());
         }
     }
 }
