@@ -31,7 +31,7 @@ namespace employees
                 this.Entity = service.GetById((int) shell.LastNavigatedDialogParameter);
                 this.IsWriteRights = service.CurrentUser.Role == Role.Manager;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 shell.OpenDialogByUri(CompanyUris.ConnectionLost, false, null);
                 return;

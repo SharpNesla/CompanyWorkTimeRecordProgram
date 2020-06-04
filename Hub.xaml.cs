@@ -126,7 +126,7 @@ namespace employees
                 {
                     return this._service.GetCount(SearchString, FilterDefinition);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     IsDisconnected = true;
                     _shell.OpenDialogByUri(CompanyUris.ConnectionLost, false, null);
@@ -154,7 +154,7 @@ namespace employees
             {
                 this._service.SaveExcelDocument(SearchString, SortingColumn, SortDirection, FilterDefinition);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 IsDisconnected = true;
                 _shell.OpenDialogByUri(CompanyUris.ConnectionLost, false, null);
@@ -248,7 +248,7 @@ namespace employees
                 {
                     return this._service.GetCount(SearchString, FilterDefinition);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     IsDisconnected = true;
                     _shell.OpenDialogByUri(CompanyUris.ConnectionLost, false, null);
@@ -274,7 +274,7 @@ namespace employees
             {
                 this._service.SaveExcelDocument(SearchString, "", true, FilterDefinition);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 IsDisconnected = true;
                 _shell.OpenDialogByUri(CompanyUris.ConnectionLost, false, null);

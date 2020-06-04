@@ -410,7 +410,7 @@ namespace employees.Model
                 });
             }
             //Обработка ошибки в случае, если карточек с данными критериями не существует
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException)
             {
                 for (int i = 0; i < 5; i++)
                 {

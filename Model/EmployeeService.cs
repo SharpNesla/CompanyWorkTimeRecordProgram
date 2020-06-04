@@ -335,7 +335,7 @@ namespace employees.Model
                 user = _applicationContext.Employees.Where(x=>x.Role != Role.Undefined)
                     .First(x => x.Username == username);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new UnauthorizedAccessException("User with username is not found! ");
             }
