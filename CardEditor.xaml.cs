@@ -147,7 +147,7 @@ namespace Employees
                     this.Entity = cards.GetById((int) shell.LastNavigatedParameter);
                     this.EmployeeComboBoxViewModel.SelectedEntity = Entity.Employee;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     _shell.OpenDialogByUri(CompanyUris.ConnectionLost, false, null);
                     return;
@@ -175,7 +175,7 @@ namespace Employees
                     _cards.Update(this.Entity);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 _shell.OpenDialogByUri(CompanyUris.ConnectionLost, false, null);
                 return;

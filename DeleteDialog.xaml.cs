@@ -42,7 +42,7 @@ namespace employees
 
                     _shell.CloseDialog();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     _shell.OpenDialogByUri(CompanyUris.ConnectionLost, false, null);
                 }

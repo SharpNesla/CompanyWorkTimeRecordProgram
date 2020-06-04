@@ -80,24 +80,7 @@ namespace employees.Model
                     request = request.Where(x => x.DateBirth <= filter.DateBirthHighBound);
                 }
             }
-
-            if (filter.IsBySumWorkTime)
-            {
-                if (filter.SumWorkTimeLowBound != null)
-                {
-                    request = request.Where(x =>
-                        x.Cards.OrderBy(y => y.DatePass).Last().SumWorkLoadTime
-                        >= filter.SumWorkTimeLowBound);
-                }
-
-                if (filter.SumWorkTimeHighBound != null)
-                {
-                    request = request.Where(x =>
-                        x.Cards.OrderBy(y => y.DatePass).Last().SumWorkLoadTime 
-                        <= filter.SumWorkTimeHighBound);
-                }
-            }
-
+            
             if (filter.IsByRole)
                 request = request.Where(x => x.Role == filter.Role);
 
@@ -188,24 +171,7 @@ namespace employees.Model
                     request = request.Where(x => x.DateBirth <= filter.DateBirthHighBound);
                 }
             }
-
-            if (filter.IsBySumWorkTime)
-            {
-                if (filter.SumWorkTimeLowBound != null)
-                {
-                    request = request.Where(x =>
-                        x.Cards.OrderBy(y => y.DatePass).Last().SumWorkLoadTime
-                        >= filter.SumWorkTimeLowBound);
-                }
-
-                if (filter.SumWorkTimeHighBound != null)
-                {
-                    request = request.Where(x =>
-                        x.Cards.OrderBy(y => y.DatePass).Last().SumWorkLoadTime
-                        <= filter.SumWorkTimeHighBound);
-                }
-            }
-
+            
             if (filter.IsByRole)
                 request = request.Where(x => x.Role == filter.Role);
 

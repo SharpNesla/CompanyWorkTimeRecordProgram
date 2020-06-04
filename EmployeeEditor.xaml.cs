@@ -156,7 +156,7 @@ namespace employees
                 {
                     this.Entity = employees.GetById((int) shell.LastNavigatedParameter);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     _shell.OpenDialogByUri(CompanyUris.ConnectionLost, false, null);
                     return;
@@ -192,7 +192,7 @@ namespace employees
                     _employees.Update(this.Entity);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 _shell.OpenDialogByUri(CompanyUris.ConnectionLost, false, null);
                 return;

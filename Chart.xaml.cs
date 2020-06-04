@@ -122,7 +122,7 @@ namespace employees
                     }
                 };
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 _shell.OpenDialogByUri(CompanyUris.ConnectionLost, false, null);
             }

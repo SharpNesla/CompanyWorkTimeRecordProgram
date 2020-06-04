@@ -25,7 +25,7 @@ namespace employees
             //window.SizeToContent = SizeToContent.WidthAndHeight;
             //window.Content = Application.LoadComponent(DialogUri) as Page;
             //window.ShowDialog();
-            DialogHost.Show(Application.LoadComponent(DialogUri) as Page);
+            await DialogHost.Show(Application.LoadComponent(DialogUri) as Page);
         }
     }
 }

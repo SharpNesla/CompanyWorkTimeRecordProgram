@@ -128,7 +128,7 @@ namespace Employees
         }
 
 
-        public async void CloseDialog()
+        public void CloseDialog()
         {
             _host.CurrentSession.Close();
             OnDialogCloseCallback?.Invoke();
