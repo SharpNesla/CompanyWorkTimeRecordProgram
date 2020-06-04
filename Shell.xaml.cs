@@ -123,8 +123,8 @@ namespace Employees
             await Task.Delay(220);
             this.LastNavigatedDialogParameter = parameter;
             _host.CloseOnClickAway = closeByClickAway;
-            await _host.ShowDialog(Application.LoadComponent(uri) as Page);
             this.OnDialogCloseCallback = onDialogCloseCallback;
+            await _host.ShowDialog(Application.LoadComponent(uri) as Page);
         }
 
 

@@ -89,7 +89,7 @@
                 <DockPanel Name="EmployeeCardList">
                     <TextBlock Margin="16,16,16,0" DockPanel.Dock="Top"
                                Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                               Text="Карточки загруженности данного работника (5 последних)" />
+                               Text="Карточки загруженности данного работника" />
 
                     <DockPanel DockPanel.Dock="Bottom" Margin="16">
                         <TextBlock Margin="0,0,16,0" VerticalAlignment="Center"
