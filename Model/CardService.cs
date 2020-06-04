@@ -114,10 +114,20 @@ namespace employees.Model
                         ? request.OrderBy(x => x.EmployeeId)
                         : request.OrderByDescending(x => x.EmployeeId);
                     break;
+                case "SumWorkLoadTime":
+                    request = sortDirection
+                        ? request.OrderBy(x => x.SumWorkLoadTime)
+                        : request.OrderByDescending(x => x.SumWorkLoadTime);
+                    break;
                 case "Payment":
                     request = sortDirection
                         ? request.OrderBy(x => x.Payment)
                         : request.OrderByDescending(x => x.Payment);
+                    break;
+                case "PaymentFull":
+                    request = sortDirection
+                        ? request.OrderBy(x => x.PaymentFull)
+                        : request.OrderByDescending(x => x.PaymentFull);
                     break;
                 default:
                     request = sortDirection

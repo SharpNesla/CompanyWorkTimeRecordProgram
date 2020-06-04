@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
+using System.Windows.Markup;
 using Employees;
 using employees.Model;
 using Employees.Model;
@@ -14,7 +17,6 @@ namespace employees
     {
         public bool IsWriteRights { get; }
         public Employee Entity { get; set; }
-
         #region Команды нажатий на кнопки
 
         public ICommand ViewCardInfoCommand { get; }

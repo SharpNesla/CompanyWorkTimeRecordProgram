@@ -16,7 +16,8 @@
                   DataContext="{Binding Source={StaticResource Locator}, Path=ShellWindowViewModel}"
                   WindowStartupLocation="CenterScreen"
                   Name="ShellWindowView"
-                  MinHeight="600" MinWidth="800">
+                  Width="1280" Height="720"
+                  MinHeight="600" MinWidth="1024">
     <b:Interaction.Triggers>
         <b:EventTrigger EventName="Loaded">
             <b:InvokeCommandAction Command="{Binding InitializeWindow}"

@@ -101,33 +101,33 @@
                                                    materialDesign:HintAssist.Hint="Понедельник"
                                                    Is24Hours="True"
                                                    SelectedTimeFormat="Short"
-                                                   SelectedTime="{Binding WorkLoadTimeMonday, Converter={StaticResource TimeStringIntConverter}}" Height="37" />
+                                                   SelectedTime="{Binding WorkLoadTimeMonday, Converter={StaticResource TimeToIntConverter}}" Height="37" />
                             <materialDesign:TimePicker Margin="0,0,16,0" Grid.Column="1"
                                                    materialDesign:HintAssist.IsFloating="True"
 
                                                    materialDesign:HintAssist.Hint="Вторник"
                                                    Is24Hours="True"
                                                    SelectedTimeFormat="Short"
-                                                   SelectedTime="{Binding WorkLoadTimeTuesday, Converter={StaticResource TimeStringIntConverter}}" Height="37" />
+                                                   SelectedTime="{Binding WorkLoadTimeTuesday, Converter={StaticResource TimeToIntConverter}}" Height="37" />
                             <materialDesign:TimePicker Margin="0,0,15,0"  Grid.Column="2"
                                                    materialDesign:HintAssist.IsFloating="True"
 
                                                    materialDesign:HintAssist.Hint="Среда"
                                                    Is24Hours="True"
                                                    SelectedTimeFormat="Short"
-                                                   SelectedTime="{Binding WorkLoadTimeWednesday, Converter={StaticResource TimeStringIntConverter}}" Height="37" />
+                                                   SelectedTime="{Binding WorkLoadTimeWednesday, Converter={StaticResource TimeToIntConverter}}" Height="37" />
                             <materialDesign:TimePicker Margin="1,0,8,0"  Grid.Column="3"
                                                    materialDesign:HintAssist.IsFloating="True"
                                                    materialDesign:HintAssist.Hint="Четверг"
                                                    Is24Hours="True"
                                                    SelectedTimeFormat="Short"
-                                                   SelectedTime="{Binding WorkLoadTimeThursday, Converter={StaticResource TimeStringIntConverter}}" Height="37" />
+                                                   SelectedTime="{Binding WorkLoadTimeThursday, Converter={StaticResource TimeToIntConverter}}" Height="37" />
                             <materialDesign:TimePicker Margin="8,0,0,0"  Grid.Column="4"
                                                    materialDesign:HintAssist.IsFloating="True"
                                                    materialDesign:HintAssist.Hint="Пятница"
                                                    Is24Hours="True"
                                                    SelectedTimeFormat="Short"
-                                                   SelectedTime="{Binding WorkLoadTimeFriday, Converter={StaticResource TimeStringIntConverter}}" Height="37" />
+                                                   SelectedTime="{Binding WorkLoadTimeFriday, Converter={StaticResource TimeToIntConverter}}" Height="37" />
                         </Grid>
                         <TextBlock Text="{Binding SumWorkLoadTime, StringFormat='Отработано всего: ##0:00'}"
                                    Margin="0,0,0,8"/>

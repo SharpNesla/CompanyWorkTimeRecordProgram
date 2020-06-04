@@ -9,9 +9,11 @@
             <local:CompositionRoot x:Key="Locator"></local:CompositionRoot>
 
             <converters:BoolVisibilityConverter x:Key="BoolVisibilityConverter"></converters:BoolVisibilityConverter>
+            <converters:BoolVisibilityHiddenConverter x:Key="BoolVisibilityHiddenConverter"></converters:BoolVisibilityHiddenConverter>
             <converters:BoolNotVisibilityConverter x:Key="BoolNotVisibilityConverter"></converters:BoolNotVisibilityConverter>
-            <converters:TimeToIntConverter x:Key="TimeStringIntConverter"></converters:TimeToIntConverter>
+            <converters:TimeToIntConverter x:Key="TimeToIntConverter"></converters:TimeToIntConverter>
             <converters:EnumBooleanConverter x:Key="EnumBooleanConverter"></converters:EnumBooleanConverter>
+            <converters:TimeStringToIntConverter x:Key="TimeStringToIntConverter"/>
 
             <Style x:Key="CellStyle" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource {x:Type DataGridCell}}">
                 <Style.Triggers>

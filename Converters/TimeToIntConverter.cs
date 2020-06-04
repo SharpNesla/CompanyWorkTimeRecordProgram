@@ -33,7 +33,6 @@ namespace employees.Converters
             }
             catch (Exception)
             {
-            
                 return 0;
             }
             

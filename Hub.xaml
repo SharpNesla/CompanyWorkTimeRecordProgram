@@ -94,7 +94,7 @@
                         <Button Panel.ZIndex="1" HorizontalAlignment="Right" Margin="0 0 16 -32"
                                 materialDesign:ShadowAssist.ShadowDepth="Depth3"
                                 Command="{Binding AddEmployeeCommand}"
-                                Visibility="{Binding IsWriteRights, Converter={StaticResource BoolVisibilityConverter}}"
+                                Visibility="{Binding IsWriteRights, Converter={StaticResource BoolVisibilityHiddenConverter}}"
                                 Style="{StaticResource MaterialDesignFloatingActionAccentButton}">
                             <materialDesign:PackIcon Kind="Plus" Height="24" Width="24" />
                         </Button>
@@ -259,20 +259,22 @@
                                                         HorizontalAlignment="Stretch"
                                                         IsEnabled="{Binding IsByDateBirth}" />
                                                 </StackPanel>
-                                                <StackPanel Width="152" Margin="16,8,0,0" VerticalAlignment="Stretch"
+                                                <!--<StackPanel Width="152" Margin="16,8,0,0" VerticalAlignment="Stretch"
                                                             HorizontalAlignment="Left">
                                                     <CheckBox IsChecked="{Binding IsBySumWorkTime}">По часам работы</CheckBox>
                                                     <TextBox Margin="0,4,0,0"
                                                              materialDesign:HintAssist.Hint="Нижняя граница"
                                                              Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                                                              HorizontalAlignment="Stretch"
+                                                             Text="{Binding SumWorkTimeLowBound}"
                                                              IsEnabled="{Binding IsBySumWorkTime}" />
                                                     <TextBox Margin="0,4,0,0"
                                                              materialDesign:HintAssist.Hint="Верхняя граница"
                                                              Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                                                              HorizontalAlignment="Stretch"
+                                                             Text="{Binding SumWorkTimeHighBound}"
                                                              IsEnabled="{Binding IsBySumWorkTime}" />
-                                                </StackPanel>
+                                                </StackPanel>-->
 
                                                 <StackPanel Width="201" Margin="16,10,8,8" VerticalAlignment="Stretch"
                                                             HorizontalAlignment="Left">
@@ -398,7 +400,7 @@
                            DataContext="{Binding CardDictionaryViewModel}">
                     <StackPanel Panel.ZIndex="3" DockPanel.Dock="Bottom">
                         <Button Command="{Binding AddCardCommand}"
-                                Visibility="{Binding IsWriteRights, Converter={StaticResource BoolVisibilityConverter}}"
+                                Visibility="{Binding IsWriteRights, Converter={StaticResource BoolVisibilityHiddenConverter}}"
                                 Panel.ZIndex="1" HorizontalAlignment="Right" Margin="0 0 16 -32"
                                 materialDesign:ShadowAssist.ShadowDepth="Depth3"
                                 Style="{StaticResource MaterialDesignFloatingActionAccentButton}">
@@ -549,16 +551,18 @@
                                                             HorizontalAlignment="Left">
                                                     <CheckBox IsChecked="{Binding FilterDefinition.IsBySumWorkTime}">По сумме отработанных часов</CheckBox>
                                                     <TextBox Margin="0,4,0,0"
-                                                             materialDesign:HintAssist.Hint="Нижняя граница"
+                                                             materialDesign:HintAssist.Hint="Нижняя граница (чч:мм)"
                                                              Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                                                              HorizontalAlignment="Stretch"
-                                                             Text="{Binding FilterDefinition.SumWorkTimeLowBound}"
+                                                             Text="{Binding FilterDefinition.SumWorkTimeLowBound, 
+                                                                Converter={StaticResource TimeStringToIntConverter}}"
                                                              IsEnabled="{Binding FilterDefinition.IsBySumWorkTime}" />
                                                     <TextBox Margin="0,4,0,0"
-                                                             materialDesign:HintAssist.Hint="Верхняя граница"
+                                                             materialDesign:HintAssist.Hint="Верхняя граница (чч:мм)"
                                                              Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                                                              HorizontalAlignment="Stretch"
-                                                             Text="{Binding FilterDefinition.SumWorkTimeHighBound}"
+                                                             Text="{Binding FilterDefinition.SumWorkTimeHighBound,
+                                                                Converter={StaticResource TimeStringToIntConverter}}"
                                                              IsEnabled="{Binding FilterDefinition.IsBySumWorkTime}" />
                                                 </StackPanel>
 
@@ -634,18 +638,21 @@
                                         Binding="{Binding SumWorkLoadTime, StringFormat='##00:00'}"
                                         CanUserReorder="True"
                                         CanUserResize="False"
+                                        SortMemberPath="$SumWorkLoadTime"
                                         Width="90"
                                         Header="За неделю" />
                                     <elements:DataGridAdaptiveColumn
                                         Binding="{Binding Payment, StringFormat='### ### ##0.00 ₽'}"
                                         Header="Почасовая З/П"
                                         CanUserResize="False"
+                                        SortMemberPath="$Payment"
                                         Width="120"
                                         CanUserReorder="True" />
                                     <elements:DataGridAdaptiveColumn
                                         Binding="{Binding PaymentFull, StringFormat='### ### ##0.00 ₽'}"
                                         Header="З/П за неделю"
                                         CanUserResize="False"
+                                        SortMemberPath="$PaymentFull"
                                         Width="150"
                                         CanUserReorder="True" />
                                     <elements:DataGridAdaptiveColumn

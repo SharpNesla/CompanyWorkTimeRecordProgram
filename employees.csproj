@@ -153,6 +153,7 @@
     <Compile Include="Converters\BoolVisibilityConverter.cs" />
     <Compile Include="Converters\EnumBooleanConverter.cs" />
     <Compile Include="Converters\EnumerationExtension.cs" />
+    <Compile Include="Converters\TimeStringToIntConverter.cs" />
     <Compile Include="Converters\TimeToIntConverter.cs" />
     <Compile Include="DeleteDialog.xaml.cs">
       <DependentUpon>DeleteDialog.xaml</DependentUpon>

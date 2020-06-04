@@ -138,10 +138,11 @@ namespace employees.Model
         /// Функция, возвращает запись работника по его идентификационному номеру
         /// </summary>
         /// <param name="id">Идентификационный номер</param>
-        /// <returns></returns>
+        /// <returns>Запись работника</returns>
         public Employee GetById(int id)
         {
-            return this._applicationContext.Employees.Find(id);
+            return this._applicationContext.Employees.Include(x=>x.Cards)
+                .First(x=>x.Id == id);
         }
 
         /// <summary>
