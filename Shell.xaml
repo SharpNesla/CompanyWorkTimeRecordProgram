@@ -17,7 +17,8 @@
                   WindowStartupLocation="CenterScreen"
                   Name="ShellWindowView"
                   Width="1280" Height="720"
-                  MinHeight="600" MinWidth="1024">
+                  MinHeight="600" MinWidth="1024"
+                  Icon="AppIcon.ico">
     <b:Interaction.Triggers>
         <b:EventTrigger EventName="Loaded">
             <b:InvokeCommandAction Command="{Binding InitializeWindow}"
