@@ -2,7 +2,7 @@
 
 # ⏱️🧑‍💼 Program for solving the problem of calculating working hours and wages of employees of the enterprise
 
-FSBEI BSU. The result of the implementation of cicoa laboratory work on the subject of "Software Engineering".
+The result of the implementation of cicoa laboratory work on the subject of "Software Engineering".
 
 ## Basis for development
 
