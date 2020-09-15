@@ -1,4 +1,4 @@
-[🇷🇺 Russian version of README.MD file]()
+[🇷🇺 Russian version of README.MD file](../blob/master/README-RU.md)
 
 # ⏱️🧑‍💼 Program for solving the problem of calculating working hours and wages of employees of the enterprise
 
