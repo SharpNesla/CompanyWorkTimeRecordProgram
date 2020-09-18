@@ -38,9 +38,10 @@ List of screen forms:
 All icon buttons are equipped with pop-up tips that briefly describe the action that occurs when this button is clicked.
 
 ## Dependencies
++ Microsoft EntityFramework 6 https://github.com/dotnet/ef6
++ NPGSQL https://github.com/npgsql/npgsql
++ Material Design in XAML https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit
 + Fody https://github.com/Fody/Home/
 + Costura.Fody https://github.com/Fody/Costura
 + INotifyPropertyChanged.Fody https://github.com/Fody/PropertyChanged
 + NPOI https://github.com/tonyqus/npoi
-+ Microsoft EntityFramework 6 https://github.com/dotnet/ef6
-+ NPGSQL https://github.com/npgsql/npgsql
